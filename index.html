@@ -8,8 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- مكتبة ضغط النصوص -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
@@ -196,10 +194,10 @@
         </div>
       </section>
 
-      <!-- نموذج التقرير الإحصائي القابل للطباعة -->
+      <!-- التقرير الإحصائي القابل للطباعة -->
       <section id="analytics-print-preview-section" class="hidden">
         <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow mb-4">
-          <button onclick="showSection('analytics-section')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-bold text-xs flex items-center gap-1.5"><i class="fa-solid fa-arrow-right"></i> رجوع للوحة الإحصاءات</button>
+          <button onclick="showSection('analytics-section')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-bold text-xs"><i class="fa-solid fa-arrow-right"></i> رجوع للوحة الإحصاءات</button>
           <div class="flex gap-2">
             <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg font-bold text-xs"><i class="fa-solid fa-print"></i> طباعة فورية</button>
             <button onclick="exportAnalyticsToPdf()" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-xs"><i class="fa-solid fa-file-pdf"></i> تصدير ملف PDF</button>
@@ -296,13 +294,13 @@
           </div>
 
           <div class="p-3.5 bg-slate-50/50 border-b border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div><label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-magnifying-glass text-emerald-600 ml-1"></i> البحث العام:</label><input type="text" id="report-search" oninput="applyAllFilters()" placeholder="بحث بالمدرسة أو المشرف..." class="w-full border rounded-lg px-3 py-1.5 text-xs bg-white outline-none"></div>
+            <div><label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-magnifying-glass text-emerald-600 ml-1"></i> البحث:</label><input type="text" id="report-search" oninput="applyAllFilters()" placeholder="بحث بالمدرسة أو المشرف..." class="w-full border rounded-lg px-3 py-1.5 text-xs bg-white outline-none"></div>
             <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-layer-group text-indigo-600 ml-1"></i> المرحلة الدراسية:</label>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-layer-group text-indigo-600 ml-1"></i> المرحلة:</label>
               <select id="filter-stage" onchange="applyAllFilters()" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-white font-bold outline-none"><option value="الكل">جميع المراحل</option><option value="ابتدائي">ابتدائي</option><option value="متوسط">متوسط</option><option value="ثانوي">ثانوي</option></select>
             </div>
             <div>
-              <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-chart-line text-amber-600 ml-1"></i> مستوى الأداء:</label>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1"><i class="fa-solid fa-chart-line text-amber-600 ml-1"></i> الأداء:</label>
               <select id="filter-level" onchange="applyAllFilters()" class="w-full border rounded-lg px-3 py-1.5 text-xs bg-white font-bold outline-none"><option value="الكل">جميع المستويات</option><option value="التميز">التميز</option><option value="التقدم">التقدم</option><option value="الانطلاق">الانطلاق</option><option value="لم يصدر">لم يصدر</option></select>
             </div>
           </div>
@@ -340,15 +338,15 @@
             <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-4">
               <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wider border-b pb-2">أولاً: البيانات العامة للزيارة والمدرسة</h4>
               <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">الفصل الدراسي</label><select id="term" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="الأول">الأول</option><option value="الثاني" selected>الثاني</option></select></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">العام الدراسي</label><input type="text" id="academic-year" value="1448" class="w-full border rounded p-2 text-xs bg-white font-medium"></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">رقم الزيارة</label><select id="visit-num" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="الأولى">الأولى</option><option value="الثانية" selected>الثانية</option><option value="الثالثة">الثالثة</option></select></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">الأسبوع</label><select id="visit-week" onchange="updateVisitDateFromSchedule()" class="w-full border rounded p-2 text-xs bg-white font-bold text-emerald-800"><option value="الأسبوع الحادي عشر" selected>الأسبوع الحادي عشر</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">الفصل</label><select id="term" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="الأول">الأول</option><option value="الثاني" selected>الثاني</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">العام</label><input type="text" id="academic-year" value="1448" class="w-full border rounded p-2 text-xs bg-white font-medium"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">الزيارة</label><select id="visit-num" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="الأولى">الأولى</option><option value="الثانية" selected>الثانية</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">الأسبوع</label><select id="visit-week" onchange="updateVisitDateFromSchedule()" class="w-full border rounded p-2 text-xs bg-white font-bold text-emerald-800"><option value="الأسبوع الحادي عشر" selected>الحادي عشر</option></select></div>
                 <div><label class="block text-xs font-bold text-slate-600 mb-1">اليوم</label><select id="visit-day" onchange="updateVisitDateFromSchedule()" class="w-full border rounded p-2 text-xs bg-white font-bold text-emerald-800"><option value="الأحد" selected>الأحد</option><option value="الإثنين">الإثنين</option><option value="الثلاثاء">الثلاثاء</option><option value="الأربعاء">الأربعاء</option><option value="الخميس">الخميس</option></select></div>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">تاريخ الزيارة</label><input type="text" id="visit-date" class="w-full border rounded p-2 text-xs bg-emerald-50 font-bold text-emerald-900" required></div>
-                <div><label class="block text-xs font-bold text-slate-600 mb-1">اسم المدرسة</label><input type="text" id="school-name" class="w-full border rounded p-2 text-xs bg-white font-bold" required></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">التاريخ</label><input type="text" id="visit-date" class="w-full border rounded p-2 text-xs bg-emerald-50 font-bold text-emerald-900" required></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">المدرسة</label><input type="text" id="school-name" class="w-full border rounded p-2 text-xs bg-white font-bold" required></div>
                 <div><label class="block text-xs font-bold text-slate-600 mb-1">المرحلة</label><input type="text" id="school-stage" class="w-full border rounded p-2 text-xs bg-white font-medium"></div>
                 <div><label class="block text-xs font-bold text-slate-600 mb-1">الفئة</label><select id="school-gender" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="بنين">بنين</option><option value="بنات">بنات</option></select></div>
               </div>
@@ -395,15 +393,15 @@
             <div class="border border-slate-200 rounded-xl p-4 bg-white space-y-3">
               <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wider border-b pb-2">رابعًا: تقديم خدمات دعم التميز المدرسي في مجالات الممارسات الإشرافية</h4>
               <div class="space-y-2">
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-6 text-xs font-bold text-slate-700">1. خدمات دعم التميز المقدمة في مجال التدريس</div><div class="md:col-span-2"><select id="sup-1-grade" class="w-full border rounded p-1.5 text-xs bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select></div><div class="md:col-span-4"><input type="text" id="sup-1-note" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-6 text-xs font-bold text-slate-700">1. خدمات دعم التدريس</div><div class="md:col-span-2"><select id="sup-1-grade" class="w-full border rounded p-1.5 text-xs bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select></div><div class="md:col-span-4"><input type="text" id="sup-1-note" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div><label class="block text-xs font-bold text-slate-700 mb-1">2. نواتج التعلم</label><select id="sup-2-grade" class="w-full border rounded p-1.5 text-xs bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select><input type="text" id="sup-2-note" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white mt-1 font-medium"></div>
                   <div><label class="block text-xs font-bold text-slate-700 mb-1">3. الأنشطة المدرسية</label><select id="sup-3-grade" class="w-full border rounded p-1.5 text-xs bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select><input type="text" id="sup-3-note" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white mt-1 font-medium"></div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
                   <div class="p-2.5 bg-slate-50 rounded border"><span class="text-xs font-bold block mb-1">4. التوجيه الطلابي</span><select id="sup-4-grade" class="w-full border rounded p-1.5 text-xs bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select><input type="text" id="sup-4-note" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white mt-1 font-medium"></div>
-                  <div class="p-2.5 bg-slate-50 rounded border"><span class="text-xs font-bold block mb-1">5. متوسط مستوى الخدمة</span><input type="text" id="sup-avg-note" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white mt-5 font-medium"></div>
-                  <div class="p-2.5 bg-slate-50 rounded border"><span class="text-xs font-bold block mb-1">6. تنفيذ التوصيات السابقة</span><input type="text" id="sup-prev-note" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white mt-5 font-medium"></div>
+                  <div class="p-2.5 bg-slate-50 rounded border"><span class="text-xs font-bold block mb-1">5. متوسط الخدمة</span><input type="text" id="sup-avg-note" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white mt-5 font-medium"></div>
+                  <div class="p-2.5 bg-slate-50 rounded border"><span class="text-xs font-bold block mb-1">6. تنفيذ التوصيات</span><input type="text" id="sup-prev-note" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white mt-5 font-medium"></div>
                 </div>
               </div>
             </div>
@@ -412,20 +410,19 @@
             <div class="border border-slate-200 rounded-xl p-4 bg-white space-y-3">
               <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wider border-b pb-2">الجدارات الوظيفية</h4>
               <div class="space-y-2 text-xs">
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-2 font-bold">المسؤولية</div><div class="md:col-span-6 text-slate-500 text-[11px]">القدرة على تحمل المسؤولية الفردية لتحقيق الأهداف بالجودة المطلوبة.</div><div class="md:col-span-4"><input type="text" id="comp-1" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-2 font-bold">العمل الجماعي</div><div class="md:col-span-6 text-slate-500 text-[11px]">القدرة على العمل بشكل جماعي وبروح الفريق والمحافظة على علاقات جيدة.</div><div class="md:col-span-4"><input type="text" id="comp-2" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-2 font-bold">المرونة للتغيير</div><div class="md:col-span-6 text-slate-500 text-[11px]">القدرة على التكيف والعمل بشكل فعّال في مختلف الظروف وقبول التغيير.</div><div class="md:col-span-4"><input type="text" id="comp-3" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-2 font-bold">المبادرة</div><div class="md:col-span-6 text-slate-500 text-[11px]">إظهار الحرص الكافي، والرغبة في إنجاز مهام إضافية تخدم مصلحة العمل.</div><div class="md:col-span-4"><input type="text" id="comp-4" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-2 font-bold">المسؤولية</div><div class="md:col-span-6 text-slate-500 text-[11px]">تحمل المسؤولية الفردية لتحقيق الأهداف بالجودة المطلوبة.</div><div class="md:col-span-4"><input type="text" id="comp-1" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-2 font-bold">العمل الجماعي</div><div class="md:col-span-6 text-slate-500 text-[11px]">العمل بروح الفريق والمحافظة على علاقات جيدة.</div><div class="md:col-span-4"><input type="text" id="comp-2" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-2 font-bold">المرونة للتغيير</div><div class="md:col-span-6 text-slate-500 text-[11px]">التكيف والعمل بفعالية في مختلف الظروف.</div><div class="md:col-span-4"><input type="text" id="comp-3" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-2 font-bold">المبادرة</div><div class="md:col-span-6 text-slate-500 text-[11px]">الحرص والرغبة في إنجاز مهام إضافية تخدم العمل.</div><div class="md:col-span-4"><input type="text" id="comp-4" placeholder="ملاحظات..." class="w-full border rounded p-1.5 text-xs bg-white font-medium"></div></div>
               </div>
             </div>
 
-            <!-- الحقول النصية -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div><label class="block text-xs font-bold text-slate-700 mb-1">التحديات التي تواجه مقدم الدعم:</label><textarea id="challenges" rows="3" class="w-full border rounded p-2 text-xs bg-white font-medium"></textarea></div>
-              <div><label class="block text-xs font-bold text-slate-700 mb-1">نقاط القوة في أداء مقدم الدعم:</label><textarea id="strengths" rows="3" class="w-full border rounded p-2 text-xs bg-white font-medium"></textarea></div>
+              <div><label class="block text-xs font-bold text-slate-700 mb-1">التحديات:</label><textarea id="challenges" rows="3" class="w-full border rounded p-2 text-xs bg-white font-medium"></textarea></div>
+              <div><label class="block text-xs font-bold text-slate-700 mb-1">نقاط القوة:</label><textarea id="strengths" rows="3" class="w-full border rounded p-2 text-xs bg-white font-medium"></textarea></div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div><label class="block text-xs font-bold text-slate-700 mb-1">خلاصة التغذية الراجعة لعضو الفريق:</label><textarea id="feedback" rows="3" class="w-full border rounded p-2 text-xs bg-white font-medium"></textarea></div>
+              <div><label class="block text-xs font-bold text-slate-700 mb-1">خلاصة التغذية الراجعة:</label><textarea id="feedback" rows="3" class="w-full border rounded p-2 text-xs bg-white font-medium"></textarea></div>
               <div><label class="block text-xs font-bold text-slate-700 mb-1">احتياجات التطوير المهني:</label><textarea id="dev-needs" rows="3" class="w-full border rounded p-2 text-xs bg-white font-medium"></textarea></div>
             </div>
 
@@ -969,7 +966,7 @@
       renderReportsTable();
       renderMemberAssignedSchoolsStats();
       showSection("list-section");
-      alert("تم حفظ التقرير بنجاح!");
+      alert("تم حفظ التقرير بنجاح دون إرسال إشعارات تلقائية!");
     });
 
     function applyAllFilters() {
@@ -980,14 +977,11 @@
     }
 
     // ==========================================
-    // توليد واختصار الرابط عبر is.gd المدعوم بالـ CORS
+    // حل مشكلة URI Too Long (تمرير المعرّف ID فقط بدلاً من البيانات)
     // ==========================================
-    function generateLongSignUrl(reportId) {
-      const item = reports.find(r => r.id === reportId);
-      if (!item) return "";
-      const payload = { ...item, authorSig: EXEC_MEMBERS[item.author]?.signature || "" };
-      const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(payload));
-      return `${window.location.href.split('?')[0]}?s=${compressed}`;
+    function generateSignUrl(reportId) {
+      const urlBase = window.location.href.split('?')[0];
+      return `${urlBase}?sign_id=${reportId}`;
     }
 
     async function getShortSignUrl(reportId) {
@@ -999,7 +993,7 @@
           if (shortUrl && shortUrl.startsWith('http')) return shortUrl.trim();
         }
       } catch (e) {
-        console.log("Fallback to compressed URL");
+        console.log("Fallback URL");
       }
       return longUrl;
     }
@@ -1009,7 +1003,7 @@
       if (!item) return;
 
       const finalLink = await getShortSignUrl(reportId);
-      const textMessage = `السلام عليكم ورحمة الله وبركاته،\nالأستاذ/ة الفاضل/ة: ${item.providerName || 'مقدم/ـة خدمات الدعم'}\n\nنأمل الاعتماد والتوقيع الإلكتروني لاستمارة زيارة مدرسة (${item.schoolName}) عبر الرابط القصير:\n\n${finalLink}\n\nشاكرين لكم تعاونكم.`;
+      const textMessage = `السلام عليكم ورحمة الله وبركاته،\nالأستاذ/ة الفاضل/ة: ${item.providerName || 'مقدم/ـة خدمات الدعم'}\n\nنأمل الاعتماد والتوقيع الإلكتروني لاستمارة زيارة مدرسة (${item.schoolName}) عبر الرابط:\n\n${finalLink}\n\nشاكرين لكم تعاونكم.`;
 
       window.open(`https://wa.me/?text=${encodeURIComponent(textMessage)}`, '_blank');
     }
@@ -1023,8 +1017,8 @@
       });
     }
 
-    // لوحة توقيع مقدم الدعم وإرسال إشعار العودة تلقائياً
-    let provCanvas, provCtx, isProvDrawing = false, externalReportData = null;
+    // لوحة توقيع مقدم الدعم وإرجاع الاعتماد للمشرف بصيغة JSON خفيفة
+    let provCanvas, provCtx, isProvDrawing = false, activeSignReportId = null;
 
     function initProviderPad() {
       provCanvas = document.getElementById("provider-sig-pad");
@@ -1049,9 +1043,10 @@
 
     function clearProviderPad() { if (provCtx && provCanvas) provCtx.clearRect(0, 0, provCanvas.width, provCanvas.height); }
 
-    function openProviderSignModal() {
+    function openProviderSignModalForId(reportId) {
+      activeSignReportId = reportId;
       document.getElementById("provider-sign-modal").classList.remove("hidden");
-      document.getElementById("provider-sign-school-name").innerText = `المدرسة: ${externalReportData?.schoolName || ''}`;
+      document.getElementById("provider-sign-school-name").innerText = `اعتماد التقرير`;
       initProviderPad();
     }
 
@@ -1059,36 +1054,33 @@
 
     function saveProviderSignatureAndPrint() {
       const sigData = provCanvas.toDataURL("image/png");
-      if (externalReportData) {
-        externalReportData.providerSignature = sigData;
-        
-        // حفظ مؤقت في جهاز مقدم الدعم وتجهيز رابط إرجاع التقرير لك
-        let existingReports = JSON.parse(localStorage.getItem("excellence_reports_v2") || "[]");
-        const idx = existingReports.findIndex(r => r.id === externalReportData.id);
-        if (idx !== -1) existingReports[idx] = externalReportData;
-        else existingReports.unshift(externalReportData);
-        localStorage.setItem("excellence_reports_v2", JSON.stringify(existingReports));
+      
+      // إرسال التوقيع عبر زر الواتساب للمشرف
+      const payload = { id: activeSignReportId, signature: sigData };
+      const compressedPayload = LZString.compressToEncodedURIComponent(JSON.stringify(payload));
+      const returnUrl = `${window.location.href.split('?')[0]}?saved_sig=${compressedPayload}`;
 
-        // توليد رابط عودة محمل بالاعتماد والتوقيع لإرساله للمشرف عبر الواتساب
-        const compressedSigned = LZString.compressToEncodedURIComponent(JSON.stringify(externalReportData));
-        const returnUrl = `${window.location.href.split('?')[0]}?signed_s=${compressedSigned}`;
-
-        const notifySupervisor = confirm("تم اعتماد التقرير وتوقيعه بنجاح!\nهل تريد إرسال إشعار الاعتماد والتوقيع إلى مشرف الفريق (صالح الحربي) عبر الواتساب الآن ليتم حفظه في أرشيفه رسمياً؟");
-        if (notifySupervisor) {
-          const msg = `السلام عليكم أستاذ صالح الحربي،\nتم اعتماد وتوقيع تقرير زيارة مدرسة (${externalReportData.schoolName}) إلكترونياً من قبل مقدم الدعم.\n\nانقر على الرابط لتحديث الأرشيف وحفظ التقرير:\n${returnUrl}`;
-          window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-        }
+      const notify = confirm("تم اعتماد التقرير وتوقيعه بنجاح!\nهل تريد إرسال التوقيع إلى مشرف الفريق عبر الواتساب لتثبيته في الأرشيف؟");
+      if (notify) {
+        const msg = `السلام عليكم أستاذ صالح، تم اعتماد وتوقيع استمارة التقرير إلكترونياً.\nاضغط هنا لتحديث وحفظ الاعتماد:\n${returnUrl}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
       }
-
-      const displaySpan = document.getElementById("pdf-provider-status-display");
-      if (displaySpan) displaySpan.outerHTML = `<img src="${sigData}" class="max-h-11 object-contain mx-auto" alt="">`;
 
       closeProviderSignModal();
       exportToPdf();
     }
 
-    function renderExternalReportForSigning(item) {
-      externalReportData = item;
+    function renderExternalReportForSigning(reportId) {
+      // جلب التقرير المحلي أو من الذاكرة المشتركة المتاحة للمتصفح
+      let allReports = JSON.parse(localStorage.getItem("excellence_reports_v2") || "[]");
+      let item = allReports.find(r => r.id === reportId);
+
+      if (!item) {
+        alert("عذراً، لم يتم العثور على بيانات التقرير في هذا المتصفح. يجدر بالمشرف إرسال تحديث التقرير أو فتحه من نفس الجهاز.");
+        return;
+      }
+
+      activeSignReportId = reportId;
       document.getElementById("login-modal").classList.add("hidden");
       document.getElementById("main-app").classList.remove("hidden");
 
@@ -1100,7 +1092,7 @@
 
       const toolbar = document.getElementById("preview-actions-toolbar");
       if (toolbar) {
-        toolbar.innerHTML = `<button onclick="openProviderSignModal()" class="px-5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-signature text-base"></i> التوقيع الإلكتروني والاعتماد الفوري</button>`;
+        toolbar.innerHTML = `<button onclick="openProviderSignModalForId('${reportId}')" class="px-5 py-2.5 bg-emerald-700 text-white rounded-lg font-bold text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-signature text-base"></i> التوقيع الإلكتروني والاعتماد الفوري</button>`;
       }
 
       showSection("preview-section");
@@ -1137,12 +1129,12 @@
 
         let actionsHtml = isLeader ? `
           <div class="flex items-center justify-center gap-1.5">
-            <button onclick="previewReport('${item.id}')" title="معاينة" class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded font-bold text-xs"><i class="fa-solid fa-eye"></i> معاينة</button>
+            <button onclick="previewReport('${item.id}')" title="معاينة" class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded font-bold text-xs">معاينة</button>
             <button onclick="shareSignLinkWhatsApp('${item.id}')" title="إرسال (واتساب)" class="p-1.5 bg-emerald-600 text-white rounded"><i class="fa-brands fa-whatsapp"></i></button>
           </div>
         ` : `
           <div class="flex items-center justify-center gap-1.5">
-            <button onclick="previewReport('${item.id}')" title="معاينة وطباعة" class="p-1.5 bg-blue-50 text-blue-600 rounded"><i class="fa-solid fa-file-pdf"></i></button>
+            <button onclick="previewReport('${item.id}')" title="معاينة" class="p-1.5 bg-blue-50 text-blue-600 rounded"><i class="fa-solid fa-file-pdf"></i></button>
             <button onclick="shareSignLinkWhatsApp('${item.id}')" title="إرسال رابط التوقيع (واتساب)" class="p-1.5 bg-emerald-600 text-white rounded"><i class="fa-brands fa-whatsapp"></i></button>
             <button onclick="copySignLink('${item.id}')" title="نسخ الرابط" class="p-1.5 bg-slate-100 text-slate-700 rounded"><i class="fa-solid fa-link"></i></button>
             <button onclick="editReport('${item.id}')" title="تعديل" class="p-1.5 bg-amber-50 text-amber-600 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -1152,7 +1144,7 @@
 
         tr.innerHTML = `
           <td class="p-3 font-semibold">${idx + 1}</td>
-          <td class="p-3 font-bold text-slate-900">${item.schoolName} ${item.providerSignature ? '<i class="fa-solid fa-circle-check text-emerald-600 ml-1" title="موقع من مقدم الدعم"></i>' : ''}</td>
+          <td class="p-3 font-bold text-slate-900">${item.schoolName} ${item.providerSignature ? '<i class="fa-solid fa-circle-check text-emerald-600 ml-1" title="موقع"></i>' : ''}</td>
           <td class="p-3"><span class="bg-slate-100 px-2 py-0.5 rounded text-[11px]">${item.schoolStage || '-'}</span></td>
           <td class="p-3"><span class="bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded text-[11px]">${item.overallLevel || 'لم يصدر'}</span></td>
           <td class="p-3">${item.term} / ${item.visitWeek}</td>
@@ -1168,7 +1160,6 @@
     function editReport(id) {
       const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
       if (isLeader) { alert("التعديل متاح فقط لعضو الفريق معد التقرير."); return; }
-
       const item = reports.find(r => r.id === id);
       if (!item) return;
 
@@ -1216,8 +1207,7 @@
 
     function deleteReport(id) {
       const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-      if (isLeader) { alert("صلاحية الحذف غير متاحة لحساب رئيس الفريق."); return; }
-
+      if (isLeader) { alert("صلاحية الحذف غير متاحة."); return; }
       if (confirm("هل ترغب في حذف هذا التقرير نهائياً؟")) {
         reports = reports.filter(r => r.id !== id);
         localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
@@ -1235,12 +1225,10 @@
     function previewReport(id) {
       const item = reports.find(r => r.id === id);
       if (!item) return;
-
       document.getElementById("preview-actions-toolbar").innerHTML = `
         <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg font-bold text-xs"><i class="fa-solid fa-print"></i> طباعة</button>
         <button onclick="exportToPdf()" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-xs"><i class="fa-solid fa-file-pdf"></i> تصدير PDF</button>
       `;
-
       previewReportObject(item);
       showSection("preview-section");
     }
@@ -1316,36 +1304,28 @@
 
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
-      const signParam = urlParams.get('s');
-      const signedReturnParam = urlParams.get('signed_s');
+      const signId = urlParams.get('sign_id');
+      const savedSigParam = urlParams.get('saved_sig');
 
-      // معالجة استلام التقرير الموقع وإضافته للأرشيف تلقائياً
-      if (signedReturnParam) {
+      if (savedSigParam) {
         try {
-          const signedObj = JSON.parse(LZString.decompressFromEncodedURIComponent(signedReturnParam));
+          const sigObj = JSON.parse(LZString.decompressFromEncodedURIComponent(savedSigParam));
           let allReports = JSON.parse(localStorage.getItem("excellence_reports_v2") || "[]");
-          const idx = allReports.findIndex(r => r.id === signedObj.id);
+          const idx = allReports.findIndex(r => r.id === sigObj.id);
           if (idx !== -1) {
-            allReports[idx] = signedObj;
-          } else {
-            allReports.unshift(signedObj);
+            allReports[idx].providerSignature = sigObj.signature;
+            localStorage.setItem("excellence_reports_v2", JSON.stringify(allReports));
+            alert(`تم استلام توقيع مقدم الدعم وتثبيته في الأرشيف بنجاح لمدرسة (${allReports[idx].schoolName})!`);
           }
-          localStorage.setItem("excellence_reports_v2", JSON.stringify(allReports));
-          alert(`تم استلام واعتماد التقرير الخاص بمدرسة (${signedObj.schoolName}) من مقدم الدعم وحفظه في الأرشيف بنجاح!`);
           window.history.replaceState({}, document.title, window.location.pathname);
         } catch (e) {
-          console.error("خطأ في معالجة التقرير الموقع:", e);
+          console.error("خطأ في تحديث التوقيع:", e);
         }
       }
 
-      if (signParam) {
-        try {
-          const reportObj = JSON.parse(LZString.decompressFromEncodedURIComponent(signParam));
-          renderExternalReportForSigning(reportObj);
-          return;
-        } catch (err) {
-          console.error("خطأ في فك ضغط التقرير:", err);
-        }
+      if (signId) {
+        renderExternalReportForSigning(signId);
+        return;
       }
 
       const savedUser = sessionStorage.getItem("logged_user");
