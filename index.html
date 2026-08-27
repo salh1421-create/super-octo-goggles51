@@ -979,7 +979,7 @@
     }
 
     // ==========================================
-    // حل مشكلة حظر المتصفح للواتساب وتمرير البيانات المكبسلة الذكية
+    // معالجة الروابط وفتح الواتساب بسلاسة
     // ==========================================
     function generateLongSignUrl(reportId) {
       const item = reports.find(r => r.id === reportId);
@@ -1007,7 +1007,6 @@
       const item = reports.find(r => r.id === reportId);
       if (!item) return;
 
-      // فتح نافذة فارغة فوراً لتجنب حظر النوافذ المنبثقة (Popup Blocker)
       let waWindow = window.open('', '_blank');
 
       const finalLink = await getShortSignUrl(reportId);
@@ -1073,22 +1072,16 @@
         const compressedSigned = LZString.compressToEncodedURIComponent(JSON.stringify(externalReportData));
         const returnUrl = `${window.location.href.split('?')[0]}?saved_sig=${compressedSigned}`;
 
-        let waWindow = window.open('', '_blank');
-
-        const notify = confirm("تم اعتماد التقرير وتوقيعه بنجاح!\nسيتم الآن فتح الواتساب لإرسال التوقيع إلى مشرف الفريق لتثبيته في الأرشيف.");
-        if (notify) {
-          const msg = `السلام عليكم أستاذ صالح، تم اعتماد وتوقيع استمارة التقرير إلكترونياً.\nاضغط هنا لتحديث وحفظ الاعتماد:\n${returnUrl}`;
-          const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
-          if (waWindow) { waWindow.location.href = waUrl; } else { window.location.href = waUrl; }
-        } else {
-          if (waWindow) waWindow.close();
-        }
+        // فتح نافذة الواتساب فوراً عند التوقيع دون طلب تأكيد معطل
+        const msg = `السلام عليكم أستاذ صالح، تم اعتماد وتوقيع استمارة التقرير إلكترونياً لمدرسة (${externalReportData.schoolName}).\nاضغط هنا لتحديث وحفظ الاعتماد:\n${returnUrl}`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
       }
 
       const displaySpan = document.getElementById("pdf-provider-status-display");
       if (displaySpan) displaySpan.outerHTML = `<img src="${sigData}" class="max-h-11 object-contain mx-auto" alt="">`;
 
       closeProviderSignModal();
+      alert("تم اعتماد التقرير وتوقيعه بنجاح، وتوجيهك لإرسال الإشعار، وجاري تحميل نسخة الـ PDF.");
       exportToPdf();
     }
 
