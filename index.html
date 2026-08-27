@@ -11,30 +11,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
-    .official-doc { font-family: 'Amiri', serif; line-height: 1.25; }
+    .official-doc { font-family: 'Amiri', serif; line-height: 1.18; }
     * {
       font-variant-numeric: tabular-nums;
       -moz-font-feature-settings: "latn" 1;
       -webkit-font-feature-settings: "latn" 1;
       font-feature-settings: "latn" 1;
     }
-    .doc-table { width: 100%; border-collapse: collapse; margin-top: 3px; margin-bottom: 4px; }
+    .doc-table { width: 100%; border-collapse: collapse; margin-top: 1.5px; margin-bottom: 2.5px; }
     .doc-table th, .doc-table td {
       border: 1px solid #1e293b;
-      padding: 2.5px 4.5px;
-      font-size: 10.5px;
+      padding: 1.8px 3.5px;
+      font-size: 9.8px;
       vertical-align: middle;
+      line-height: 1.15;
     }
     .doc-table th { background-color: #f8fafc; font-weight: bold; text-align: center; }
     .table-label { background-color: #f8fafc; font-weight: bold; width: 15%; }
     .section-header {
       background-color: #f1f5f9;
       font-weight: bold;
-      font-size: 11px;
-      padding: 2px 5px;
+      font-size: 10.2px;
+      padding: 1.5px 4px;
       border: 1px solid #1e293b;
       border-bottom: none;
-      margin-top: 3px;
+      margin-top: 2px;
     }
     .moe-logo-img {
       display: block !important;
@@ -46,7 +47,7 @@
     @media print {
       body * { visibility: hidden; }
       #printable-area, #printable-area *, #analytics-report-area, #analytics-report-area * { visibility: visible !important; }
-      #printable-area, #analytics-report-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 6mm; }
+      #printable-area, #analytics-report-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 4mm 5mm; }
       .no-print { display: none !important; }
     }
   </style>
@@ -809,7 +810,7 @@
         </div>
       </section>
 
-      <!-- شاشة المعاينة والمستند الرسمي المطابق 100% -->
+      <!-- شاشة المعاينة والمستند الرسمي (صفحة A4 واحدة متكاملة) -->
       <section id="preview-section" class="hidden">
         <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow mb-4">
           <button id="btn-back-to-list" onclick="showSection('list-section')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-bold text-xs flex items-center gap-1.5">
@@ -825,9 +826,9 @@
           </div>
         </div>
 
-        <div id="printable-area" class="bg-white p-5 mx-auto shadow-2xl rounded-sm border border-slate-300 max-w-[850px] official-doc text-black">
-          <div class="flex justify-between items-center border-b border-black pb-1.5 mb-2">
-            <div class="text-center text-[10.5px] leading-tight font-bold text-slate-800 w-1/3">
+        <div id="printable-area" class="bg-white mx-auto shadow-2xl rounded-sm border border-slate-300 max-w-[800px] official-doc text-black" style="padding: 4mm 6mm;">
+          <div class="flex justify-between items-center border-b border-black pb-1 mb-1">
+            <div class="text-center text-[9.5px] leading-tight font-bold text-slate-800 w-1/3">
               <p>المملكة العربية السعودية</p>
               <p>وزارة التعليم</p>
               <p>(280)</p>
@@ -837,18 +838,18 @@
             </div>
             
             <div class="text-center w-1/3">
-              <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto" style="height: 65px; max-width: 130px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
+              <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto" style="height: 52px; max-width: 110px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
             </div>
 
-            <div class="text-right text-[11px] leading-relaxed font-bold text-slate-800 w-1/3 pr-6">
+            <div class="text-right text-[10px] leading-relaxed font-bold text-slate-800 w-1/3 pr-6">
               <p>الرقم: <span id="pdf-doc-id" class="font-normal mr-1"></span></p>
-              <p>التاريخ: <span id="pdf-doc-date" class="font-normal mr-1 border-b border-black inline-block min-w-[70px] text-center"></span> /</p>
+              <p>التاريخ: <span id="pdf-doc-date" class="font-normal mr-1 border-b border-black inline-block min-w-[60px] text-center"></span> /</p>
               <p>المرفقات: <span class="font-normal mr-1">بدون</span></p>
             </div>
           </div>
 
-          <div class="text-center my-1">
-            <h2 class="text-xs md:text-sm font-bold bg-slate-100 py-1 px-3 border border-black inline-block">
+          <div class="text-center my-0.5">
+            <h2 class="text-[11px] font-bold bg-slate-100 py-0.5 px-3 border border-black inline-block">
               تقرير التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي خلال الفصل الدراسي <span id="pdf-term-display"></span> لعام <span id="pdf-year"></span> هـ
             </h2>
           </div>
@@ -885,7 +886,7 @@
             </tr>
             <tr>
               <td class="table-label">مجالات الدعم المقدمة</td>
-              <td id="pdf-sup-areas" colspan="5" class="font-bold text-[10px]"></td>
+              <td id="pdf-sup-areas" colspan="5" class="font-bold text-[9.5px]"></td>
             </tr>
             <tr>
               <td class="table-label">الهدف من الزيارة:</td>
@@ -930,9 +931,9 @@
           <table class="doc-table">
             <thead>
               <tr>
-                <th class="w-8">م</th>
+                <th class="w-7">م</th>
                 <th>الممارسات</th>
-                <th class="w-28">الدرجة/ التقدير**</th>
+                <th class="w-24">الدرجة/ التقدير**</th>
                 <th class="w-1/3">الملاحظات</th>
               </tr>
             </thead>
@@ -962,9 +963,9 @@
           <table class="doc-table">
             <thead>
               <tr>
-                <th class="w-8">م</th>
+                <th class="w-7">م</th>
                 <th>الممارسات</th>
-                <th class="w-28">الدرجة/ التقدير**</th>
+                <th class="w-24">الدرجة/ التقدير**</th>
                 <th class="w-1/3">الملاحظات</th>
               </tr>
             </thead>
@@ -1012,8 +1013,8 @@
           <table class="doc-table">
             <thead>
               <tr>
-                <th class="w-8">م</th>
-                <th class="w-24">الجدارة</th>
+                <th class="w-7">م</th>
+                <th class="w-20">الجدارة</th>
                 <th>معناها</th>
                 <th class="w-1/3">ملاحظات</th>
               </tr>
@@ -1022,25 +1023,25 @@
               <tr>
                 <td class="text-center font-bold">1</td>
                 <td class="font-bold text-center">المسؤولية</td>
-                <td class="text-[9.5px]">القدرة على تحمل المسؤولية الفردية لتحقيق الأهداف بالجودة المطلوبة وفي الوقت المحدد.</td>
+                <td class="text-[9px]">القدرة على تحمل المسؤولية الفردية لتحقيق الأهداف بالجودة المطلوبة وفي الوقت المحدد.</td>
                 <td id="pdf-comp-1"></td>
               </tr>
               <tr>
                 <td class="text-center font-bold">2</td>
                 <td class="font-bold text-center">العمل الجماعي</td>
-                <td class="text-[9.5px]">القدرة على العمل بشكل جماعي وبروح الفريق والمحافظة على علاقات جيدة داخل وخارج الوحدة التنظيمية من أجل تحقيق الأهداف المشتركة.</td>
+                <td class="text-[9px]">القدرة على العمل بشكل جماعي وبروح الفريق والمحافظة على علاقات جيدة داخل وخارج الوحدة التنظيمية.</td>
                 <td id="pdf-comp-2"></td>
               </tr>
               <tr>
                 <td class="text-center font-bold">3</td>
                 <td class="font-bold text-center">المرونة للتغيير</td>
-                <td class="text-[9.5px]">القدرة على التكيف والعمل بشكل فعّال في مختلف الظروف، وفهم وجهات النظر المختلفة، وقبول التغيير في متطلبات العمل.</td>
+                <td class="text-[9px]">القدرة على التكيف والعمل بشكل فعّال في مختلف الظروف، وفهم وجهات النظر المختلفة.</td>
                 <td id="pdf-comp-3"></td>
               </tr>
               <tr>
                 <td class="text-center font-bold">4</td>
                 <td class="font-bold text-center">المبادرة</td>
-                <td class="text-[9.5px]">القدرة على إظهار الحرص الكافي لتحقيق أهداف العمل، والرغبة في إنجاز مهام إضافية تخدم مصلحة العمل، دون أن تتم مطالبته بذلك، وتقديم أفكار ومقترحات جديدة نابعة من الرغبة في التحسين والتطوير.</td>
+                <td class="text-[9px]">القدرة على إظهار الحرص الكافي، والرغبة في إنجاز مهام إضافية تخدم مصلحة العمل وتقديم أفكار جديدة.</td>
                 <td id="pdf-comp-4"></td>
               </tr>
             </tbody>
@@ -1065,25 +1066,25 @@
             </tr>
           </table>
 
-          <table class="doc-table mt-3" style="border:none;">
+          <table class="doc-table mt-1.5" style="border:none;">
             <tr style="border:none;">
               <td style="border:none; width:50%; text-align:center;">
-                <p class="font-bold text-xs">مقدم/ة خدمات دعم التميز المدرسي</p>
-                <p id="pdf-footer-provider" class="font-semibold text-xs mt-1"></p>
-                <div class="h-12 flex items-center justify-center">
-                  <span id="pdf-provider-status-display" class="text-slate-400 italic text-[10.5px]">[تم الاعتماد والتسليم إلكترونياً]</span>
+                <p class="font-bold text-[10.5px]">مقدم/ة خدمات دعم التميز المدرسي</p>
+                <p id="pdf-footer-provider" class="font-semibold text-[10.5px] mt-0.5"></p>
+                <div class="h-10 flex items-center justify-center">
+                  <span id="pdf-provider-status-display" class="text-slate-400 italic text-[10px]">[تم الاعتماد والتسليم إلكترونياً]</span>
                 </div>
               </td>
               <td style="border:none; width:50%; text-align:center;">
-                <p class="font-bold text-xs">مشرف/ـة الفريق التنفيذي</p>
-                <p id="pdf-footer-member" class="font-bold text-xs mt-1"></p>
-                <div class="h-12 flex items-center justify-center">
-                  <img id="pdf-signature-img" src="" alt="التوقيع الإلكتروني" class="max-h-11 object-contain">
+                <p class="font-bold text-[10.5px]">مشرف/ـة الفريق التنفيذي</p>
+                <p id="pdf-footer-member" class="font-bold text-[10.5px] mt-0.5"></p>
+                <div class="h-10 flex items-center justify-center">
+                  <img id="pdf-signature-img" src="" alt="التوقيع الإلكتروني" class="max-h-9 object-contain">
                 </div>
               </td>
             </tr>
           </table>
-          <p class="text-[9px] text-center mt-0.5 text-slate-500">** ( 3: نفذ بدرجة عالية | 2: نفذ بدرجة متوسطة | 1: نفذ بدرجة منخفضة )</p>
+          <p class="text-[8.5px] text-center mt-0.5 text-slate-500">** ( 3: نفذ بدرجة عالية | 2: نفذ بدرجة متوسطة | 1: نفذ بدرجة منخفضة )</p>
         </div>
       </section>
     </main>
@@ -1166,7 +1167,7 @@
         <div class="flex justify-end gap-2 pt-2 border-t">
           <button onclick="closeProviderSignModal()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">إلغاء</button>
           <button onclick="saveProviderSignatureAndPrint()" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs shadow flex items-center gap-1.5">
-            <i class="fa-solid fa-check"></i> اعتماد وتصدير PDF
+            <i class="fa-solid fa-check"></i> اعتماد وحفظ وتصدير PDF
           </button>
         </div>
       </div>
@@ -1202,7 +1203,6 @@
     let chartMembers = null;
     let chartLevels = null;
 
-    // تسجيل الدخول
     document.getElementById("login-form").addEventListener("submit", function(e) {
       e.preventDefault();
       const user = document.getElementById("login-user").value;
@@ -1247,7 +1247,6 @@
       }
     }
 
-    // إعدادات الحساب وتحديث أو رسم التوقيع
     let padCanvas, padCtx, isDrawing = false;
     function openSettingsModal() {
       document.getElementById("settings-user-name").value = currentUser;
@@ -1291,35 +1290,12 @@
         };
       }
 
-      function start(e) {
-        e.preventDefault();
-        isDrawing = true;
-        const pos = getPos(e);
-        padCtx.beginPath();
-        padCtx.moveTo(pos.x, pos.y);
-      }
-
-      function move(e) {
-        if (!isDrawing) return;
-        e.preventDefault();
-        const pos = getPos(e);
-        padCtx.lineTo(pos.x, pos.y);
-        padCtx.stroke();
-      }
-
-      function end(e) {
-        if (!isDrawing) return;
-        isDrawing = false;
-        tempNewSignature = padCanvas.toDataURL("image/png");
-        document.getElementById("settings-sig-preview").src = tempNewSignature;
-      }
-
-      padCanvas.onmousedown = start;
-      padCanvas.onmousemove = move;
-      padCanvas.onmouseup = end;
-      padCanvas.ontouchstart = start;
-      padCanvas.ontouchmove = move;
-      padCanvas.ontouchend = end;
+      padCanvas.onmousedown = (e) => { e.preventDefault(); isDrawing = true; const p = getPos(e); padCtx.beginPath(); padCtx.moveTo(p.x, p.y); };
+      padCanvas.onmousemove = (e) => { if (!isDrawing) return; e.preventDefault(); const p = getPos(e); padCtx.lineTo(p.x, p.y); padCtx.stroke(); };
+      padCanvas.onmouseup = () => { isDrawing = false; };
+      padCanvas.ontouchstart = (e) => { e.preventDefault(); isDrawing = true; const p = getPos(e); padCtx.beginPath(); padCtx.moveTo(p.x, p.y); };
+      padCanvas.ontouchmove = (e) => { if (!isDrawing) return; e.preventDefault(); const p = getPos(e); padCtx.lineTo(p.x, p.y); padCtx.stroke(); };
+      padCanvas.ontouchend = () => { isDrawing = false; };
     }
 
     function clearSignaturePad() {
@@ -1341,7 +1317,6 @@
       alert("تم حفظ التوقيع وبيانات الحساب بنجاح!");
     }
 
-    // بناء وتحديث جدول إحصائية الزيارات لكل مدرسة مسندة لعضو الفريق
     function renderMemberAssignedSchoolsStats() {
       const tbody = document.getElementById("member-assigned-stats-body");
       if (!tbody) return;
@@ -1429,404 +1404,6 @@
       onSchoolSelected(schoolName);
     }
 
-    // بناء لوحة الإحصاءات العامة لرئيس الفريق
-    function renderAnalyticsDashboard() {
-      const stageFilter = document.getElementById("analytics-filter-stage")?.value || "الكل";
-      const levelFilter = document.getElementById("analytics-filter-level")?.value || "الكل";
-
-      let filteredSchools = SCHOOLS_DATA;
-      if (stageFilter !== "الكل") {
-        filteredSchools = filteredSchools.filter(s => s.stage.includes(stageFilter) || (stageFilter === "ابتدائي" && s.name.includes("طفول")));
-      }
-      if (levelFilter !== "الكل") {
-        if (levelFilter === "التهيئة") {
-          filteredSchools = filteredSchools.filter(s => s.overall_level.includes("التهيئة") || !s.overall_level || s.overall_level.includes("لا يوجد"));
-        } else {
-          filteredSchools = filteredSchools.filter(s => s.overall_level.includes(levelFilter));
-        }
-      }
-
-      const totalSchools = filteredSchools.length;
-      const totalReports = reports.length;
-      
-      const providersSet = new Set();
-      filteredSchools.forEach(s => {
-        if (s.provider_name && s.provider_name.trim() && s.has_provider === "نعم") {
-          providersSet.add(s.provider_name.trim());
-        }
-      });
-      
-      document.getElementById("stat-total-schools").innerText = totalSchools;
-      document.getElementById("stat-total-reports").innerText = totalReports;
-      document.getElementById("stat-total-providers").innerText = providersSet.size;
-
-      const membersList = [
-        { name: "أنس بن ناجي رشيد الرحيلي", gender: "بنين" },
-        { name: "شكري بن أحمد خجا بخاري", gender: "بنين" },
-        { name: "صالح بن عوض فاضي الحربي", gender: "بنين" },
-        { name: "بدرية بنت علي حسين الفريدي", gender: "بنات" },
-        { name: "ريم بنت عبدالله حمد السحيمي", gender: "بنات" },
-        { name: "هدى بنت نويع عائض الحربي", gender: "بنات" }
-      ];
-
-      const memberNames = [];
-      const reportsCountPerMember = [];
-      const assignedCountPerMember = [];
-
-      const tbody = document.getElementById("table-exec-summary-body");
-      tbody.innerHTML = "";
-
-      membersList.forEach(m => {
-        const assignedSchools = filteredSchools.filter(s => s.member.trim() === m.name.trim());
-        const withProv = assignedSchools.filter(s => s.has_provider === "نعم").length;
-        const withoutProv = assignedSchools.filter(s => s.has_provider !== "نعم").length;
-        const memberReports = reports.filter(r => r.author && r.author.trim() === m.name.trim());
-        
-        const perc = assignedSchools.length > 0 ? Math.round((memberReports.length / assignedSchools.length) * 100) : 0;
-
-        memberNames.push(m.name.split(" ")[0] + " " + m.name.split(" ")[m.name.split(" ").length - 1]);
-        reportsCountPerMember.push(memberReports.length);
-        assignedCountPerMember.push(assignedSchools.length);
-
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 border-b";
-        tr.innerHTML = `
-          <td class="p-3 font-bold text-slate-800">${m.name}</td>
-          <td class="p-3">${m.gender}</td>
-          <td class="p-3 text-center font-bold">${assignedSchools.length}</td>
-          <td class="p-3 text-center text-emerald-700 font-semibold">${withProv}</td>
-          <td class="p-3 text-center text-amber-700 font-semibold">${withoutProv}</td>
-          <td class="p-3 text-center font-black text-indigo-700">${memberReports.length}</td>
-          <td class="p-3 text-center">
-            <div class="flex items-center justify-center gap-2">
-              <span class="font-bold">${perc}%</span>
-              <div class="w-16 bg-slate-200 rounded-full h-2">
-                <div class="bg-emerald-600 h-2 rounded-full" style="width: ${perc > 100 ? 100 : perc}%"></div>
-              </div>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      const ctx1 = document.getElementById('chart-members-reports').getContext('2d');
-      if (chartMembers) chartMembers.destroy();
-      chartMembers = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: memberNames,
-          datasets: [
-            {
-              label: 'المدارس المسندة',
-              data: assignedCountPerMember,
-              backgroundColor: '#94a3b8',
-              borderRadius: 6
-            },
-            {
-              label: 'التقارير المكتملة',
-              data: reportsCountPerMember,
-              backgroundColor: '#4f46e5',
-              borderRadius: 6
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: {
-            legend: { position: 'top', rtl: true, labels: { font: { family: 'Cairo' } } }
-          },
-          scales: {
-            y: { beginAtZero: true }
-          }
-        }
-      });
-
-      let countTakadom = 0, countIntilaq = 0, countTamayuz = 0, countNone = 0;
-      filteredSchools.forEach(s => {
-        if (s.overall_level.includes("التميز")) countTamayuz++;
-        else if (s.overall_level.includes("التقدم")) countTakadom++;
-        else if (s.overall_level.includes("الانطلاق")) countIntilaq++;
-        else countNone++;
-      });
-
-      const ctx2 = document.getElementById('chart-schools-levels').getContext('2d');
-      if (chartLevels) chartLevels.destroy();
-      chartLevels = new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-          labels: ['التميز', 'التقدم', 'الانطلاق', 'تهيئة / أخرى'],
-          datasets: [{
-            data: [countTamayuz, countTakadom, countIntilaq, countNone],
-            backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#cbd5e1']
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          plugins: {
-            legend: { position: 'bottom', rtl: true, labels: { font: { family: 'Cairo' } } }
-          }
-        }
-      });
-    }
-
-    function prepareAndPrintAnalyticsReport() {
-      const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-      if (!isLeader) {
-        alert("هذه الصلاحية متاحة فقط لرئيس الفريق التنفيذي.");
-        return;
-      }
-
-      const totalSchools = SCHOOLS_DATA.length;
-      const totalReports = reports.length;
-      const providersSet = new Set();
-      SCHOOLS_DATA.forEach(s => {
-        if (s.provider_name && s.provider_name.trim() && s.has_provider === "نعم") {
-          providersSet.add(s.provider_name.trim());
-        }
-      });
-
-      document.getElementById("stat-doc-id").innerText = "STAT-" + Date.now().toString().substring(6);
-      document.getElementById("stat-doc-date").innerText = new Date().toISOString().split("T")[0];
-      document.getElementById("print-stat-schools").innerText = totalSchools;
-      document.getElementById("print-stat-reports").innerText = totalReports;
-      document.getElementById("print-stat-providers").innerText = providersSet.size;
-
-      const membersList = [
-        { name: "أنس بن ناجي رشيد الرحيلي", gender: "بنين" },
-        { name: "شكري بن أحمد خجا بخاري", gender: "بنين" },
-        { name: "صالح بن عوض فاضي الحربي", gender: "بنين" },
-        { name: "بدرية بنت علي حسين الفريدي", gender: "بنات" },
-        { name: "ريم بنت عبدالله حمد السحيمي", gender: "بنات" },
-        { name: "هدى بنت نويع عائض الحربي", gender: "بنات" }
-      ];
-
-      const printTbody = document.getElementById("print-table-exec-summary");
-      printTbody.innerHTML = "";
-
-      membersList.forEach((m, idx) => {
-        const assignedSchools = SCHOOLS_DATA.filter(s => s.member.trim() === m.name.trim());
-        const withProv = assignedSchools.filter(s => s.has_provider === "نعم").length;
-        const withoutProv = assignedSchools.filter(s => s.has_provider !== "نعم").length;
-        const memberReports = reports.filter(r => r.author && r.author.trim() === m.name.trim());
-        const perc = assignedSchools.length > 0 ? Math.round((memberReports.length / assignedSchools.length) * 100) : 0;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td class="text-center font-bold">${idx + 1}</td>
-          <td class="font-bold">${m.name}</td>
-          <td class="text-center">${m.gender}</td>
-          <td class="text-center font-bold">${assignedSchools.length}</td>
-          <td class="text-center font-semibold">${withProv}</td>
-          <td class="text-center font-semibold">${withoutProv}</td>
-          <td class="text-center font-black">${memberReports.length}</td>
-          <td class="text-center font-bold">${perc}%</td>
-        `;
-        printTbody.appendChild(tr);
-      });
-
-      if (chartMembers) {
-        document.getElementById("print-chart-img-1").src = chartMembers.toBase64Image();
-      }
-      if (chartLevels) {
-        document.getElementById("print-chart-img-2").src = chartLevels.toBase64Image();
-      }
-
-      const leaderSig = EXEC_MEMBERS["د. عائشة بنت جميعان الجهني"]?.signature || "";
-      const sigEl = document.getElementById("stat-leader-signature-img");
-      if (leaderSig) {
-        sigEl.src = leaderSig;
-        sigEl.classList.remove("hidden");
-      } else {
-        sigEl.classList.add("hidden");
-      }
-
-      showSection("analytics-print-preview-section");
-    }
-
-    function exportAnalyticsToPdf() {
-      const element = document.getElementById('analytics-report-area');
-      const opt = {
-        margin:       [3, 3, 3, 3],
-        filename:     `التقرير_الإحصائي_الشامل_لدعم_التميز_قطاع_العوالي.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, allowTaint: true },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-      html2pdf().set(opt).from(element).save();
-    }
-
-    function populateSchoolSelect() {
-      const select = document.getElementById("auto-school-select");
-      select.innerHTML = '<option value="">-- اختر المدرسة من قائمة إسناد قطاع العوالي --</option>';
-      
-      const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-      
-      if (isLeader) {
-        const group = document.createElement("optgroup");
-        group.label = "كافة مدارس قطاع العوالي (إسناد البنين والبنات)";
-        SCHOOLS_DATA.forEach(s => {
-          const opt = document.createElement("option");
-          opt.value = s.name;
-          opt.innerText = `${s.name} (${s.stage} - ${s.gender}) - [المشرف: ${s.member}]`;
-          group.appendChild(opt);
-        });
-        select.appendChild(group);
-      } else {
-        const mySchools = SCHOOLS_DATA.filter(s => s.member.trim() === currentUser.trim());
-        const otherSchools = SCHOOLS_DATA.filter(s => !mySchools.includes(s));
-
-        if (mySchools.length > 0) {
-          const group = document.createElement("optgroup");
-          group.label = `مدارس مسندة إلى: ${currentUser}`;
-          mySchools.forEach(s => {
-            const opt = document.createElement("option");
-            opt.value = s.name;
-            opt.innerText = `${s.name} (${s.stage} - ${s.gender}) - [مقدم الدعم: ${s.provider_name || 'بدون'}]`;
-            group.appendChild(opt);
-          });
-          select.appendChild(group);
-        }
-
-        const otherGroup = document.createElement("optgroup");
-        otherGroup.label = "بقية مدارس قطاع العوالي";
-        otherSchools.forEach(s => {
-          const opt = document.createElement("option");
-          opt.value = s.name;
-          opt.innerText = `${s.name} (${s.stage} - ${s.gender}) - [${s.member}]`;
-          otherGroup.appendChild(opt);
-        });
-        select.appendChild(otherGroup);
-      }
-    }
-
-    function onSchoolSelected(schoolName) {
-      if (!schoolName) return;
-      const school = SCHOOLS_DATA.find(s => s.name === schoolName);
-      if (!school) return;
-
-      document.getElementById("school-name").value = school.name;
-      document.getElementById("school-gender").value = school.gender;
-      document.getElementById("school-stage").value = school.stage;
-      document.getElementById("provider-name").value = school.provider_name || "";
-      document.getElementById("provider-present").value = school.has_provider === "نعم" ? "نعم" : "لا";
-
-      if (school.overall_level && school.overall_level !== "لا يوجد تصنيف") {
-        document.getElementById("overall-level").value = school.overall_level;
-        document.getElementById("eval-type").value = "خارجي";
-      } else {
-        document.getElementById("overall-level").value = "لم يصدر";
-        document.getElementById("eval-type").value = "لم يصدر لها تقرير";
-      }
-
-      if (school.outcomes_level && school.outcomes_level !== "لا يوجد تصنيف") {
-        document.getElementById("outcomes-level").value = school.outcomes_level;
-      } else {
-        document.getElementById("outcomes-level").value = "لم يصدر";
-      }
-    }
-
-    function showSection(sectionId) {
-      const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-      
-      if ((sectionId === 'analytics-section' || sectionId === 'analytics-print-preview-section') && !isLeader) {
-        alert("لوحة الإحصاءات والتقرير الإحصائي متاحة فقط لرئيس الفريق التنفيذي.");
-        return;
-      }
-
-      document.getElementById("analytics-section").classList.add("hidden");
-      document.getElementById("analytics-print-preview-section").classList.add("hidden");
-      document.getElementById("list-section").classList.add("hidden");
-      document.getElementById("form-section").classList.add("hidden");
-      document.getElementById("preview-section").classList.add("hidden");
-      document.getElementById(sectionId).classList.remove("hidden");
-
-      if (sectionId === 'list-section') {
-        renderReportsTable();
-        renderMemberAssignedSchoolsStats();
-      }
-    }
-
-    document.getElementById("report-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const editId = document.getElementById("edit-id").value;
-
-      const reportData = {
-        id: editId || 'REP-' + Date.now(),
-        author: currentUser,
-        term: document.getElementById("term").value,
-        academicYear: document.getElementById("academic-year").value,
-        visitNum: document.getElementById("visit-num").value,
-        visitWeek: document.getElementById("visit-week").value,
-        visitDay: document.getElementById("visit-day").value,
-        visitDate: document.getElementById("visit-date").value,
-        schoolName: document.getElementById("school-name").value,
-        schoolStage: document.getElementById("school-stage").value,
-        schoolGender: document.getElementById("school-gender").value,
-        providerPresent: document.getElementById("provider-present").value,
-        providerName: document.getElementById("provider-name").value,
-        supportType: document.getElementById("support-type").value,
-        weeklyReport: document.getElementById("weekly-report").value,
-        supTeach: document.getElementById("sup-area-teach").checked,
-        supOutcomes: document.getElementById("sup-area-outcomes").checked,
-        supGuidance: document.getElementById("sup-area-guidance").checked,
-        supActivities: document.getElementById("sup-area-activities").checked,
-        evalType: document.getElementById("eval-type").value,
-        overallLevel: document.getElementById("overall-level").value,
-        overallScore: document.getElementById("overall-score").value,
-        outcomesLevel: document.getElementById("outcomes-level").value,
-        outcomesScore: document.getElementById("outcomes-score").value,
-        prac1G: document.getElementById("prac-1-grade").value,
-        prac1N: document.getElementById("prac-1-note").value,
-        prac2G: document.getElementById("prac-2-grade").value,
-        prac2N: document.getElementById("prac-2-note").value,
-        prac3G: document.getElementById("prac-3-grade").value,
-        prac3N: document.getElementById("prac-3-note").value,
-        sup1G: document.getElementById("sup-1-grade").value,
-        sup1N: document.getElementById("sup-1-note").value,
-        sup2G: document.getElementById("sup-2-grade").value,
-        sup2N: document.getElementById("sup-2-note").value,
-        sup3G: document.getElementById("sup-3-grade").value,
-        sup3N: document.getElementById("sup-3-note").value,
-        sup4G: document.getElementById("sup-4-grade").value,
-        sup4N: document.getElementById("sup-4-note").value,
-        supAvgN: document.getElementById("sup-avg-note").value,
-        supPrevN: document.getElementById("sup-prev-note").value,
-        comp1: document.getElementById("comp-1").value,
-        comp2: document.getElementById("comp-2").value,
-        comp3: document.getElementById("comp-3").value,
-        comp4: document.getElementById("comp-4").value,
-        challenges: document.getElementById("challenges").value,
-        strengths: document.getElementById("strengths").value,
-        feedback: document.getElementById("feedback").value,
-        devNeeds: document.getElementById("dev-needs").value,
-        savedAt: new Date().toISOString()
-      };
-
-      if (editId) {
-        const idx = reports.findIndex(r => r.id === editId);
-        if (idx !== -1) reports[idx] = reportData;
-      } else {
-        reports.unshift(reportData);
-      }
-
-      localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
-      renderReportsTable();
-      renderMemberAssignedSchoolsStats();
-      showSection("list-section");
-      alert("تم حفظ التقرير بنجاح!");
-    });
-
-    function applyAllFilters() {
-      const searchKw = document.getElementById("report-search").value;
-      const stageVal = document.getElementById("filter-stage").value;
-      const levelVal = document.getElementById("filter-level").value;
-      renderReportsTable(searchKw, stageVal, levelVal);
-    }
-
     // ==========================================
     // دوال إرسال واستقبال روابط التوقيع الإلكتروني لمقدم الدعم
     // ==========================================
@@ -1836,7 +1413,7 @@
       
       const payload = {
         ...item,
-        authorSig: EXEC_MEMBERS[item.author]?.signature || ""
+        authorSig: item.authorSig || EXEC_MEMBERS[item.author]?.signature || ""
       };
       
       const jsonStr = JSON.stringify(payload);
@@ -1864,7 +1441,7 @@
       });
     }
 
-    // إدارة لوحة توقيع مقدم الدعم
+    // إدارة لوحة توقيع مقدم الدعم وحفظ التقرير في النظام
     let provCanvas, provCtx, isProvDrawing = false, externalReportData = null;
 
     function initProviderPad() {
@@ -1910,13 +1487,28 @@
     function saveProviderSignatureAndPrint() {
       const sigData = provCanvas.toDataURL("image/png");
       
-      const displaySpan = document.getElementById("pdf-provider-status-display");
-      if (displaySpan) {
-        displaySpan.outerHTML = `<img src="${sigData}" class="max-h-11 object-contain mx-auto" alt="توقيع مقدم الدعم">`;
-      }
+      // تحديث مظهر التوقيع في الاستمارة
+      const footerProviderCell = document.getElementById("pdf-footer-provider").parentElement;
+      footerProviderCell.querySelector("div").innerHTML = `<img src="${sigData}" class="max-h-9 object-contain mx-auto" alt="توقيع مقدم الدعم">`;
       
+      // حفظ الاستمارة مع توقيع مقدم الدعم في النظام محلياً
+      if (externalReportData) {
+        externalReportData.providerSig = sigData;
+        externalReportData.providerSignedAt = new Date().toISOString();
+        
+        let allSavedReports = JSON.parse(localStorage.getItem("excellence_reports_v2") || "[]");
+        const idx = allSavedReports.findIndex(r => r.id === externalReportData.id);
+        if (idx !== -1) {
+          allSavedReports[idx] = externalReportData;
+        } else {
+          allSavedReports.unshift(externalReportData);
+        }
+        localStorage.setItem("excellence_reports_v2", JSON.stringify(allSavedReports));
+        reports = allSavedReports;
+      }
+
       closeProviderSignModal();
-      alert("تم اعتماد وتوثيق توقيعك بنجاح! جاري تحميل نسختك الرسمية المعتمدة بصيغة PDF...");
+      alert("تم اعتماد وتوثيق توقيعك وحفظ الاستمارة في النظام بنجاح! جاري تحميل الاستمارة الرسمية كصفحة واحدة PDF...");
       exportToPdf();
     }
 
@@ -2195,6 +1787,7 @@
       document.getElementById("pdf-footer-provider").innerText = item.providerName || 'مقدم الدعم';
       document.getElementById("pdf-footer-member").innerText = item.author;
 
+      // توقيع المشرف
       const sigImg = document.getElementById("pdf-signature-img");
       const userSig = item.authorSig || EXEC_MEMBERS[item.author]?.signature;
       if (userSig) {
@@ -2202,6 +1795,14 @@
         sigImg.classList.remove("hidden");
       } else {
         sigImg.classList.add("hidden");
+      }
+
+      // توقيع مقدم الدعم إن وجد
+      const providerStatusDisplay = document.getElementById("pdf-provider-status-display");
+      if (item.providerSig) {
+        providerStatusDisplay.outerHTML = `<img id="pdf-provider-status-display" src="${item.providerSig}" class="max-h-9 object-contain mx-auto" alt="توقيع مقدم الدعم">`;
+      } else {
+        providerStatusDisplay.outerHTML = `<span id="pdf-provider-status-display" class="text-slate-400 italic text-[10px]">[تم الاعتماد والتسليم إلكترونياً]</span>`;
       }
     }
 
@@ -2212,14 +1813,14 @@
         margin:       [3, 3, 3, 3],
         filename:     `تقرير_التغذية_الراجعة_${school}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, allowTaint: true },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:    { mode: 'avoid-all' }
       };
       html2pdf().set(opt).from(element).save();
     }
 
     window.onload = function() {
-      // التحقق مما إذا كان الرابط هو رابط توقيع إلكتروني مرسل لمقدم الدعم
       const urlParams = new URLSearchParams(window.location.search);
       const signRep = urlParams.get('sign_rep');
 
