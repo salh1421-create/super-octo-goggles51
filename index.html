@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- مكتبة ضغط النصوص -->
+  <!-- مكتبة ضغط النصوص المتقدمة -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -588,7 +588,7 @@
           <canvas id="provider-sig-pad" width="380" height="110" class="w-full h-28 border-2 border-dashed border-emerald-400 rounded-lg bg-slate-50 cursor-crosshair"></canvas>
         </div>
         <div class="flex justify-end gap-2 pt-2 border-t">
-          <button onclick="closeProviderSignModal()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">إلغاء</button>
+          <button onclick="closeProviderSignModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg text-xs">إلغاء</button>
           <button onclick="saveProviderSignatureAndPrint()" class="px-5 py-2 bg-emerald-700 text-white font-bold rounded-lg text-xs shadow flex items-center gap-1.5"><i class="fa-solid fa-check"></i> حفظ الاعتماد وتصدير PDF وإرسال الإشعار</button>
         </div>
       </div>
@@ -979,11 +979,14 @@
     }
 
     // ==========================================
-    // حل مشكلة منع فتح الواتساب عبر النافذة المنبثقة
+    // حل مشكلة حظر المتصفح للواتساب وتمرير البيانات المكبسلة الذكية
     // ==========================================
     function generateLongSignUrl(reportId) {
-      const urlBase = window.location.href.split('?')[0];
-      return `${urlBase}?sign_id=${reportId}`;
+      const item = reports.find(r => r.id === reportId);
+      if (!item) return "";
+      const payload = { ...item, authorSig: EXEC_MEMBERS[item.author]?.signature || "" };
+      const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(payload));
+      return `${window.location.href.split('?')[0]}?s=${compressed}`;
     }
 
     async function getShortSignUrl(reportId) {
@@ -1004,7 +1007,7 @@
       const item = reports.find(r => r.id === reportId);
       if (!item) return;
 
-      // فتح نافذة فارغة فوراً لضمان عدم حظر المتصفح لفتح الواتساب (تجنب popup blocker)
+      // فتح نافذة فارغة فوراً لتجنب حظر النوافذ المنبثقة (Popup Blocker)
       let waWindow = window.open('', '_blank');
 
       const finalLink = await getShortSignUrl(reportId);
@@ -1029,7 +1032,7 @@
     }
 
     // لوحة توقيع مقدم الدعم
-    let provCanvas, provCtx, isProvDrawing = false, activeSignReportId = null;
+    let provCanvas, provCtx, isProvDrawing = false, externalReportData = null;
 
     function initProviderPad() {
       provCanvas = document.getElementById("provider-sig-pad");
@@ -1054,10 +1057,9 @@
 
     function clearProviderPad() { if (provCtx && provCanvas) provCtx.clearRect(0, 0, provCanvas.width, provCanvas.height); }
 
-    function openProviderSignModalForId(reportId) {
-      activeSignReportId = reportId;
+    function openProviderSignModal() {
       document.getElementById("provider-sign-modal").classList.remove("hidden");
-      document.getElementById("provider-sign-school-name").innerText = `اعتماد التقرير`;
+      document.getElementById("provider-sign-school-name").innerText = `المدرسة: ${externalReportData?.schoolName || ''}`;
       initProviderPad();
     }
 
@@ -1065,37 +1067,33 @@
 
     function saveProviderSignatureAndPrint() {
       const sigData = provCanvas.toDataURL("image/png");
-      
-      const payload = { id: activeSignReportId, signature: sigData };
-      const compressedPayload = LZString.compressToEncodedURIComponent(JSON.stringify(payload));
-      const returnUrl = `${window.location.href.split('?')[0]}?saved_sig=${compressedPayload}`;
+      if (externalReportData) {
+        externalReportData.providerSignature = sigData;
+        
+        const compressedSigned = LZString.compressToEncodedURIComponent(JSON.stringify(externalReportData));
+        const returnUrl = `${window.location.href.split('?')[0]}?saved_sig=${compressedSigned}`;
 
-      // فتح نافذة الواتساب فوراً عند الاعتماد
-      let waWindow = window.open('', '_blank');
+        let waWindow = window.open('', '_blank');
 
-      const notify = confirm("تم اعتماد التقرير وتوقيعه بنجاح!\nسيتم الآن فتح الواتساب لإرسال التوقيع لمشرف الفريق لتثبيته في الأرشيف.");
-      if (notify) {
-        const msg = `السلام عليكم أستاذ صالح، تم اعتماد وتوقيع استمارة التقرير إلكترونياً.\nاضغط هنا لتحديث وحفظ الاعتماد:\n${returnUrl}`;
-        const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
-        if (waWindow) { waWindow.location.href = waUrl; } else { window.location.href = waUrl; }
-      } else {
-        if (waWindow) waWindow.close();
+        const notify = confirm("تم اعتماد التقرير وتوقيعه بنجاح!\nسيتم الآن فتح الواتساب لإرسال التوقيع إلى مشرف الفريق لتثبيته في الأرشيف.");
+        if (notify) {
+          const msg = `السلام عليكم أستاذ صالح، تم اعتماد وتوقيع استمارة التقرير إلكترونياً.\nاضغط هنا لتحديث وحفظ الاعتماد:\n${returnUrl}`;
+          const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+          if (waWindow) { waWindow.location.href = waUrl; } else { window.location.href = waUrl; }
+        } else {
+          if (waWindow) waWindow.close();
+        }
       }
+
+      const displaySpan = document.getElementById("pdf-provider-status-display");
+      if (displaySpan) displaySpan.outerHTML = `<img src="${sigData}" class="max-h-11 object-contain mx-auto" alt="">`;
 
       closeProviderSignModal();
       exportToPdf();
     }
 
-    function renderExternalReportForSigning(reportId) {
-      let allReports = JSON.parse(localStorage.getItem("excellence_reports_v2") || "[]");
-      let item = allReports.find(r => r.id === reportId);
-
-      if (!item) {
-        alert("عذراً، لم يتم العثور على بيانات التقرير في هذا المتصفح.");
-        return;
-      }
-
-      activeSignReportId = reportId;
+    function renderExternalReportForSigning(item) {
+      externalReportData = item;
       document.getElementById("login-modal").classList.add("hidden");
       document.getElementById("main-app").classList.remove("hidden");
 
@@ -1107,7 +1105,7 @@
 
       const toolbar = document.getElementById("preview-actions-toolbar");
       if (toolbar) {
-        toolbar.innerHTML = `<button onclick="openProviderSignModalForId('${reportId}')" class="px-5 py-2.5 bg-emerald-700 text-white rounded-lg font-bold text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-signature text-base"></i> التوقيع الإلكتروني والاعتماد الفوري</button>`;
+        toolbar.innerHTML = `<button onclick="openProviderSignModal()" class="px-5 py-2.5 bg-emerald-700 text-white rounded-lg font-bold text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-signature text-base"></i> التوقيع الإلكتروني والاعتماد الفوري</button>`;
       }
 
       showSection("preview-section");
@@ -1319,7 +1317,7 @@
 
     window.onload = function() {
       const urlParams = new URLSearchParams(window.location.search);
-      const signId = urlParams.get('sign_id');
+      const sParam = urlParams.get('s');
       const savedSigParam = urlParams.get('saved_sig');
 
       if (savedSigParam) {
@@ -1338,9 +1336,14 @@
         }
       }
 
-      if (signId) {
-        renderExternalReportForSigning(signId);
-        return;
+      if (sParam) {
+        try {
+          const reportObj = JSON.parse(LZString.decompressFromEncodedURIComponent(sParam));
+          renderExternalReportForSigning(reportObj);
+          return;
+        } catch (err) {
+          console.error("خطأ في فك ضغط بيانات التقرير:", err);
+        }
       }
 
       const savedUser = sessionStorage.getItem("logged_user");
