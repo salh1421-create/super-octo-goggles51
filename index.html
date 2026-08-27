@@ -248,115 +248,6 @@
         </div>
       </section>
 
-      <!-- نموذج التقرير الإحصائي القابل للطباعة -->
-      <section id="analytics-print-preview-section" class="hidden">
-        <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow mb-4">
-          <button onclick="showSection('analytics-section')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-bold text-xs flex items-center gap-1.5">
-            <i class="fa-solid fa-arrow-right"></i> رجوع للوحة الإحصاءات
-          </button>
-          <div class="flex gap-2">
-            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg font-bold hover:bg-black text-xs flex items-center gap-1.5">
-              <i class="fa-solid fa-print"></i> طباعة فورية
-            </button>
-            <button onclick="exportAnalyticsToPdf()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-xs flex items-center gap-1.5">
-              <i class="fa-solid fa-file-pdf"></i> تصدير ملف PDF معتمد
-            </button>
-          </div>
-        </div>
-
-        <div id="analytics-report-area" class="bg-white p-6 mx-auto shadow-2xl rounded-sm border border-slate-300 max-w-[850px] official-doc text-black">
-          <div class="flex justify-between items-center border-b border-black pb-1.5 mb-2">
-            <div class="text-center text-[10.5px] leading-tight font-bold text-slate-800 w-1/3">
-              <p>المملكة العربية السعودية</p>
-              <p>وزارة التعليم</p>
-              <p>(280)</p>
-              <p>الإدارة العامة للتعليم بمنطقة المدينة المنورة</p>
-              <p>الشؤون التعليمية</p>
-              <p>إدارة أداء التعليم — قسم الاشراف التربوي</p>
-            </div>
-            
-            <div class="text-center w-1/3">
-              <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto" style="height: 65px; max-width: 130px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
-            </div>
-
-            <div class="text-right text-[11px] leading-relaxed font-bold text-slate-800 w-1/3 pr-6">
-              <p>الرقم: <span id="stat-doc-id" class="font-normal mr-1"></span></p>
-              <p>التاريخ: <span id="stat-doc-date" class="font-normal mr-1 border-b border-black inline-block min-w-[70px] text-center"></span> /</p>
-              <p>المرفقات: <span class="font-normal mr-1">بيان إحصائي ورسوم بيانية</span></p>
-            </div>
-          </div>
-
-          <div class="text-center my-2">
-            <h2 class="text-xs md:text-sm font-bold bg-slate-100 py-1.5 px-4 border border-black inline-block">
-              التقرير الإحصائي الشامل لمتابعة وتقويم أداء المدارس ومقدمي خدمات دعم التميز — قطاع العوالي
-            </h2>
-          </div>
-
-          <div class="grid grid-cols-4 gap-2 my-2 text-center text-[10.5px]">
-            <div class="border border-black p-1.5 bg-slate-50">
-              <span class="font-bold block">إجمالي مدارس القطاع</span>
-              <span id="print-stat-schools" class="font-black text-sm">173</span>
-            </div>
-            <div class="border border-black p-1.5 bg-slate-50">
-              <span class="font-bold block">التقارير المنجزة</span>
-              <span id="print-stat-reports" class="font-black text-sm text-indigo-800">0</span>
-            </div>
-            <div class="border border-black p-1.5 bg-slate-50">
-              <span class="font-bold block">مقدمو خدمات الدعم</span>
-              <span id="print-stat-providers" class="font-black text-sm text-emerald-800">57</span>
-            </div>
-            <div class="border border-black p-1.5 bg-slate-50">
-              <span class="font-bold block">أعضاء الفريق التنفيذي</span>
-              <span class="font-black text-sm">6</span>
-            </div>
-          </div>
-
-          <div class="section-header">أولاً: بيان إحصائي بمتابعة وإنجاز أعضاء الفريق التنفيذي بقطاع العوالي</div>
-          <table class="doc-table">
-            <thead>
-              <tr>
-                <th>م</th>
-                <th>عضو الفريق التنفيذي</th>
-                <th>الفئة</th>
-                <th>المدارس المسندة</th>
-                <th>بها مقدم دعم</th>
-                <th>بدون مقدم دعم</th>
-                <th>التقارير المنفذة</th>
-                <th>نسبة الإنجاز</th>
-              </tr>
-            </thead>
-            <tbody id="print-table-exec-summary"></tbody>
-          </table>
-
-          <div class="section-header">ثانياً: مؤشرات الأداء والرسوم البيانية المعتمدة</div>
-          <div class="grid grid-cols-2 gap-3 my-2 text-center">
-            <div class="border border-black p-2 bg-white rounded-sm">
-              <p class="text-[10px] font-bold mb-1">مؤشر التقارير المنجزة حسب أعضاء الفريق</p>
-              <img id="print-chart-img-1" src="" class="max-h-40 mx-auto object-contain" alt="رسم بياني">
-            </div>
-            <div class="border border-black p-2 bg-white rounded-sm">
-              <p class="text-[10px] font-bold mb-1">تصنيف مستويات الأداء لمدارس القطاع</p>
-              <img id="print-chart-img-2" src="" class="max-h-40 mx-auto object-contain" alt="رسم بياني">
-            </div>
-          </div>
-
-          <div class="mt-6 pt-3 border-t border-slate-400 flex justify-between items-center text-center text-xs">
-            <div class="w-1/2">
-              <p class="font-bold">منظومة دعم التميز المدرسي بقطاع العوالي</p>
-              <p class="text-[10px] text-slate-600 mt-1">تم إعداد وتوليد التقرير آلياً عبر المنظومة السحابية</p>
-            </div>
-            <div class="w-1/2">
-              <p class="font-bold">رئيس الفريق التنفيذي لدعم التميز المدرسي بقطاع العوالي</p>
-              <p id="stat-footer-leader-name" class="font-bold text-xs mt-0.5 text-slate-900">د. عائشة بنت جميعان الجهني</p>
-              <div class="h-14 flex items-center justify-center">
-                <img id="stat-leader-signature-img" src="" alt="توقيع رئيس الفريق" class="max-h-12 object-contain">
-              </div>
-            </div>
-          </div>
-          <p class="text-[9px] text-center mt-1 text-slate-500">يعتمد هذا التقرير رسمياً لمتابعة وتطوير خدمات دعم التميز بمدارس قطاع العوالي</p>
-        </div>
-      </section>
-
       <!-- صفحة عضو الفريق: إحصائيات المدارس المسندة وقائمة التقارير المحفوظة ومشاركتها -->
       <section id="list-section" class="hidden no-print space-y-6">
         <div id="member-kpi-cards" class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1360,7 +1251,7 @@
       
       const mySchools = isLeader 
         ? SCHOOLS_DATA 
-        : SCHOOLS_DATA.filter(s => s.member && s.member.trim() === currentUser.trim());
+        : SCHOOLS_DATA.filter(s => s.member.trim() === currentUser.trim());
 
       const userReports = isLeader 
         ? reports 
@@ -1499,7 +1390,7 @@
       provCanvas.onmousedown = (e) => { e.preventDefault(); isProvDrawing = true; const p = getPos(e); provCtx.beginPath(); provCtx.moveTo(p.x, p.y); };
       provCanvas.onmousemove = (e) => { if (!isProvDrawing) return; e.preventDefault(); const p = getPos(e); provCtx.lineTo(p.x, p.y); provCtx.stroke(); };
       provCanvas.onmouseup = () => { isProvDrawing = false; };
-      provCanvas.ontouchstart = (e) => { e.preventDefault(); isProvDrawing = true; const p = getPos(e); provCtx.beginPath(); provCtx.moveTo(p.x, p.y); };
+      provCanvas.ontouchstart = (e) => { e.preventDefault(); isProvDrawing = true; const p = getPos(e); padCtx = provCtx; provCtx.beginPath(); provCtx.moveTo(p.x, p.y); };
       provCanvas.ontouchmove = (e) => { if (!isProvDrawing) return; e.preventDefault(); const p = getPos(e); provCtx.lineTo(p.x, p.y); provCtx.stroke(); };
       provCanvas.ontouchend = () => { isProvDrawing = false; };
     }
@@ -1521,11 +1412,13 @@
     function saveProviderSignatureAndPrint() {
       const sigData = provCanvas.toDataURL("image/png");
       
+      // تحديث مظهر التوقيع في الاستمارة
       const container = document.getElementById("pdf-provider-sig-container");
       if (container) {
         container.innerHTML = `<img src="${sigData}" class="max-h-9 object-contain mx-auto" alt="توقيع مقدم الدعم">`;
       }
       
+      // حفظ الاستمارة مع توقيع مقدم الدعم في النظام محلياً
       if (externalReportData) {
         externalReportData.providerSig = sigData;
         externalReportData.providerSignedAt = new Date().toISOString();
@@ -1549,10 +1442,12 @@
     function renderExternalReportForSigning(item) {
       externalReportData = item;
       
+      // إخفاء تسجيل الدخول وإظهار التطبيق وشريط ضيف الاعتماد
       document.getElementById("login-modal").classList.add("hidden");
       document.getElementById("main-app").classList.remove("hidden");
       document.getElementById("provider-guest-banner").classList.remove("hidden");
       
+      // إخفاء شريط التنقل العلوي وتفاصيل المستخدم
       const topNav = document.getElementById("top-nav-bar");
       if (topNav) topNav.classList.add("hidden");
       const mainHeader = document.getElementById("main-header");
@@ -1570,6 +1465,7 @@
         `;
       }
 
+      // عرض شاشة التقرير المباشرة
       document.getElementById("analytics-section").classList.add("hidden");
       document.getElementById("analytics-print-preview-section").classList.add("hidden");
       document.getElementById("list-section").classList.add("hidden");
@@ -1581,7 +1477,6 @@
 
     function renderReportsTable(filterKeyword = "", filterStage = "الكل", filterLevel = "الكل") {
       const tbody = document.getElementById("reports-table-body");
-      if (!tbody) return;
       tbody.innerHTML = "";
       
       const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
@@ -1831,6 +1726,7 @@
       document.getElementById("pdf-footer-provider").innerText = item.providerName || 'مقدم الدعم';
       document.getElementById("pdf-footer-member").innerText = item.author;
 
+      // توقيع المشرف
       const sigImg = document.getElementById("pdf-signature-img");
       const userSig = item.authorSig || EXEC_MEMBERS[item.author]?.signature;
       if (userSig) {
@@ -1840,6 +1736,7 @@
         sigImg.classList.add("hidden");
       }
 
+      // توقيع مقدم الدعم
       const container = document.getElementById("pdf-provider-sig-container");
       if (container) {
         if (item.providerSig) {
