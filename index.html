@@ -8,35 +8,34 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- مكتبة ضغط النصوص لجعل روابط الواتساب قصيرة جداً -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
-    .official-doc { font-family: 'Amiri', serif; line-height: 1.25; }
+    .official-doc { font-family: 'Amiri', serif; line-height: 1.18; }
     * {
       font-variant-numeric: tabular-nums;
       -moz-font-feature-settings: "latn" 1;
       -webkit-font-feature-settings: "latn" 1;
       font-feature-settings: "latn" 1;
     }
-    .doc-table { width: 100%; border-collapse: collapse; margin-top: 3px; margin-bottom: 4px; }
+    .doc-table { width: 100%; border-collapse: collapse; margin-top: 1.5px; margin-bottom: 2.5px; }
     .doc-table th, .doc-table td {
       border: 1px solid #1e293b;
-      padding: 2.5px 4.5px;
-      font-size: 10.5px;
+      padding: 1.8px 3.5px;
+      font-size: 9.8px;
       vertical-align: middle;
+      line-height: 1.15;
     }
     .doc-table th { background-color: #f8fafc; font-weight: bold; text-align: center; }
     .table-label { background-color: #f8fafc; font-weight: bold; width: 15%; }
     .section-header {
       background-color: #f1f5f9;
       font-weight: bold;
-      font-size: 11px;
-      padding: 2px 5px;
+      font-size: 10.2px;
+      padding: 1.5px 4px;
       border: 1px solid #1e293b;
       border-bottom: none;
-      margin-top: 3px;
+      margin-top: 2px;
     }
     .moe-logo-img {
       display: block !important;
@@ -48,12 +47,33 @@
     @media print {
       body * { visibility: hidden; }
       #printable-area, #printable-area *, #analytics-report-area, #analytics-report-area * { visibility: visible !important; }
-      #printable-area, #analytics-report-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 6mm; }
+      #printable-area, #analytics-report-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 4mm 5mm; }
       .no-print { display: none !important; }
     }
   </style>
 </head>
 <body class="min-h-screen">
+
+  <!-- شريط علوي بارز يظهر لمقدم الدعم عند فتح الرابط للتوقيع -->
+  <div id="provider-guest-banner" class="hidden bg-emerald-900 text-white px-4 py-3 shadow-xl sticky top-0 z-50 no-print border-b-2 border-amber-400">
+    <div class="max-w-5xl mx-auto flex justify-between items-center flex-wrap gap-2">
+      <div class="flex items-center gap-2.5">
+        <span class="w-9 h-9 rounded-full bg-emerald-800 border border-amber-400 flex items-center justify-center text-amber-300 font-bold text-base"><i class="fa-solid fa-signature"></i></span>
+        <div>
+          <h3 class="font-bold text-sm leading-tight">بوابة اعتماد وتوقيع استمارة التغذية الراجعة</h3>
+          <p class="text-[11px] text-emerald-200">نأمل مراجعة تفاصيل الزيارة والتوقيع الإلكتروني للاعتماد الفوري</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openProviderSignModal()" class="px-4 py-2 bg-amber-400 hover:bg-amber-500 text-slate-900 font-black rounded-lg text-xs shadow transition flex items-center gap-1.5 animate-bounce">
+          <i class="fa-solid fa-pen-nib"></i> <span>توقيع واعتماد الاستمارة</span>
+        </button>
+        <button onclick="exportToPdf()" class="px-3 py-2 bg-emerald-800 hover:bg-emerald-700 text-white font-bold rounded-lg text-xs transition flex items-center gap-1 border border-emerald-600">
+          <i class="fa-solid fa-file-pdf"></i> <span>تحميل PDF</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- شاشة الدخول -->
   <div id="login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -93,7 +113,7 @@
 
   <!-- التطبيق الرئيسي -->
   <div id="main-app" class="hidden">
-    <header class="bg-emerald-800 text-white shadow sticky top-0 z-40 no-print">
+    <header id="main-header" class="bg-emerald-800 text-white shadow sticky top-0 z-40 no-print">
       <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
         <div class="flex items-center gap-3">
           <div class="bg-white px-2 py-1 rounded-lg shadow-sm flex items-center justify-center">
@@ -121,7 +141,7 @@
 
     <main class="max-w-7xl mx-auto px-4 py-6">
       <!-- أزرار التنقل العلوية -->
-      <div class="flex justify-between items-center mb-6 no-print flex-wrap gap-2">
+      <div id="top-nav-bar" class="flex justify-between items-center mb-6 no-print flex-wrap gap-2">
         <div class="flex gap-2 flex-wrap">
           <button id="btn-nav-analytics" onclick="showSection('analytics-section'); renderAnalyticsDashboard();" class="hidden px-4 py-2 bg-indigo-700 text-white rounded-lg font-bold hover:bg-indigo-800 shadow flex items-center gap-2 text-sm transition">
             <i class="fa-solid fa-chart-pie"></i> لوحة الإحصاءات العامة
@@ -254,7 +274,7 @@
               <p>الشؤون التعليمية</p>
               <p>إدارة أداء التعليم — قسم الاشراف التربوي</p>
             </div>
-
+            
             <div class="text-center w-1/3">
               <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto" style="height: 65px; max-width: 130px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
             </div>
@@ -410,7 +430,7 @@
               <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
                 <i class="fa-solid fa-folder-open text-emerald-600"></i> أرشيف التقارير المعتمدة والمحفوظة
               </h3>
-              <p class="text-[11px] text-slate-500 mt-0.5">يمكنك إرسال التقرير لمقدم الدعم للتوقيع عبر الواتساب برابط قصير وسريع</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">يمكنك إرسال التقرير لمقدم الدعم للتوقيع عبر الواتساب أو نسخ الرابط</p>
             </div>
             <span id="report-count" class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">0 تقرير</span>
           </div>
@@ -494,9 +514,10 @@
               </select>
             </div>
 
+            <!-- أولاً: بيانات الزيارة والمدرسة -->
             <div class="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-4">
               <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wider border-b pb-2">أولاً: البيانات العامة للزيارة والمدرسة</h4>
-
+              
               <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <div>
                   <label class="block text-xs font-bold text-slate-600 mb-1">الفصل الدراسي</label>
@@ -806,7 +827,7 @@
         </div>
       </section>
 
-      <!-- شاشة المعاينة والمستند الرسمي المطابق 100% -->
+      <!-- شاشة المعاينة والمستند الرسمي (صفحة A4 واحدة متكاملة) -->
       <section id="preview-section" class="hidden">
         <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow mb-4">
           <button id="btn-back-to-list" onclick="showSection('list-section')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-bold text-xs flex items-center gap-1.5">
@@ -822,9 +843,9 @@
           </div>
         </div>
 
-        <div id="printable-area" class="bg-white p-5 mx-auto shadow-2xl rounded-sm border border-slate-300 max-w-[850px] official-doc text-black">
-          <div class="flex justify-between items-center border-b border-black pb-1.5 mb-2">
-            <div class="text-center text-[10.5px] leading-tight font-bold text-slate-800 w-1/3">
+        <div id="printable-area" class="bg-white mx-auto shadow-2xl rounded-sm border border-slate-300 max-w-[800px] official-doc text-black" style="padding: 4mm 6mm;">
+          <div class="flex justify-between items-center border-b border-black pb-1 mb-1">
+            <div class="text-center text-[9.5px] leading-tight font-bold text-slate-800 w-1/3">
               <p>المملكة العربية السعودية</p>
               <p>وزارة التعليم</p>
               <p>(280)</p>
@@ -832,26 +853,26 @@
               <p>الشؤون التعليمية</p>
               <p>إدارة أداء التعليم — قسم الاشراف التربوي</p>
             </div>
-
+            
             <div class="text-center w-1/3">
-              <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto" style="height: 65px; max-width: 130px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
+              <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto" style="height: 52px; max-width: 110px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
             </div>
 
-            <div class="text-right text-[11px] leading-relaxed font-bold text-slate-800 w-1/3 pr-6">
+            <div class="text-right text-[10px] leading-relaxed font-bold text-slate-800 w-1/3 pr-6">
               <p>الرقم: <span id="pdf-doc-id" class="font-normal mr-1"></span></p>
-              <p>التاريخ: <span id="pdf-doc-date" class="font-normal mr-1 border-b border-black inline-block min-w-[70px] text-center"></span> /</p>
+              <p>التاريخ: <span id="pdf-doc-date" class="font-normal mr-1 border-b border-black inline-block min-w-[60px] text-center"></span> /</p>
               <p>المرفقات: <span class="font-normal mr-1">بدون</span></p>
             </div>
           </div>
 
-          <div class="text-center my-1">
-            <h2 class="text-xs md:text-sm font-bold bg-slate-100 py-1 px-3 border border-black inline-block">
+          <div class="text-center my-0.5">
+            <h2 class="text-[11px] font-bold bg-slate-100 py-0.5 px-3 border border-black inline-block">
               تقرير التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي خلال الفصل الدراسي <span id="pdf-term-display"></span> لعام <span id="pdf-year"></span> هـ
             </h2>
           </div>
 
           <div class="section-header">أولا: البيانات العامّة للزّيارة</div>
-
+          
           <table class="doc-table">
             <tr>
               <td class="table-label">رقم الزيارة:</td>
@@ -882,7 +903,7 @@
             </tr>
             <tr>
               <td class="table-label">مجالات الدعم المقدمة</td>
-              <td id="pdf-sup-areas" colspan="5" class="font-bold text-[10px]"></td>
+              <td id="pdf-sup-areas" colspan="5" class="font-bold text-[9.5px]"></td>
             </tr>
             <tr>
               <td class="table-label">الهدف من الزيارة:</td>
@@ -927,9 +948,9 @@
           <table class="doc-table">
             <thead>
               <tr>
-                <th class="w-8">م</th>
+                <th class="w-7">م</th>
                 <th>الممارسات</th>
-                <th class="w-28">الدرجة/ التقدير**</th>
+                <th class="w-24">الدرجة/ التقدير**</th>
                 <th class="w-1/3">الملاحظات</th>
               </tr>
             </thead>
@@ -959,9 +980,9 @@
           <table class="doc-table">
             <thead>
               <tr>
-                <th class="w-8">م</th>
+                <th class="w-7">م</th>
                 <th>الممارسات</th>
-                <th class="w-28">الدرجة/ التقدير**</th>
+                <th class="w-24">الدرجة/ التقدير**</th>
                 <th class="w-1/3">الملاحظات</th>
               </tr>
             </thead>
@@ -1009,8 +1030,8 @@
           <table class="doc-table">
             <thead>
               <tr>
-                <th class="w-8">م</th>
-                <th class="w-24">الجدارة</th>
+                <th class="w-7">م</th>
+                <th class="w-20">الجدارة</th>
                 <th>معناها</th>
                 <th class="w-1/3">ملاحظات</th>
               </tr>
@@ -1019,25 +1040,25 @@
               <tr>
                 <td class="text-center font-bold">1</td>
                 <td class="font-bold text-center">المسؤولية</td>
-                <td class="text-[9.5px]">القدرة على تحمل المسؤولية الفردية لتحقيق الأهداف بالجودة المطلوبة وفي الوقت المحدد.</td>
+                <td class="text-[9px]">القدرة على تحمل المسؤولية الفردية لتحقيق الأهداف بالجودة المطلوبة وفي الوقت المحدد.</td>
                 <td id="pdf-comp-1"></td>
               </tr>
               <tr>
                 <td class="text-center font-bold">2</td>
                 <td class="font-bold text-center">العمل الجماعي</td>
-                <td class="text-[9.5px]">القدرة على العمل بشكل جماعي وبروح الفريق والمحافظة على علاقات جيدة داخل وخارج الوحدة التنظيمية من أجل تحقيق الأهداف المشتركة.</td>
+                <td class="text-[9px]">القدرة على العمل بشكل جماعي وبروح الفريق والمحافظة على علاقات جيدة داخل وخارج الوحدة التنظيمية.</td>
                 <td id="pdf-comp-2"></td>
               </tr>
               <tr>
                 <td class="text-center font-bold">3</td>
                 <td class="font-bold text-center">المرونة للتغيير</td>
-                <td class="text-[9.5px]">القدرة على التكيف والعمل بشكل فعّال في مختلف الظروف، وفهم وجهات النظر المختلفة، وقبول التغيير في متطلبات العمل.</td>
+                <td class="text-[9px]">القدرة على التكيف والعمل بشكل فعّال في مختلف الظروف، وفهم وجهات النظر المختلفة.</td>
                 <td id="pdf-comp-3"></td>
               </tr>
               <tr>
                 <td class="text-center font-bold">4</td>
                 <td class="font-bold text-center">المبادرة</td>
-                <td class="text-[9.5px]">القدرة على إظهار الحرص الكافي لتحقيق أهداف العمل، والرغبة في إنجاز مهام إضافية تخدم مصلحة العمل، دون أن تتم مطالبته بذلك، وتقديم أفكار ومقترحات جديدة نابعة من الرغبة في التحسين والتطوير.</td>
+                <td class="text-[9px]">القدرة على إظهار الحرص الكافي، والرغبة في إنجاز مهام إضافية تخدم مصلحة العمل وتقديم أفكار جديدة.</td>
                 <td id="pdf-comp-4"></td>
               </tr>
             </tbody>
@@ -1062,25 +1083,25 @@
             </tr>
           </table>
 
-          <table class="doc-table mt-3" style="border:none;">
+          <table class="doc-table mt-1.5" style="border:none;">
             <tr style="border:none;">
               <td style="border:none; width:50%; text-align:center;">
-                <p class="font-bold text-xs">مقدم/ة خدمات دعم التميز المدرسي</p>
-                <p id="pdf-footer-provider" class="font-semibold text-xs mt-1"></p>
-                <div class="h-12 flex items-center justify-center">
-                  <span id="pdf-provider-status-display" class="text-slate-400 italic text-[10.5px]">[تم الاعتماد والتسليم إلكترونياً]</span>
+                <p class="font-bold text-[10.5px]">مقدم/ة خدمات دعم التميز المدرسي</p>
+                <p id="pdf-footer-provider" class="font-semibold text-[10.5px] mt-0.5"></p>
+                <div id="pdf-provider-sig-container" class="h-10 flex items-center justify-center">
+                  <span id="pdf-provider-status-display" class="text-slate-400 italic text-[10px]">[بانتظار التوقيع والاعتماد]</span>
                 </div>
               </td>
               <td style="border:none; width:50%; text-align:center;">
-                <p class="font-bold text-xs">مشرف/ـة الفريق التنفيذي</p>
-                <p id="pdf-footer-member" class="font-bold text-xs mt-1"></p>
-                <div class="h-12 flex items-center justify-center">
-                  <img id="pdf-signature-img" src="" alt="التوقيع الإلكتروني" class="max-h-11 object-contain">
+                <p class="font-bold text-[10.5px]">مشرف/ـة الفريق التنفيذي</p>
+                <p id="pdf-footer-member" class="font-bold text-[10.5px] mt-0.5"></p>
+                <div class="h-10 flex items-center justify-center">
+                  <img id="pdf-signature-img" src="" alt="التوقيع الإلكتروني" class="max-h-9 object-contain">
                 </div>
               </td>
             </tr>
           </table>
-          <p class="text-[9px] text-center mt-0.5 text-slate-500">** ( 3: نفذ بدرجة عالية | 2: نفذ بدرجة متوسطة | 1: نفذ بدرجة منخفضة )</p>
+          <p class="text-[8.5px] text-center mt-0.5 text-slate-500">** ( 3: نفذ بدرجة عالية | 2: نفذ بدرجة متوسطة | 1: نفذ بدرجة منخفضة )</p>
         </div>
       </section>
     </main>
@@ -1141,7 +1162,7 @@
     </div>
   </div>
 
-  <!-- نافذة توقيع مقدم خدمات الدعم الإلكتروني المباشر وحفظ الاستمارة -->
+  <!-- نافذة توقيع مقدم خدمات الدعم الإلكتروني المباشر -->
   <div id="provider-sign-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
       <div class="text-center mb-4">
@@ -1163,7 +1184,7 @@
         <div class="flex justify-end gap-2 pt-2 border-t">
           <button onclick="closeProviderSignModal()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">إلغاء</button>
           <button onclick="saveProviderSignatureAndPrint()" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs shadow flex items-center gap-1.5">
-            <i class="fa-solid fa-check"></i> حفظ الاعتماد وتصدير PDF
+            <i class="fa-solid fa-check"></i> اعتماد وحفظ وتصدير PDF
           </button>
         </div>
       </div>
@@ -1171,6 +1192,23 @@
   </div>
 
   <script>
+    // الدوال البرمجية الآمنة لترميز وفك تشفير الرابط باللغة العربية
+    function utf8ToBase64(str) {
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode('0x' + p1);
+      }));
+    }
+
+    function base64ToUtf8(str) {
+      try {
+        return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+      } catch(e) {
+        return decodeURIComponent(escape(atob(str)));
+      }
+    }
+
     const VISIT_SCHEDULE = {"الأسبوع الثاني": {"الأحد": "24 ربيع الأول 1448 هـ", "الإثنين": "25 ربيع الأول 1448 هـ", "الثلاثاء": "26 ربيع الأول 1448 هـ", "الأربعاء": "27 ربيع الأول 1448 هـ", "الخميس": "28 ربيع الأول 1448 هـ"}, "الأسبوع الثالث": {"الأحد": "2 ربيع الثاني 1448 هـ", "الإثنين": "3 ربيع الثاني 1448 هـ", "الثلاثاء": "4 ربيع الثاني 1448 هـ", "الأربعاء": "5 ربيع الثاني 1448 هـ", "الخميس": "6 ربيع الثاني 1448 هـ"}, "الأسبوع الرابع": {"الأحد": "9 ربيع الثاني 1448 هـ", "الإثنين": "10 ربيع الثاني 1448 هـ", "الثلاثاء": "11 ربيع الثاني 1448 هـ", "الأربعاء": "12 ربيع الثاني 1448 هـ", "الخميس": "13 ربيع الثاني 1448 هـ"}, "الأسبوع الخامس": {"الأحد": "16 ربيع الثاني 1448 هـ", "الإثنين": "17 ربيع الثاني 1448 هـ", "الثلاثاء": "18 ربيع الثاني 1448 هـ", "الأربعاء": "19 ربيع الثاني 1448 هـ", "الخميس": "20 ربيع الثاني 1448 هـ"}, "الأسبوع السادس": {"الأحد": "23 ربيع الثاني 1448 هـ", "الإثنين": "24 ربيع الثاني 1448 هـ", "الثلاثاء": "25 ربيع الثاني 1448 هـ", "الأربعاء": "26 ربيع الثاني 1448 هـ", "الخميس": "27 ربيع الثاني 1448 هـ"}, "الأسبوع السابع": {"الأحد": "30 ربيع الثاني 1448 هـ", "الإثنين": "1 جمادى الأولى 1448 هـ", "الثلاثاء": "2 جمادى الأولى 1448 هـ", "الأربعاء": "3 جمادى الأولى 1448 هـ", "الخميس": "4 جمادى الأولى 1448 هـ"}, "الأسبوع الثامن": {"الأحد": "7 جمادى الأولى 1448 هـ", "الإثنين": "8 جمادى الأولى 1448 هـ", "الثلاثاء": "9 جمادى الأولى 1448 هـ", "الأربعاء": "10 جمادى الأولى 1448 هـ", "الخميس": "11 جمادى الأولى 1448 هـ"}, "الأسبوع التاسع": {"الأحد": "14 جمادى الأولى 1448 هـ", "الإثنين": "15 جمادى الأولى 1448 هـ", "الثلاثاء": "16 جمادى الأولى 1448 هـ", "الأربعاء": "17 جمادى الأولى 1448 هـ", "الخميس": "18 جمادى الأولى 1448 هـ"}, "الأسبوع العاشر": {"الأحد": "21 جمادى الأولى 1448 هـ", "الإثنين": "22 جمادى الأولى 1448 هـ", "الثلاثاء": "23 جمادى الأولى 1448 هـ", "الأربعاء": "24 جمادى الأولى 1448 هـ", "الخميس": "25 جمادى الأولى 1448 هـ"}, "الأسبوع الحادي عشر": {"الأحد": "28 جمادى الأولى 1448 هـ", "الإثنين": "29 جمادى الأولى 1448 هـ", "الثلاثاء": "30 جمادى الأولى 1448 هـ", "الأربعاء": "1 جمادى الثانية 1448 هـ", "الخميس": "2 جمادى الثانية 1448 هـ"}, "الأسبوع الثاني عشر": {"الأحد": "5 جمادى الثانية 1448 هـ", "الإثنين": "6 جمادى الثانية 1448 هـ", "الثلاثاء": "7 جمادى الثانية 1448 هـ", "الأربعاء": "8 جمادى الثانية 1448 هـ", "الخميس": "9 جمادى الثانية 1448 هـ"}, "الأسبوع الثالث عشر": {"الأحد": "19 جمادى الثانية 1448 هـ", "الإثنين": "20 جمادى الثانية 1448 هـ", "الثلاثاء": "21 جمادى الثانية 1448 هـ", "الأربعاء": "22 جمادى الثانية 1448 هـ", "الخميس": "23 جمادى الثانية 1448 هـ"}, "الأسبوع الرابع عشر": {"الأحد": "26 جمادى الثانية 1448 هـ", "الإثنين": "27 جمادى الثانية 1448 هـ", "الثلاثاء": "28 جمادى الثانية 1448 هـ", "الأربعاء": "29 جمادى الثانية 1448 هـ", "الخميس": "1 رجب 1448 هـ"}, "الأسبوع الخامس عشر": {"الأحد": "4 رجب 1448 هـ", "الإثنين": "5 رجب 1448 هـ", "الثلاثاء": "6 رجب 1448 هـ", "الأربعاء": "7 رجب 1448 هـ", "الخميس": "8 رجب 1448 هـ"}, "الأسبوع السادس عشر": {"الأحد": "11 رجب 1448 هـ", "الإثنين": "12 رجب 1448 هـ", "الثلاثاء": "13 رجب 1448 هـ", "الأربعاء": "14 رجب 1448 هـ", "الخميس": "15 رجب 1448 هـ"}, "الأسبوع السابع عشر": {"الأحد": "18 رجب 1448 هـ", "الإثنين": "19 رجب 1448 هـ", "الثلاثاء": "20 رجب 1448 هـ", "الأربعاء": "21 رجب 1448 هـ", "الخميس": "22 رجب 1448 هـ"}, "الأسبوع الثامن عشر": {"الأحد": "25 رجب 1448 هـ", "الإثنين": "26 رجب 1448 هـ", "الثلاثاء": "27 رجب 1448 هـ", "الأربعاء": "28 رجب 1448 هـ", "الخميس": "29 رجب 1448 هـ"}};
 
     function updateVisitDateFromSchedule() {
@@ -1182,7 +1220,7 @@
     }
 
     const SCHOOLS_DATA = [{"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية الإمام أبي حنيفة النعمان", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "أكرم ياسين أحمد الشريف", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية شوران", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "جايز دغيمان سميحان السليمي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية الإمام احمد بن حنبل", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد بن صالح بن يعقوب عفيفي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية السعودية", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عادل بن سالم بن عوض حسينون", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "الإمام يعقوب بن اسحاق الحضرمي لتحفيظ القرآن الكريم", "gender": "بنين", "stage": "عام", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية الفهدية", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "المنذر بن سعيد (غراب)", "gender": "بنين", "stage": "عام", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "عادل بن سالم بن عوض حسينون", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية إياس بن البكير", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد عبدالكريم مراد رحمة الله", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانويةالأمير عبدالمحسن بن عبدالعزيز - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية عقيل بن أبي طالب", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية معاذ بن الحارث", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة عمر بن الخطاب", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "أكرم ياسين أحمد الشريف", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة سلمة بن الأكوع (غراب)", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "جايز دغيمان سميحان السليمي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية الضميرية - مسارات (الضميرية)", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "علي ناجي عبدالحميد طرابيشي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية طابة - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "علي ناجي عبدالحميد طرابيشي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة ربيعة بن الحارث", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد بن صالح بن يعقوب عفيفي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية عطاء بن يسار (الضميرية)", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد بن صالح بن يعقوب عفيفي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية رافع بن مالك", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد عبدالكريم مراد رحمة الله", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطةالضميرية (الضميرية)", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "التهيئة", "has_provider": "نعم", "provider_name": "ناصر بن حسن بن ناصر القحطاني", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة أبان بن سعيد بن العاص", "gender": "بنين", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "ناصر بن حسن بن ناصر القحطاني", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية الأقصى - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "ناصر بن حسن بن ناصر القحطاني", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة الحسن البصري", "gender": "بنين", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة المنذري (الحجرية)", "gender": "بنين", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية زيد بن حارثة", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية ابن حجر العسقلاني (الحجرية)", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية عبدالله بن الحارث الأنصاري", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية الإمام الشاطبي لتحفيظ القران الكريم", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "بندر ابراهيم محمد مرعي الشريف", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "متوسطة ابن هشام", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "بندر ابراهيم محمد مرعي الشريف", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية عمرو بن سهل بن الحارث", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "تركي سليمان سالم الأحمدي", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ثانوية الملك عبدالله بن عبدالعزيز - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "تركي سليمان سالم الأحمدي", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية غالب بن عبدالله الكناني", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "جعفر عبدالله علي عواجي", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "متوسطة عمرو بن مالك الأوسي", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "جعفر عبدالله علي عواجي", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية زيد الخير", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "حسين عبدالسلام هاشم حافظ", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ثانوية الأمير محمد بن عبدالعزيز - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "حسين عبدالسلام هاشم حافظ", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية الماوردي", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "عبد الرحمن علي عبد الرحمن الشهري", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "متوسطة الأرقم بن أبي الأرقم", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عبد الرحمن علي عبد الرحمن الشهري", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية المسبعة", "gender": "بنين", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "عبد الرحمن علي عبد الرحمن الشهري", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ثانوية الأنصار - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "عبدالله ابراهيم عبدالقادر صديق", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "متوسطة عثمان بن أبي العاص", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عبدالله عوض شحاد الرشيدي", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية وادي بطحان", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "فراس محسن محمد الحربي", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "متوسطة عبدالله بن مظعون", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "فراس محسن محمد الحربي", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "أجنادين", "gender": "بنين", "stage": "عام", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "عبدالله ابراهيم عبدالقادر صديق", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "متوسطة عمرو بن عثمان القرشي", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عبدالله ابراهيم عبدالقادر صديق", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "الإمام الشوكاني لتحفيظ القرآن الكريم", "gender": "بنين", "stage": "عام", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "متوسطة أبي بكر الصديق", "gender": "بنين", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية الإمام الدوري لتحفيظ القرآن الكريم", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية الأحنف بن قيس التميمي", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية الفيصلية", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة الخوارزمي", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة عبدالله بن عثمان بن عفان", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "بندر بن عبدالكريم بن حجي الرويثي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ابتدائية أبي حيان التوحيدي (حزرة)", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "اسحاق بن عمر بن محمود عبدالعال", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة كعب بن عمرو الخزرجي", "gender": "بنين", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "اسحاق بن عمر بن محمود عبدالعال", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة خبيب بن إساف", "gender": "بنين", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "بندر بن عبدالكريم بن حجي الرويثي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية خالد بن الوليد - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة الخندق", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سلطان عواض عوض الجابري الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية العقيق - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سلطان عواض عوض الجابري الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ابتدائية أوس بن ثابت الأنصاري", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عبدالرحمن شلوه سعيدان الشاماني", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة المنذر بن عمرو الأنصاري", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "علي عبدالهادي محمد الكناني", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة الشيخ محمد بن ابراهيم", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "فهد علي سعد القحطاني", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية أبي سفيان بن حرب - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "فهد علي سعد القحطاني", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية النهروان - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "فهد عويض عوض المطيري", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ابتدائيةالزبير بن العوام", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "عبد المنعم عبد الحفيظ محمد الأحمدي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ابتدائية زيد بن سهل الأنصاري", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "فهد عويض عوض المطيري", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية هارون الرشيد - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عبدالرحمن شلوه سعيدان الشاماني", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة الإمام نافع الليثي لتحفيظ القران الكريم", "gender": "بنين", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية الإمام عاصم بن أبي النجود - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية الأمير نايف بن عبدالعزيز - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية طيبة", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التميز", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية صفوان بن أمية - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "بندر بن عبدالكريم بن حجي الرويثي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ابتدائية أسيد بن حضير", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عبدالله عوض شحاد الرشيدي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة شريح القاضي", "gender": "بنين", "stage": "متوسط", "overall_level": "", "outcomes_level": "", "has_provider": "نعم", "provider_name": "عبدالله عوض شحاد الرشيدي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة أبي بن ثابت الأنصاري", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة عمرو بن سعد الأنصاري (حزرة)", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "اسحاق بن عمر بن محمود عبدالعال", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الرابعة والسبعون بالمدينة(طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "بينة حسن ناصر القحطاني", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الإبتدائية السادسة والاربعون (طفولة المبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "بينة حسن ناصر القحطاني", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الثامنه والاربعون طفوله مبكره", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "بينة حسن ناصر القحطاني", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "المتوسطة الرابعة والسبعون", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "فيحاء خليفه معيوف المطيري", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الثانوية التاسعة عشرة بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "أريج بكر إبراهيم الخضير", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الثالثة لتحفيظ القران الكريم بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "فيحاء خليفه معيوف المطيري", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الرابعة عشرة بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "وداد دخيل الله سليمان اللقماني", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الثانوية العاشرة بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "وداد دخيل الله سليمان اللقماني", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائيه التاسعه والأربعون طفولة مبكره", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "وداد دخيل الله سليمان اللقماني", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الثانية بعد المائة والطفولة المبكرة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الأولى (طفولة مبكرة) (الحجرية)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "أميره عتيق الله عايد اليوبي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الثانوية الخامسة بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "جواهر شكري مفرّج بطيش", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة الأولى لتحفيظ القرآن الكريم بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "جواهر شكري مفرّج بطيش", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائية الأولى لتحفيظ القرآن الكريم  بالمدينة (طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "جواهر شكري مفرّج بطيش", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "ثانوية مارية القبطية - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "وردة عبد الله مطلق المطيري", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائيه السادسه بعد المائه طفوله مبكره", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "منى مستور فراج الرحيلي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة السابعة والعشرون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "وردة عبد الله مطلق المطيري", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الأبتدائيه التاسعة لتحفيظ القران الكريم", "gender": "بنات", "stage": "عام", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "فاطمة محروس عبد الحكيم الأنصاري", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الثانوية الثالثة بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "فاطمة محروس عبد الحكيم الأنصاري", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة السادسة والخمسون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "تماضر محمد  عمر طه", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الأولى (الضميرية )", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "هياء عبد الله محمد المرعب", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "المتوسطة الأولى (حزرة)", "gender": "بنات", "stage": "متوسط", "overall_level": "الانطلاق", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "فيحاء خليفه معيوف المطيري", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "ابتدائية ام الدرداء( طفولة مبكرة )", "gender": "بنات", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "إيمان بنت محمد سعيد بن فالح المغامسي", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الرابعة والسبعون بالمدينة(طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "تماضر بهجت محمود جنيد", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الرابعة والخمسون بالمدينة (طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "مها محمد عوض القحطاني", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الثالثة عشر بعد المائة بالمدينة (طفولة مبكرة )", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "حنان بنت علي بن محمد الشهري", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الثانية والعشرون بعد المائة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "منيرة علي محسن الصقيري الفهيدي", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "المتوسطة الثامنة والستون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "ريم تنيضب عواده الفايدي", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الثانوية الخامسة والثلاثون بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "ريم تنيضب عواده الفايدي", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "متوسطة الخنساء بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "المتوسطة الرابعة والسبعون", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "أريج بكر إبراهيم الخضير", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الأولى (طفولة مبكرة) حزرة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "فيحاء خليفه معيوف المطيري", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "المتوسطة التاسعة والخمسون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الثانوية السادسة عشر بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "عبير صالح أحمد شرقاوي", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "المتوسطة الرابعة بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "سميه بلقاسم الطيب سليماني", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائية السادسة عشربالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "سوميه سليمان محمد النزهة الزغيبي", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "إبتدائية خديجة بنت الزبير بن العوام (طفولة مبكرة )", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الثالثة و الثلاثون بعد المائة بالمدينة طفولة مبكره", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "إيمان بنت محمد سعيد بن فالح المغامسي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائيه الاولى (طفوله مبكره) (المسبعة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "نسرين عبد الله حسن الحازمي", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الحادية والثلاثون بعد المائة (طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "تماضر بهجت محمود جنيد", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الخامسة والأربعون بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الثانوية الثالثة والأربعون بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التميز", "outcomes_level": "التميز", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الثانوية الثامنة بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التميز", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الثانوية السادسة والأربعون بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "المتوسطة التاسعة عشرة بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التميز", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "ابتدائية أروى بنت أبي العاص (طفولة مبكرة )", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "هدى علي عبد الله الغامدي", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الطفولة المبكرة الملحقة بالروضة الثانية بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "صفاء حسن سالم الأحمدي", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الطفولة المبكرة الملحقة بالروضة الثانية بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "نجله صالح يعقوب عفيفي", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية التاسعة والعشرون بعد المائة بالمدينه", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "رنا علي حمادي الحربي", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "المتوسطة الثانية والسبعون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "رانيه عبد الكريم عبد القادر المدني", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الطفولة المبكرة الملحقة بالروضة الحادية عشر بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "عائشة عبد الله جابر الشمراني", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الأولى (طفولة مبكرة) (غراب)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "رانيه عبد الكريم عبد القادر المدني", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "إبتدائية حطين بالمدينة (طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "هياء عبد الله محمد المرعب", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "المتوسطة السادسة والأربعون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائية الأولى لتحفيظ القرآن الكريم  بالمدينة (طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "منى مستور فراج الرحيلي", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الخامسة والخمسون", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الثلاثون بالمدينة (طفولة مبكرة )", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التميز", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الإبتدائية الثانية والثمانون بالمدينة", "gender": "بنات", "stage": "عام", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الرابعة والعشرون بعد المائة (طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائيه التاسعة والستون (طفوله مبكره)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "صفاء حسن سالم الأحمدي", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الرابعة والتسعون بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية السابعة والتسعون طفولة مبكرة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الثانية والسبعون بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الثامنة ( طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "المتوسطة الأولى (الحجرية)", "gender": "بنات", "stage": "متوسط", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "أميره عتيق الله عايد اليوبي", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "المتوسطه الثانية والستون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "أميره عتيق الله عايد اليوبي", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "المتوسطه الثانية والستون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "منيرة عبد العزيز محمد هوسة", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "المتوسطة الثالثة و السبعون  بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "سلافه معتوق أحمد حلا", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "المتوسطة السابعة بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "المتوسطة الحادية والخمسون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الثانوية الأولى بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الثانوية الثامنة والعشرون", "gender": "بنات", "stage": "ثانوي", "overall_level": "التميز", "outcomes_level": "التميز", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "ثانوية الحكمة بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التميز", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الثانوية الرابعة بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التميز", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائية المائة بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "غادة زبن عبيد الرحيلي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائية الخامسة عشر بعد المائة (طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "سعاد محمد علي مبارك الردادي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائية الخامسة عشر بعد المائة (طفولة مبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "لا يوجد تصنيف", "outcomes_level": "لا يوجد تصنيف", "has_provider": "نعم", "provider_name": "سوميه سليمان محمد النزهة الزغيبي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائية الثانية و الثلاثون بالمدينة طفولة مبكرة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "الانطلاق", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "نسرين عبد الله حسن الحازمي", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائيه الخمسون (طفوله مبكره)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائبة الرابعة والثمانون (طفولة المبكرة)", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائية الثامنة بعد المائة للطفولة المبكرة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "ابتدائية سكنية بنت الحسين بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الإبتدائية الحادية والخمسون بالمدينة", "gender": "بنات", "stage": "عام", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "ابتدائية مريم بنت إياس بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة الرابعة لتحفيظ القرآن الكريم بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة الرابعة والعشرون", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "سعاد محمد علي مبارك الردادي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة العاشرة بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "متوسطة ام عمار بن ياسر بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "متوسطة أروى بنت أنيس بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة الخامسة والعشرون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة الاولى (لضميرية)", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "فايزة معيض شلوه الحربي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الثانوية الأولى (الضميرية )", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "فايزة معيض شلوه الحربي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "ثانوية البيان", "gender": "بنات", "stage": "ثانوي", "overall_level": "التميز", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الثانوية الخامسة والأربعون بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التميز", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "ثانوية أم المؤمنين سودة بنت زمعة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "متوسطة أم حكيم بنت الحارث بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "نعم", "provider_name": "وردة عبد الله مطلق المطيري", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة الثالثة والاربعون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "مريم حمدي بريك الجابري", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "المتوسطة الثالثة والاربعون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "الانطلاق", "has_provider": "نعم", "provider_name": "فايزة معيض شلوه الحربي", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الابتدائية العاشرة بعد المائة للطفولة المبكرة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "المتوسطة السادسة والأربعون بالمدينة", "gender": "بنات", "stage": "متوسط", "overall_level": "التقدم", "outcomes_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}];
-
+    
     let EXEC_MEMBERS = JSON.parse(localStorage.getItem("exec_members_config")) || {
       "د. عائشة بنت جميعان الجهني": { pass: "123456", signature: "", role: "leader" },
       "صالح بن عوض فاضي الحربي": { pass: "123456", signature: "", role: "member" },
@@ -1224,7 +1262,7 @@
       document.getElementById("login-modal").classList.add("hidden");
       document.getElementById("main-app").classList.remove("hidden");
       document.getElementById("current-user-display").innerText = currentUser;
-
+      
       const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
       const navAnalyticsBtn = document.getElementById("btn-nav-analytics");
 
@@ -1286,26 +1324,28 @@
         };
       }
 
-      function start(e) { e.preventDefault(); isDrawing = true; const pos = getPos(e); padCtx.beginPath(); padCtx.moveTo(pos.x, pos.y); }
-      function move(e) { if (!isDrawing) return; e.preventDefault(); const pos = getPos(e); padCtx.lineTo(pos.x, pos.y); padCtx.stroke(); }
-      function end() { if (!isDrawing) return; isDrawing = false; tempNewSignature = padCanvas.toDataURL("image/png"); document.getElementById("settings-sig-preview").src = tempNewSignature; }
-
-      padCanvas.onmousedown = start;
-      padCanvas.onmousemove = move;
-      padCanvas.onmouseup = end;
-      padCanvas.ontouchstart = start;
-      padCanvas.ontouchmove = move;
-      padCanvas.ontouchend = end;
+      padCanvas.onmousedown = (e) => { e.preventDefault(); isDrawing = true; const p = getPos(e); padCtx.beginPath(); padCtx.moveTo(p.x, p.y); };
+      padCanvas.onmousemove = (e) => { if (!isDrawing) return; e.preventDefault(); const p = getPos(e); padCtx.lineTo(p.x, p.y); padCtx.stroke(); };
+      padCanvas.onmouseup = () => { isDrawing = false; };
+      padCanvas.ontouchstart = (e) => { e.preventDefault(); isDrawing = true; const p = getPos(e); padCtx.beginPath(); padCtx.moveTo(p.x, p.y); };
+      padCanvas.ontouchmove = (e) => { if (!isDrawing) return; e.preventDefault(); const p = getPos(e); padCtx.lineTo(p.x, p.y); padCtx.stroke(); };
+      padCanvas.ontouchend = () => { isDrawing = false; };
     }
 
     function clearSignaturePad() {
-      if (padCtx && padCanvas) padCtx.clearRect(0, 0, padCanvas.width, padCanvas.height);
+      if (padCtx && padCanvas) {
+        padCtx.clearRect(0, 0, padCanvas.width, padCanvas.height);
+      }
     }
 
     function saveUserSettings() {
       const newPass = document.getElementById("settings-new-pass").value.trim();
-      if (newPass) EXEC_MEMBERS[currentUser].pass = newPass;
-      if (tempNewSignature) EXEC_MEMBERS[currentUser].signature = tempNewSignature;
+      if (newPass) {
+        EXEC_MEMBERS[currentUser].pass = newPass;
+      }
+      if (tempNewSignature) {
+        EXEC_MEMBERS[currentUser].signature = tempNewSignature;
+      }
       localStorage.setItem("exec_members_config", JSON.stringify(EXEC_MEMBERS));
       closeSettingsModal();
       alert("تم حفظ التوقيع وبيانات الحساب بنجاح!");
@@ -1317,8 +1357,15 @@
       tbody.innerHTML = "";
 
       const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-      const mySchools = isLeader ? SCHOOLS_DATA : SCHOOLS_DATA.filter(s => s.member.trim() === currentUser.trim());
-      const userReports = isLeader ? reports : reports.filter(r => r.author && r.author.trim() === currentUser.trim());
+      
+      const mySchools = isLeader 
+        ? SCHOOLS_DATA 
+        : SCHOOLS_DATA.filter(s => s.member && s.member.trim() === currentUser.trim());
+
+      const userReports = isLeader 
+        ? reports 
+        : reports.filter(r => r.author && r.author.trim() === currentUser.trim());
+
       let visitedCount = 0;
 
       mySchools.forEach((school, index) => {
@@ -1343,16 +1390,25 @@
             <div>${school.name}</div>
             <div class="text-[10px] text-slate-400 font-normal mt-0.5">${school.gender} - قطاع ${school.sector}</div>
           </td>
-          <td class="p-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-semibold text-[11px]">${school.stage}</span></td>
+          <td class="p-3">
+            <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-semibold text-[11px]">${school.stage}</span>
+          </td>
           <td class="p-3 font-medium text-slate-600">
             ${school.has_provider === 'نعم' && school.provider_name ? `<span class="text-emerald-700 font-bold">${school.provider_name}</span>` : '<span class="text-amber-600 font-semibold italic">بدون مقدم دعم</span>'}
           </td>
-          <td class="p-3 text-center"><span class="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded text-[11px]">${school.overall_level || 'لم يصدر'}</span></td>
-          <td class="p-3 text-center"><span class="inline-block px-3 py-0.5 rounded-md font-black text-sm ${count > 0 ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-100 text-slate-400'}">${count}</span></td>
+          <td class="p-3 text-center">
+            <span class="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded text-[11px]">${school.overall_level || 'لم يصدر'}</span>
+          </td>
+          <td class="p-3 text-center">
+            <span class="inline-block px-3 py-0.5 rounded-md font-black text-sm ${count > 0 ? 'bg-indigo-100 text-indigo-800' : 'bg-slate-100 text-slate-400'}">
+              ${count}
+            </span>
+          </td>
           <td class="p-3 text-center">${statusBadge}</td>
           <td class="p-3 text-center">
             <button onclick="quickStartReportForSchool('${school.name}')" title="إنشاء تقرير فوري لهذه المدرسة" class="px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1 shadow-sm mx-auto transition">
-              <i class="fa-solid fa-file-circle-plus"></i><span>إنشاء تقرير</span>
+              <i class="fa-solid fa-file-circle-plus"></i>
+              <span>إنشاء تقرير</span>
             </button>
           </td>
         `;
@@ -1367,9 +1423,11 @@
       document.getElementById("member-kpi-reports").innerText = userReports.length;
       document.getElementById("member-kpi-visited").innerText = visitedCount;
       document.getElementById("member-kpi-pending").innerText = pendingCount >= 0 ? pendingCount : 0;
-
+      
       const badge = document.getElementById("assigned-coverage-badge");
-      if (badge) badge.innerText = `${coveragePercentage}% نسبة تغطية المدارس (${visitedCount} من ${assignedCount})`;
+      if (badge) {
+        badge.innerText = `${coveragePercentage}% نسبة تغطية المدارس (${visitedCount} من ${assignedCount})`;
+      }
     }
 
     function quickStartReportForSchool(schoolName) {
@@ -1380,328 +1438,44 @@
       onSchoolSelected(schoolName);
     }
 
-    function renderAnalyticsDashboard() {
-      const stageFilter = document.getElementById("analytics-filter-stage")?.value || "الكل";
-      const levelFilter = document.getElementById("analytics-filter-level")?.value || "الكل";
-
-      let filteredSchools = SCHOOLS_DATA;
-      if (stageFilter !== "الكل") {
-        filteredSchools = filteredSchools.filter(s => s.stage.includes(stageFilter) || (stageFilter === "ابتدائي" && s.name.includes("طفول")));
-      }
-      if (levelFilter !== "الكل") {
-        if (levelFilter === "التهيئة") {
-          filteredSchools = filteredSchools.filter(s => s.overall_level.includes("التهيئة") || !s.overall_level || s.overall_level.includes("لا يوجد"));
-        } else {
-          filteredSchools = filteredSchools.filter(s => s.overall_level.includes(levelFilter));
-        }
-      }
-
-      const totalSchools = filteredSchools.length;
-      const totalReports = reports.length;
-      const providersSet = new Set();
-      filteredSchools.forEach(s => {
-        if (s.provider_name && s.provider_name.trim() && s.has_provider === "نعم") providersSet.add(s.provider_name.trim());
-      });
-
-      document.getElementById("stat-total-schools").innerText = totalSchools;
-      document.getElementById("stat-total-reports").innerText = totalReports;
-      document.getElementById("stat-total-providers").innerText = providersSet.size;
-
-      const membersList = [
-        { name: "أنس بن ناجي رشيد الرحيلي", gender: "بنين" },
-        { name: "شكري بن أحمد خجا بخاري", gender: "بنين" },
-        { name: "صالح بن عوض فاضي الحربي", gender: "بنين" },
-        { name: "بدرية بنت علي حسين الفريدي", gender: "بنات" },
-        { name: "ريم بنت عبدالله حمد السحيمي", gender: "بنات" },
-        { name: "هدى بنت نويع عائض الحربي", gender: "بنات" }
-      ];
-
-      const memberNames = [];
-      const reportsCountPerMember = [];
-      const assignedCountPerMember = [];
-      const tbody = document.getElementById("table-exec-summary-body");
-      tbody.innerHTML = "";
-
-      membersList.forEach(m => {
-        const assignedSchools = filteredSchools.filter(s => s.member.trim() === m.name.trim());
-        const withProv = assignedSchools.filter(s => s.has_provider === "نعم").length;
-        const withoutProv = assignedSchools.filter(s => s.has_provider !== "نعم").length;
-        const memberReports = reports.filter(r => r.author && r.author.trim() === m.name.trim());
-        const perc = assignedSchools.length > 0 ? Math.round((memberReports.length / assignedSchools.length) * 100) : 0;
-
-        memberNames.push(m.name.split(" ")[0] + " " + m.name.split(" ")[m.name.split(" ").length - 1]);
-        reportsCountPerMember.push(memberReports.length);
-        assignedCountPerMember.push(assignedSchools.length);
-
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 border-b";
-        tr.innerHTML = `
-          <td class="p-3 font-bold text-slate-800">${m.name}</td>
-          <td class="p-3">${m.gender}</td>
-          <td class="p-3 text-center font-bold">${assignedSchools.length}</td>
-          <td class="p-3 text-center text-emerald-700 font-semibold">${withProv}</td>
-          <td class="p-3 text-center text-amber-700 font-semibold">${withoutProv}</td>
-          <td class="p-3 text-center font-black text-indigo-700">${memberReports.length}</td>
-          <td class="p-3 text-center">
-            <div class="flex items-center justify-center gap-2">
-              <span class="font-bold">${perc}%</span>
-              <div class="w-16 bg-slate-200 rounded-full h-2"><div class="bg-emerald-600 h-2 rounded-full" style="width: ${perc > 100 ? 100 : perc}%"></div></div>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      const ctx1 = document.getElementById('chart-members-reports').getContext('2d');
-      if (chartMembers) chartMembers.destroy();
-      chartMembers = new Chart(ctx1, {
-        type: 'bar',
-        data: { labels: memberNames, datasets: [{ label: 'المدارس المسندة', data: assignedCountPerMember, backgroundColor: '#94a3b8', borderRadius: 6 }, { label: 'التقارير المكتملة', data: reportsCountPerMember, backgroundColor: '#4f46e5', borderRadius: 6 }] },
-        options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { position: 'top', rtl: true, labels: { font: { family: 'Cairo' } } } }, scales: { y: { beginAtZero: true } } }
-      });
-
-      let countTakadom = 0, countIntilaq = 0, countTamayuz = 0, countNone = 0;
-      filteredSchools.forEach(s => {
-        if (s.overall_level.includes("التميز")) countTamayuz++;
-        else if (s.overall_level.includes("التقدم")) countTakadom++;
-        else if (s.overall_level.includes("الانطلاق")) countIntilaq++;
-        else countNone++;
-      });
-
-      const ctx2 = document.getElementById('chart-schools-levels').getContext('2d');
-      if (chartLevels) chartLevels.destroy();
-      chartLevels = new Chart(ctx2, {
-        type: 'doughnut',
-        data: { labels: ['التميز', 'التقدم', 'الانطلاق', 'تهيئة / أخرى'], datasets: [{ data: [countTamayuz, countTakadom, countIntilaq, countNone], backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#cbd5e1'] }] },
-        options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { position: 'bottom', rtl: true, labels: { font: { family: 'Cairo' } } } } }
-      });
-    }
-
-    function prepareAndPrintAnalyticsReport() {
-      const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-      if (!isLeader) { alert("هذه الصلاحية متاحة فقط لرئيس الفريق التنفيذي."); return; }
-
-      document.getElementById("stat-doc-id").innerText = "STAT-" + Date.now().toString().substring(6);
-      document.getElementById("stat-doc-date").innerText = new Date().toISOString().split("T")[0];
-      document.getElementById("print-stat-schools").innerText = SCHOOLS_DATA.length;
-      document.getElementById("print-stat-reports").innerText = reports.length;
-
-      const membersList = [
-        { name: "أنس بن ناجي رشيد الرحيلي", gender: "بنين" }, { name: "شكري بن أحمد خجا بخاري", gender: "بنين" }, { name: "صالح بن عوض فاضي الحربي", gender: "بنين" },
-        { name: "بدرية بنت علي حسين الفريدي", gender: "بنات" }, { name: "ريم بنت عبدالله حمد السحيمي", gender: "بنات" }, { name: "هدى بنت نويع عائض الحربي", gender: "بنات" }
-      ];
-
-      const printTbody = document.getElementById("print-table-exec-summary");
-      printTbody.innerHTML = "";
-      membersList.forEach((m, idx) => {
-        const assignedSchools = SCHOOLS_DATA.filter(s => s.member.trim() === m.name.trim());
-        const withProv = assignedSchools.filter(s => s.has_provider === "نعم").length;
-        const withoutProv = assignedSchools.filter(s => s.has_provider !== "نعم").length;
-        const memberReports = reports.filter(r => r.author && r.author.trim() === m.name.trim());
-        const perc = assignedSchools.length > 0 ? Math.round((memberReports.length / assignedSchools.length) * 100) : 0;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td class="text-center font-bold">${idx + 1}</td><td class="font-bold">${m.name}</td><td class="text-center">${m.gender}</td><td class="text-center font-bold">${assignedSchools.length}</td><td class="text-center font-semibold">${withProv}</td><td class="text-center font-semibold">${withoutProv}</td><td class="text-center font-black">${memberReports.length}</td><td class="text-center font-bold">${perc}%</td>`;
-        printTbody.appendChild(tr);
-      });
-
-      if (chartMembers) document.getElementById("print-chart-img-1").src = chartMembers.toBase64Image();
-      if (chartLevels) document.getElementById("print-chart-img-2").src = chartLevels.toBase64Image();
-
-      const leaderSig = EXEC_MEMBERS["د. عائشة بنت جميعان الجهني"]?.signature || "";
-      const sigEl = document.getElementById("stat-leader-signature-img");
-      if (leaderSig) { sigEl.src = leaderSig; sigEl.classList.remove("hidden"); } else { sigEl.classList.add("hidden"); }
-
-      showSection("analytics-print-preview-section");
-    }
-
-    function exportAnalyticsToPdf() {
-      const element = document.getElementById('analytics-report-area');
-      const opt = { margin: [3, 3, 3, 3], filename: `التقرير_الإحصائي_الشامل_لدعم_التميز_قطاع_العوالي.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, allowTaint: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-      html2pdf().set(opt).from(element).save();
-    }
-
-    function populateSchoolSelect() {
-      const select = document.getElementById("auto-school-select");
-      select.innerHTML = '<option value="">-- اختر المدرسة من قائمة إسناد قطاع العوالي --</option>';
-      const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-
-      if (isLeader) {
-        const group = document.createElement("optgroup");
-        group.label = "كافة مدارس قطاع العوالي (إسناد البنين والبنات)";
-        SCHOOLS_DATA.forEach(s => {
-          const opt = document.createElement("option");
-          opt.value = s.name;
-          opt.innerText = `${s.name} (${s.stage} - ${s.gender}) - [المشرف: ${s.member}]`;
-          group.appendChild(opt);
-        });
-        select.appendChild(group);
-      } else {
-        const mySchools = SCHOOLS_DATA.filter(s => s.member.trim() === currentUser.trim());
-        const otherSchools = SCHOOLS_DATA.filter(s => !mySchools.includes(s));
-        if (mySchools.length > 0) {
-          const group = document.createElement("optgroup");
-          group.label = `مدارس مسندة إلى: ${currentUser}`;
-          mySchools.forEach(s => {
-            const opt = document.createElement("option");
-            opt.value = s.name;
-            opt.innerText = `${s.name} (${s.stage} - ${s.gender}) - [مقدم الدعم: ${s.provider_name || 'بدون'}]`;
-            group.appendChild(opt);
-          });
-          select.appendChild(group);
-        }
-        const otherGroup = document.createElement("optgroup");
-        otherGroup.label = "بقية مدارس قطاع العوالي";
-        otherSchools.forEach(s => {
-          const opt = document.createElement("option");
-          opt.value = s.name;
-          opt.innerText = `${s.name} (${s.stage} - ${s.gender}) - [${s.member}]`;
-          otherGroup.appendChild(opt);
-        });
-        select.appendChild(otherGroup);
-      }
-    }
-
-    function onSchoolSelected(schoolName) {
-      if (!schoolName) return;
-      const school = SCHOOLS_DATA.find(s => s.name === schoolName);
-      if (!school) return;
-      document.getElementById("school-name").value = school.name;
-      document.getElementById("school-gender").value = school.gender;
-      document.getElementById("school-stage").value = school.stage;
-      document.getElementById("provider-name").value = school.provider_name || "";
-      document.getElementById("provider-present").value = school.has_provider === "نعم" ? "نعم" : "لا";
-      document.getElementById("overall-level").value = (school.overall_level && school.overall_level !== "لا يوجد تصنيف") ? school.overall_level : "لم يصدر";
-      document.getElementById("eval-type").value = (school.overall_level && school.overall_level !== "لا يوجد تصنيف") ? "خارجي" : "لم يصدر لها تقرير";
-      document.getElementById("outcomes-level").value = (school.outcomes_level && school.outcomes_level !== "لا يوجد تصنيف") ? school.outcomes_level : "لم يصدر";
-    }
-
-    function showSection(sectionId) {
-      const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-      if ((sectionId === 'analytics-section' || sectionId === 'analytics-print-preview-section') && !isLeader) { alert("هذه اللوحة متاحة فقط لرئيس الفريق التنفيذي."); return; }
-
-      document.getElementById("analytics-section").classList.add("hidden");
-      document.getElementById("analytics-print-preview-section").classList.add("hidden");
-      document.getElementById("list-section").classList.add("hidden");
-      document.getElementById("form-section").classList.add("hidden");
-      document.getElementById("preview-section").classList.add("hidden");
-      document.getElementById(sectionId).classList.remove("hidden");
-
-      if (sectionId === 'list-section') {
-        renderReportsTable();
-        renderMemberAssignedSchoolsStats();
-      }
-    }
-
-    document.getElementById("report-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const editId = document.getElementById("edit-id").value;
-      const reportData = {
-        id: editId || 'REP-' + Date.now(),
-        author: currentUser,
-        term: document.getElementById("term").value,
-        academicYear: document.getElementById("academic-year").value,
-        visitNum: document.getElementById("visit-num").value,
-        visitWeek: document.getElementById("visit-week").value,
-        visitDay: document.getElementById("visit-day").value,
-        visitDate: document.getElementById("visit-date").value,
-        schoolName: document.getElementById("school-name").value,
-        schoolStage: document.getElementById("school-stage").value,
-        schoolGender: document.getElementById("school-gender").value,
-        providerPresent: document.getElementById("provider-present").value,
-        providerName: document.getElementById("provider-name").value,
-        supportType: document.getElementById("support-type").value,
-        weeklyReport: document.getElementById("weekly-report").value,
-        supTeach: document.getElementById("sup-area-teach").checked,
-        supOutcomes: document.getElementById("sup-area-outcomes").checked,
-        supGuidance: document.getElementById("sup-area-guidance").checked,
-        supActivities: document.getElementById("sup-area-activities").checked,
-        evalType: document.getElementById("eval-type").value,
-        overallLevel: document.getElementById("overall-level").value,
-        overallScore: document.getElementById("overall-score").value,
-        outcomesLevel: document.getElementById("outcomes-level").value,
-        outcomesScore: document.getElementById("outcomes-score").value,
-        prac1G: document.getElementById("prac-1-grade").value, prac1N: document.getElementById("prac-1-note").value,
-        prac2G: document.getElementById("prac-2-grade").value, prac2N: document.getElementById("prac-2-note").value,
-        prac3G: document.getElementById("prac-3-grade").value, prac3N: document.getElementById("prac-3-note").value,
-        sup1G: document.getElementById("sup-1-grade").value, sup1N: document.getElementById("sup-1-note").value,
-        sup2G: document.getElementById("sup-2-grade").value, sup2N: document.getElementById("sup-2-note").value,
-        sup3G: document.getElementById("sup-3-grade").value, sup3N: document.getElementById("sup-3-note").value,
-        sup4G: document.getElementById("sup-4-grade").value, sup4N: document.getElementById("sup-4-note").value,
-        supAvgN: document.getElementById("sup-avg-note").value, supPrevN: document.getElementById("sup-prev-note").value,
-        comp1: document.getElementById("comp-1").value, comp2: document.getElementById("comp-2").value,
-        comp3: document.getElementById("comp-3").value, comp4: document.getElementById("comp-4").value,
-        challenges: document.getElementById("challenges").value,
-        strengths: document.getElementById("strengths").value,
-        feedback: document.getElementById("feedback").value,
-        devNeeds: document.getElementById("dev-needs").value,
-        providerSignature: null, // توقيع مقدم الدعم (يتم تعبئته عند الاعتماد)
-        savedAt: new Date().toISOString()
-      };
-
-      if (editId) {
-        const idx = reports.findIndex(r => r.id === editId);
-        if (idx !== -1) {
-          reportData.providerSignature = reports[idx].providerSignature || null; // الحفاظ على التوقيع السابق إن وجد
-          reports[idx] = reportData;
-        }
-      } else {
-        reports.unshift(reportData);
-      }
-
-      localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
-      renderReportsTable();
-      renderMemberAssignedSchoolsStats();
-      showSection("list-section");
-      alert("تم حفظ التقرير بنجاح!");
-    });
-
-    function applyAllFilters() {
-      const searchKw = document.getElementById("report-search").value;
-      const stageVal = document.getElementById("filter-stage").value;
-      const levelVal = document.getElementById("filter-level").value;
-      renderReportsTable(searchKw, stageVal, levelVal);
-    }
-
     // ==========================================
-    // آلية توليد رابط قصير عبر LZ-String لمشاركة التوقيع عبر الواتساب
+    // دوال إرسال واستقبال روابط التوقيع الإلكتروني لمقدم الدعم
     // ==========================================
     function generateSignUrl(reportId) {
       const item = reports.find(r => r.id === reportId);
       if (!item) return "";
-
+      
       const payload = {
         ...item,
-        authorSig: EXEC_MEMBERS[item.author]?.signature || ""
+        authorSig: item.authorSig || EXEC_MEMBERS[item.author]?.signature || ""
       };
-
-      // ضغط بيانات التقرير بالكامل لتوليد رابط قصير جداً يناسب الواتساب
+      
       const jsonStr = JSON.stringify(payload);
-      const compressed = LZString.compressToEncodedURIComponent(jsonStr);
+      const base64Data = utf8ToBase64(jsonStr);
       const urlBase = window.location.href.split('?')[0];
-      return `${urlBase}?s=${compressed}`;
+      return `${urlBase}?sign_rep=${encodeURIComponent(base64Data)}`;
     }
 
     function shareSignLinkWhatsApp(reportId) {
       const item = reports.find(r => r.id === reportId);
       if (!item) return;
-
+      
       const link = generateSignUrl(reportId);
-      const textMessage = `السلام عليكم ورحمة الله وبركاته،\nالأستاذ/ة الفاضل/ة: ${item.providerName || 'مقدم/ـة خدمات الدعم'}\n\nنأمل التكرم بالاطلاع واعتماد استمارة التغذية الراجعة لزيارة مدرسة (${item.schoolName}) والتوقيع عليها إلكترونياً من خلال الرابط أدناه:\n\n${link}\n\nشاكرين لكم حسن تعاونكم في دعم التميز المدرسي.`;
-
+      const textMessage = `السلام عليكم ورحمة الله وبركاته،\nالأستاذ/ة الفاضل/ة: ${item.providerName || 'مقدم/ـة خدمات الدعم'}\n\nنأمل التكرم بالاطلاع واعتماد استمارة التغذية الراجعة لزيارة مدرسة (${item.schoolName}) والتوقيع عليها إلكترونياً من خلال الرابط المباشر أدناه:\n\n${link}\n\nشاكرين لكم حسن تعاونكم في دعم التميز المدرسي.`;
+      
       window.open(`https://wa.me/?text=${encodeURIComponent(textMessage)}`, '_blank');
     }
 
     function copySignLink(reportId) {
       const link = generateSignUrl(reportId);
       navigator.clipboard.writeText(link).then(() => {
-        alert("تم نسخ رابط التوقيع والاعتماد القصير بنجاح!");
+        alert("تم نسخ رابط التوقيع والاعتماد الإلكتروني بنجاح!\nيمكنك الآن إرساله عبر البريد الإلكتروني أو الرسائل.");
       }).catch(() => {
         prompt("انسخ رابط التوقيع التالي:", link);
       });
     }
 
-    // إدارة لوحة توقيع مقدم الدعم وحفظه بالتقرير
+    // إدارة لوحة توقيع مقدم الدعم وحفظ التقرير في النظام
     let provCanvas, provCtx, isProvDrawing = false, externalReportData = null;
 
     function initProviderPad() {
@@ -1744,43 +1518,48 @@
       document.getElementById("provider-sign-modal").classList.add("hidden");
     }
 
-    // حفظ توقيع مقدم الدعم وتحديث التقرير محلياً أو إرساله
     function saveProviderSignatureAndPrint() {
       const sigData = provCanvas.toDataURL("image/png");
-      if (externalReportData) {
-        externalReportData.providerSignature = sigData;
-        
-        // حفظ التقرير المحدث في localStorage للمتصفح أو كملف JSON لضمان حفظه الدائم
-        let existingReports = JSON.parse(localStorage.getItem("excellence_reports_v2") || "[]");
-        const idx = existingReports.findIndex(r => r.id === externalReportData.id);
-        if (idx !== -1) {
-          existingReports[idx] = externalReportData;
-        } else {
-          existingReports.unshift(externalReportData);
-        }
-        localStorage.setItem("excellence_reports_v2", JSON.stringify(existingReports));
+      
+      const container = document.getElementById("pdf-provider-sig-container");
+      if (container) {
+        container.innerHTML = `<img src="${sigData}" class="max-h-9 object-contain mx-auto" alt="توقيع مقدم الدعم">`;
       }
-
-      const displaySpan = document.getElementById("pdf-provider-status-display");
-      if (displaySpan) {
-        displaySpan.outerHTML = `<img src="${sigData}" class="max-h-11 object-contain mx-auto" alt="توقيع مقدم الدعم">`;
+      
+      if (externalReportData) {
+        externalReportData.providerSig = sigData;
+        externalReportData.providerSignedAt = new Date().toISOString();
+        
+        let allSavedReports = JSON.parse(localStorage.getItem("excellence_reports_v2") || "[]");
+        const idx = allSavedReports.findIndex(r => r.id === externalReportData.id);
+        if (idx !== -1) {
+          allSavedReports[idx] = externalReportData;
+        } else {
+          allSavedReports.unshift(externalReportData);
+        }
+        localStorage.setItem("excellence_reports_v2", JSON.stringify(allSavedReports));
+        reports = allSavedReports;
       }
 
       closeProviderSignModal();
-      alert("تم اعتماد وتوثيق توقيعك وحفظ التقرير بنجاح! جاري تحميل نسختك الرسمية المعتمدة بصيغة PDF...");
+      alert("تم اعتماد وتوثيق توقيعك وحفظ الاستمارة في النظام بنجاح! جاري تصدير وتحميل الاستمارة الرسمية...");
       exportToPdf();
     }
 
     function renderExternalReportForSigning(item) {
       externalReportData = item;
+      
       document.getElementById("login-modal").classList.add("hidden");
       document.getElementById("main-app").classList.remove("hidden");
+      document.getElementById("provider-guest-banner").classList.remove("hidden");
+      
+      const topNav = document.getElementById("top-nav-bar");
+      if (topNav) topNav.classList.add("hidden");
+      const mainHeader = document.getElementById("main-header");
+      if (mainHeader) mainHeader.classList.add("hidden");
 
       const btnBack = document.getElementById("btn-back-to-list");
       if (btnBack) btnBack.classList.add("hidden");
-
-      const navHeader = document.querySelector("header .flex.items-center.gap-2.md\\:gap-3");
-      if (navHeader) navHeader.classList.add("hidden");
 
       const toolbar = document.getElementById("preview-actions-toolbar");
       if (toolbar) {
@@ -1791,25 +1570,42 @@
         `;
       }
 
-      showSection("preview-section");
+      document.getElementById("analytics-section").classList.add("hidden");
+      document.getElementById("analytics-print-preview-section").classList.add("hidden");
+      document.getElementById("list-section").classList.add("hidden");
+      document.getElementById("form-section").classList.add("hidden");
+      document.getElementById("preview-section").classList.remove("hidden");
+
       previewReportObject(item);
     }
 
     function renderReportsTable(filterKeyword = "", filterStage = "الكل", filterLevel = "الكل") {
       const tbody = document.getElementById("reports-table-body");
+      if (!tbody) return;
       tbody.innerHTML = "";
-
+      
       const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
       let userReports = isLeader ? reports : reports.filter(r => r.author === currentUser);
 
       if (filterKeyword) {
         const kw = filterKeyword.toLowerCase().trim();
-        userReports = userReports.filter(r => (r.schoolName && r.schoolName.toLowerCase().includes(kw)) || (r.providerName && r.providerName.toLowerCase().includes(kw)) || (r.author && r.author.toLowerCase().includes(kw)));
+        userReports = userReports.filter(r => 
+          (r.schoolName && r.schoolName.toLowerCase().includes(kw)) ||
+          (r.providerName && r.providerName.toLowerCase().includes(kw)) ||
+          (r.author && r.author.toLowerCase().includes(kw))
+        );
       }
-      if (filterStage && filterStage !== "الكل") userReports = userReports.filter(r => r.schoolStage && r.schoolStage.includes(filterStage));
+
+      if (filterStage && filterStage !== "الكل") {
+        userReports = userReports.filter(r => r.schoolStage && r.schoolStage.includes(filterStage));
+      }
+
       if (filterLevel && filterLevel !== "الكل") {
-        if (filterLevel === "لم يصدر") userReports = userReports.filter(r => !r.overallLevel || r.overallLevel.includes("لم يصدر") || r.overallLevel.includes("تهيئة"));
-        else userReports = userReports.filter(r => r.overallLevel && r.overallLevel.includes(filterLevel));
+        if (filterLevel === "لم يصدر") {
+          userReports = userReports.filter(r => !r.overallLevel || r.overallLevel.includes("لم يصدر") || r.overallLevel.includes("تهيئة"));
+        } else {
+          userReports = userReports.filter(r => r.overallLevel && r.overallLevel.includes(filterLevel));
+        }
       }
 
       document.getElementById("report-count").innerText = `${userReports.length} تقرير`;
@@ -1823,24 +1619,43 @@
         const tr = document.createElement("tr");
         tr.className = "hover:bg-slate-50 transition border-b";
 
-        let actionsHtml = isLeader ? `
-          <div class="flex items-center justify-center gap-1.5">
-            <button onclick="previewReport('${item.id}')" title="معاينة" class="px-3 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-md font-bold text-xs flex items-center gap-1"><i class="fa-solid fa-eye"></i> <span>معاينة</span></button>
-            <button onclick="shareSignLinkWhatsApp('${item.id}')" title="إرسال رابط التوقيع لمقدم الدعم (واتساب)" class="p-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded shadow-sm"><i class="fa-brands fa-whatsapp"></i></button>
-          </div>
-        ` : `
-          <div class="flex items-center justify-center gap-1.5">
-            <button onclick="previewReport('${item.id}')" title="معاينة وطباعة" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded"><i class="fa-solid fa-file-pdf"></i></button>
-            <button onclick="shareSignLinkWhatsApp('${item.id}')" title="إرسال رابط التوقيع (واتساب)" class="p-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded shadow-sm"><i class="fa-brands fa-whatsapp"></i></button>
-            <button onclick="copySignLink('${item.id}')" title="نسخ رابط التوقيع" class="p-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded"><i class="fa-solid fa-link"></i></button>
-            <button onclick="editReport('${item.id}')" title="تعديل" class="p-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
-            <button onclick="deleteReport('${item.id}')" title="حذف" class="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded"><i class="fa-solid fa-trash-can"></i></button>
-          </div>
-        `;
+        let actionsHtml = '';
+        if (isLeader) {
+          actionsHtml = `
+            <div class="flex items-center justify-center gap-1.5">
+              <button onclick="previewReport('${item.id}')" title="معاينة والاطلاع على التقرير" class="px-3 py-1 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-md font-bold text-xs flex items-center gap-1">
+                <i class="fa-solid fa-eye"></i> <span>معاينة</span>
+              </button>
+              <button onclick="shareSignLinkWhatsApp('${item.id}')" title="إرسال عبر واتساب" class="p-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded shadow-sm">
+                <i class="fa-brands fa-whatsapp"></i>
+              </button>
+            </div>
+          `;
+        } else {
+          actionsHtml = `
+            <div class="flex items-center justify-center gap-1.5">
+              <button onclick="previewReport('${item.id}')" title="معاينة وطباعة" class="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded">
+                <i class="fa-solid fa-file-pdf"></i>
+              </button>
+              <button onclick="shareSignLinkWhatsApp('${item.id}')" title="إرسال رابط التوقيع لمقدم الدعم (واتساب)" class="p-1.5 bg-emerald-600 text-white hover:bg-emerald-700 rounded shadow-sm">
+                <i class="fa-brands fa-whatsapp"></i>
+              </button>
+              <button onclick="copySignLink('${item.id}')" title="نسخ رابط التوقيع" class="p-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded">
+                <i class="fa-solid fa-link"></i>
+              </button>
+              <button onclick="editReport('${item.id}')" title="تعديل" class="p-1.5 bg-amber-50 text-amber-600 hover:bg-amber-100 rounded">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="deleteReport('${item.id}')" title="حذف" class="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          `;
+        }
 
         tr.innerHTML = `
           <td class="p-3 font-semibold">${idx + 1}</td>
-          <td class="p-3 font-bold text-slate-900">${item.schoolName} ${item.providerSignature ? '<i class="fa-solid fa-circle-check text-emerald-600 ml-1" title="موقع ومثبت من مقدم الدعم"></i>' : ''}</td>
+          <td class="p-3 font-bold text-slate-900">${item.schoolName}</td>
           <td class="p-3"><span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-semibold text-[11px]">${item.schoolStage || '-'}</span></td>
           <td class="p-3"><span class="bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded text-[11px]">${item.overallLevel || 'لم يصدر'}</span></td>
           <td class="p-3">${item.term} / ${item.visitWeek}</td>
@@ -1855,7 +1670,10 @@
 
     function editReport(id) {
       const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-      if (isLeader) { alert("تعديل التقارير متاح فقط للعضو معد التقرير."); return; }
+      if (isLeader) {
+        alert("تعديل التقارير متاح فقط للعضو معد التقرير.");
+        return;
+      }
 
       const item = reports.find(r => r.id === id);
       if (!item) return;
@@ -1913,7 +1731,10 @@
 
     function deleteReport(id) {
       const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
-      if (isLeader) { alert("حساب رئيس الفريق مخصص للاطلاع والمتابعة فقط ولا يملك صلاحية حذف التقارير."); return; }
+      if (isLeader) {
+        alert("حساب رئيس الفريق مخصص للاطلاع والمتابعة فقط ولا يملك صلاحية حذف التقارير.");
+        return;
+      }
 
       if (confirm("هل ترغب في حذف هذا التقرير نهائياً؟")) {
         reports = reports.filter(r => r.id !== id);
@@ -1936,8 +1757,12 @@
       const toolbar = document.getElementById("preview-actions-toolbar");
       if (toolbar) {
         toolbar.innerHTML = `
-          <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg font-bold hover:bg-black text-xs flex items-center gap-1.5"><i class="fa-solid fa-print"></i> طباعة فورية</button>
-          <button onclick="exportToPdf()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-xs flex items-center gap-1.5"><i class="fa-solid fa-file-pdf"></i> تصدير مستند PDF</button>
+          <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg font-bold hover:bg-black text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-print"></i> طباعة فورية
+          </button>
+          <button onclick="exportToPdf()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-xs flex items-center gap-1.5">
+            <i class="fa-solid fa-file-pdf"></i> تصدير مستند PDF
+          </button>
         `;
       }
 
@@ -1968,20 +1793,28 @@
       document.getElementById("pdf-stage").innerText = item.schoolStage;
       document.getElementById("pdf-gender").innerText = item.schoolGender === 'بنين' ? '■ بنين  □ بنات' : '□ بنين  ■ بنات';
 
-      document.getElementById("pdf-eval-type").innerText = item.evalType === 'خارجي' ? 'ذاتي (   )   خارجي ( ■ )   لم يصدر لها تقرير (   )' : (item.evalType === 'ذاتي' ? 'ذاتي ( ■ )   خارجي (   )   لم يصدر لها تقرير (   )' : 'لم يصدر لها تقرير ( ■ )');
+      let evalStr = item.evalType === 'خارجي' ? 'ذاتي (   )   خارجي ( ■ )   لم يصدر لها تقرير (   )' : (item.evalType === 'ذاتي' ? 'ذاتي ( ■ )   خارجي (   )   لم يصدر لها تقرير (   )' : 'لم يصدر لها تقرير ( ■ )');
+      document.getElementById("pdf-eval-type").innerText = evalStr;
       document.getElementById("pdf-overall-level").innerText = item.overallLevel;
       document.getElementById("pdf-overall-score").innerText = item.overallScore;
       document.getElementById("pdf-outcomes-level").innerText = item.outcomesLevel;
       document.getElementById("pdf-outcomes-score").innerText = item.outcomesScore;
 
-      document.getElementById("pdf-prac-1-g").innerText = item.prac1G; document.getElementById("pdf-prac-1-n").innerText = item.prac1N || '-';
-      document.getElementById("pdf-prac-2-g").innerText = item.prac2G; document.getElementById("pdf-prac-2-n").innerText = item.prac2N || '-';
-      document.getElementById("pdf-prac-3-g").innerText = item.prac3G; document.getElementById("pdf-prac-3-n").innerText = item.prac3N || '-';
+      document.getElementById("pdf-prac-1-g").innerText = item.prac1G;
+      document.getElementById("pdf-prac-1-n").innerText = item.prac1N || '-';
+      document.getElementById("pdf-prac-2-g").innerText = item.prac2G;
+      document.getElementById("pdf-prac-2-n").innerText = item.prac2N || '-';
+      document.getElementById("pdf-prac-3-g").innerText = item.prac3G;
+      document.getElementById("pdf-prac-3-n").innerText = item.prac3N || '-';
 
-      document.getElementById("pdf-sup-1-g").innerText = item.sup1G; document.getElementById("pdf-sup-1-n").innerText = item.sup1N || '-';
-      document.getElementById("pdf-sup-2-g").innerText = item.sup2G; document.getElementById("pdf-sup-2-n").innerText = item.sup2N || '-';
-      document.getElementById("pdf-sup-3-g").innerText = item.sup3G; document.getElementById("pdf-sup-3-n").innerText = item.sup3N || '-';
-      document.getElementById("pdf-sup-4-g").innerText = item.sup4G; document.getElementById("pdf-sup-4-n").innerText = item.sup4N || '-';
+      document.getElementById("pdf-sup-1-g").innerText = item.sup1G;
+      document.getElementById("pdf-sup-1-n").innerText = item.sup1N || '-';
+      document.getElementById("pdf-sup-2-g").innerText = item.sup2G;
+      document.getElementById("pdf-sup-2-n").innerText = item.sup2N || '-';
+      document.getElementById("pdf-sup-3-g").innerText = item.sup3G;
+      document.getElementById("pdf-sup-3-n").innerText = item.sup3N || '-';
+      document.getElementById("pdf-sup-4-g").innerText = item.sup4G;
+      document.getElementById("pdf-sup-4-n").innerText = item.sup4N || '-';
       document.getElementById("pdf-sup-avg-n").innerText = item.supAvgN || '-';
       document.getElementById("pdf-sup-prev-n").innerText = item.supPrevN || '-';
 
@@ -2000,46 +1833,52 @@
 
       const sigImg = document.getElementById("pdf-signature-img");
       const userSig = item.authorSig || EXEC_MEMBERS[item.author]?.signature;
-      if (userSig) { sigImg.src = userSig; sigImg.classList.remove("hidden"); } else { sigImg.classList.add("hidden"); }
+      if (userSig) {
+        sigImg.src = userSig;
+        sigImg.classList.remove("hidden");
+      } else {
+        sigImg.classList.add("hidden");
+      }
 
-      // عرض توقيع مقدم الدعم إذا تم اعتماده وحفظه مسبقاً
-      const provStatusContainer = document.getElementById("pdf-provider-status-display");
-      if (provStatusContainer) {
-        if (item.providerSignature) {
-          provStatusContainer.outerHTML = `<img id="pdf-provider-status-display" src="${item.providerSignature}" class="max-h-11 object-contain mx-auto" alt="توقيع مقدم الدعم">`;
+      const container = document.getElementById("pdf-provider-sig-container");
+      if (container) {
+        if (item.providerSig) {
+          container.innerHTML = `<img src="${item.providerSig}" class="max-h-9 object-contain mx-auto" alt="توقيع مقدم الدعم">`;
         } else {
-          provStatusContainer.innerText = "[تم الاعتماد والتسليم إلكترونياً]";
+          container.innerHTML = `<span id="pdf-provider-status-display" class="text-slate-400 italic text-[10px]">[بانتظار التوقيع والاعتماد]</span>`;
         }
       }
     }
 
     function exportToPdf() {
       const element = document.getElementById('printable-area');
-      const school = document.getElementById('pdf-school-name').innerText;
-      const opt = { margin: [3, 3, 3, 3], filename: `تقرير_التغذية_الراجعة_${school}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, allowTaint: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+      const school = document.getElementById('pdf-school-name').innerText || 'استمارة_الزيارة';
+      const opt = {
+        margin:       [2, 2, 2, 2],
+        filename:     `تقرير_التغذية_الراجعة_${school}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:    { mode: 'avoid-all' }
+      };
       html2pdf().set(opt).from(element).save();
     }
 
     window.onload = function() {
-      // فحص معامِلات الرابط المختصر (LZString) أو المعامل القديم للاعتماد والتوقيع
       const urlParams = new URLSearchParams(window.location.search);
-      const shortParam = urlParams.get('s');
-      const legacyParam = urlParams.get('sign_rep');
+      const signRepParam = urlParams.get('sign_rep');
 
-      if (shortParam || legacyParam) {
+      if (signRepParam) {
         try {
-          let reportObj;
-          if (shortParam) {
-            const decompressed = LZString.decompressFromEncodedURIComponent(shortParam);
-            reportObj = JSON.parse(decompressed);
-          } else {
-            const decodedJson = decodeURIComponent(escape(atob(decodeURIComponent(legacyParam))));
-            reportObj = JSON.parse(decodedJson);
+          const jsonString = base64ToUtf8(signRepParam);
+          const reportObj = JSON.parse(jsonString);
+          if (reportObj && reportObj.schoolName) {
+            renderExternalReportForSigning(reportObj);
+            return;
           }
-          renderExternalReportForSigning(reportObj);
-          return;
         } catch (err) {
-          console.error("خطأ في فك ضغط بيانات التقرير:", err);
+          console.error("خطأ في قراءة بيانات تقرير التوقيع:", err);
+          alert("تعذر فتح رابط التوقيع، يرجى التأكد من نسخ الرابط بالكامل والمحاولة مجدداً.");
         }
       }
 
