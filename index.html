@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- مكتبة ضغط النصوص -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
@@ -586,7 +588,7 @@
           <canvas id="provider-sig-pad" width="380" height="110" class="w-full h-28 border-2 border-dashed border-emerald-400 rounded-lg bg-slate-50 cursor-crosshair"></canvas>
         </div>
         <div class="flex justify-end gap-2 pt-2 border-t">
-          <button onclick="closeProviderSignModal()" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg text-xs">إلغاء</button>
+          <button onclick="closeProviderSignModal()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">إلغاء</button>
           <button onclick="saveProviderSignatureAndPrint()" class="px-5 py-2 bg-emerald-700 text-white font-bold rounded-lg text-xs shadow flex items-center gap-1.5"><i class="fa-solid fa-check"></i> حفظ الاعتماد وتصدير PDF وإرسال الإشعار</button>
         </div>
       </div>
@@ -977,9 +979,9 @@
     }
 
     // ==========================================
-    // حل مشكلة URI Too Long (تمرير المعرّف ID فقط بدلاً من البيانات)
+    // حل مشكلة منع فتح الواتساب عبر النافذة المنبثقة
     // ==========================================
-    function generateSignUrl(reportId) {
+    function generateLongSignUrl(reportId) {
       const urlBase = window.location.href.split('?')[0];
       return `${urlBase}?sign_id=${reportId}`;
     }
@@ -1002,10 +1004,19 @@
       const item = reports.find(r => r.id === reportId);
       if (!item) return;
 
+      // فتح نافذة فارغة فوراً لضمان عدم حظر المتصفح لفتح الواتساب (تجنب popup blocker)
+      let waWindow = window.open('', '_blank');
+
       const finalLink = await getShortSignUrl(reportId);
       const textMessage = `السلام عليكم ورحمة الله وبركاته،\nالأستاذ/ة الفاضل/ة: ${item.providerName || 'مقدم/ـة خدمات الدعم'}\n\nنأمل الاعتماد والتوقيع الإلكتروني لاستمارة زيارة مدرسة (${item.schoolName}) عبر الرابط:\n\n${finalLink}\n\nشاكرين لكم تعاونكم.`;
 
-      window.open(`https://wa.me/?text=${encodeURIComponent(textMessage)}`, '_blank');
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(textMessage)}`;
+      
+      if (waWindow) {
+        waWindow.location.href = waUrl;
+      } else {
+        window.location.href = waUrl;
+      }
     }
 
     async function copySignLink(reportId) {
@@ -1017,7 +1028,7 @@
       });
     }
 
-    // لوحة توقيع مقدم الدعم وإرجاع الاعتماد للمشرف بصيغة JSON خفيفة
+    // لوحة توقيع مقدم الدعم
     let provCanvas, provCtx, isProvDrawing = false, activeSignReportId = null;
 
     function initProviderPad() {
@@ -1055,15 +1066,20 @@
     function saveProviderSignatureAndPrint() {
       const sigData = provCanvas.toDataURL("image/png");
       
-      // إرسال التوقيع عبر زر الواتساب للمشرف
       const payload = { id: activeSignReportId, signature: sigData };
       const compressedPayload = LZString.compressToEncodedURIComponent(JSON.stringify(payload));
       const returnUrl = `${window.location.href.split('?')[0]}?saved_sig=${compressedPayload}`;
 
-      const notify = confirm("تم اعتماد التقرير وتوقيعه بنجاح!\nهل تريد إرسال التوقيع إلى مشرف الفريق عبر الواتساب لتثبيته في الأرشيف؟");
+      // فتح نافذة الواتساب فوراً عند الاعتماد
+      let waWindow = window.open('', '_blank');
+
+      const notify = confirm("تم اعتماد التقرير وتوقيعه بنجاح!\nسيتم الآن فتح الواتساب لإرسال التوقيع لمشرف الفريق لتثبيته في الأرشيف.");
       if (notify) {
         const msg = `السلام عليكم أستاذ صالح، تم اعتماد وتوقيع استمارة التقرير إلكترونياً.\nاضغط هنا لتحديث وحفظ الاعتماد:\n${returnUrl}`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        const waUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+        if (waWindow) { waWindow.location.href = waUrl; } else { window.location.href = waUrl; }
+      } else {
+        if (waWindow) waWindow.close();
       }
 
       closeProviderSignModal();
@@ -1071,12 +1087,11 @@
     }
 
     function renderExternalReportForSigning(reportId) {
-      // جلب التقرير المحلي أو من الذاكرة المشتركة المتاحة للمتصفح
       let allReports = JSON.parse(localStorage.getItem("excellence_reports_v2") || "[]");
       let item = allReports.find(r => r.id === reportId);
 
       if (!item) {
-        alert("عذراً، لم يتم العثور على بيانات التقرير في هذا المتصفح. يجدر بالمشرف إرسال تحديث التقرير أو فتحه من نفس الجهاز.");
+        alert("عذراً، لم يتم العثور على بيانات التقرير في هذا المتصفح.");
         return;
       }
 
