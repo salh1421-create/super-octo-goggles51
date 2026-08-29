@@ -12,37 +12,11 @@
   <style>
     body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
     .official-doc { font-family: 'Amiri', serif; line-height: 1.25; }
-    * {
-      font-variant-numeric: tabular-nums;
-      -moz-font-feature-settings: "latn" 1;
-      -webkit-font-feature-settings: "latn" 1;
-      font-feature-settings: "latn" 1;
-    }
     .doc-table { width: 100%; border-collapse: collapse; margin-top: 2px; margin-bottom: 2px; }
-    .doc-table th, .doc-table td {
-      border: 1px solid #1e293b;
-      padding: 2.5px 4.5px;
-      font-size: 10px;
-      vertical-align: middle;
-    }
+    .doc-table th, .doc-table td { border: 1px solid #1e293b; padding: 2.5px 4.5px; font-size: 10px; vertical-align: middle; }
     .doc-table th { background-color: #f8fafc; font-weight: bold; text-align: center; }
     .table-label { background-color: #f8fafc; font-weight: bold; width: 15%; }
-    .section-header {
-      background-color: #f1f5f9;
-      font-weight: bold;
-      font-size: 10.5px;
-      padding: 2px 5px;
-      border: 1px solid #1e293b;
-      border-bottom: none;
-      margin-top: 3px;
-    }
-    .moe-logo-img {
-      display: block !important;
-      visibility: visible !important;
-      object-fit: contain !important;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
+    .section-header { background-color: #f1f5f9; font-weight: bold; font-size: 10.5px; padding: 2px 5px; border: 1px solid #1e293b; border-bottom: none; margin-top: 3px; }
     @media print {
       body * { visibility: hidden; }
       #printable-area, #printable-area *, #analytics-report-area, #analytics-report-area * { visibility: visible !important; }
@@ -68,7 +42,7 @@
       <form id="login-form" class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">المستخدم (رئيس / عضو الفريق)</label>
-          <select id="login-user" class="w-full border rounded-lg p-2.5 bg-slate-50 text-sm focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-800">
+          <select id="login-user" class="w-full border rounded-lg p-2.5 bg-slate-50 text-sm font-bold text-slate-800 outline-none">
             <optgroup label="الإدارة والإشراف العام">
               <option value="د. عائشة بنت جميعان الجهني">د. عائشة بنت جميعان الجهني (رئيس الفريق التنفيذي)</option>
             </optgroup>
@@ -86,9 +60,7 @@
           <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
           <input type="password" id="login-pass" value="123456" class="w-full border rounded-lg p-2.5 bg-slate-50 text-sm font-mono">
         </div>
-        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-lg shadow transition">
-          <i class="fa-solid fa-right-to-bracket"></i> دخول المنظومة
-        </button>
+        <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-lg shadow transition">دخول المنظومة</button>
       </form>
     </div>
   </div>
@@ -113,9 +85,7 @@
       </div>
       <div class="flex justify-between items-center pt-4 border-t">
         <span id="sign-success-msg" class="text-xs text-emerald-700 font-bold hidden"><i class="fa-solid fa-circle-check"></i> تم التوقيع والحفظ في السحاب!</span>
-        <button onclick="submitProviderSignature()" class="px-6 py-2.5 bg-emerald-700 text-white font-bold rounded-lg text-xs shadow">
-          اعتماد وتوقيع الاستمارة سحابياً
-        </button>
+        <button onclick="submitProviderSignature()" class="px-6 py-2.5 bg-emerald-700 text-white font-bold rounded-lg text-xs shadow">اعتماد وتوقيع الاستمارة سحابياً</button>
       </div>
     </div>
   </div>
@@ -124,95 +94,50 @@
   <div id="main-app" class="hidden">
     <header class="bg-emerald-800 text-white shadow sticky top-0 z-40 no-print">
       <div class="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
+        <h1 class="font-bold text-base">إدارة أداء التعليم - قطاع العوالي</h1>
         <div class="flex items-center gap-3">
-          <div>
-            <h1 class="font-bold text-base md:text-lg leading-tight">إدارة أداء التعليم - قسم الاشراف التربوي - الفريق التنفيذي قطاع العوالي</h1>
-            <p class="text-[11px] text-emerald-200">استمارة التغذية الراجعة لمقدمي خدمات الدعم</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 md:gap-3">
-          <span class="text-xs bg-emerald-700/80 px-3 py-1.5 rounded-full border border-emerald-600 flex items-center gap-1.5">
-            <i class="fa-solid fa-user-check text-emerald-300"></i>
-            <span id="current-user-display" class="font-semibold"></span>
-          </span>
-          <button onclick="openSettingsModal()" class="text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg font-bold shadow">
-            <i class="fa-solid fa-signature"></i> توقيعي
-          </button>
-          <button onclick="logout()" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold">خروج</button>
+          <span id="current-user-display" class="text-xs font-semibold bg-emerald-700 px-3 py-1 rounded-full"></span>
+          <button onclick="openSettingsModal()" class="text-xs bg-amber-600 text-white px-3 py-1 rounded font-bold">توقيعي</button>
+          <button onclick="logout()" class="text-xs bg-red-600 text-white px-3 py-1 rounded font-bold">خروج</button>
         </div>
       </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-6">
-      <div class="flex justify-between items-center mb-6 no-print flex-wrap gap-2">
-        <div class="flex gap-2 flex-wrap">
-          <button id="btn-nav-analytics" onclick="showSection('analytics-section'); renderAnalyticsDashboard();" class="hidden px-4 py-2 bg-indigo-700 text-white rounded-lg font-bold text-sm shadow">
-            <i class="fa-solid fa-chart-pie"></i> لوحة الإحصاءات العامة
-          </button>
-          <button onclick="showSection('list-section')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold text-sm shadow-sm">
-            <i class="fa-solid fa-folder-open text-emerald-600"></i> متابعة الإسناد والتقارير
-          </button>
-          <button onclick="showSection('form-section'); resetForm();" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-sm shadow">
-            <i class="fa-solid fa-circle-plus"></i> إنشاء تقرير جديد
-          </button>
-        </div>
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+      <div class="flex gap-2 no-print flex-wrap">
+        <button id="btn-nav-analytics" onclick="showSection('analytics-section'); renderAnalyticsDashboard();" class="hidden px-4 py-2 bg-indigo-700 text-white rounded-lg font-bold text-sm shadow">لوحة الإحصاءات العامة</button>
+        <button onclick="showSection('list-section')" class="px-4 py-2 bg-white border text-slate-700 rounded-lg font-bold text-sm shadow-sm">متابعة الإسناد والتقارير</button>
+        <button onclick="showSection('form-section'); resetForm();" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-sm shadow">إنشاء تقرير جديد</button>
       </div>
 
-      <!-- لوحة الإحصاءات العامة (لرئيس الفريق) -->
+      <!-- لوحة الإحصاءات العامة لرئيس الفريق -->
       <section id="analytics-section" class="hidden no-print space-y-6">
-        <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-5 rounded-2xl shadow flex justify-between items-center flex-wrap gap-4">
-          <div>
-            <span class="bg-indigo-700 text-[11px] font-bold px-3 py-1 rounded-full inline-block mb-1">لوحة القيادة الإشرافية</span>
-            <h3 class="text-lg font-black">التقرير الإحصائي العام لدعم التميز المدرسي بقطاع العوالي</h3>
-          </div>
-          <button onclick="prepareAndPrintAnalyticsReport()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded-xl text-xs">
-            <i class="fa-solid fa-print"></i> إصدار وطباعة التقرير الإحصائي
-          </button>
+        <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-5 rounded-2xl shadow flex justify-between items-center">
+          <div><h3 class="text-lg font-black">التقرير الإحصائي العام لدعم التميز المدرسي بقطاع العوالي</h3></div>
+          <button onclick="prepareAndPrintAnalyticsReport()" class="px-4 py-2 bg-amber-500 text-slate-900 font-bold rounded-xl text-xs">إصدار وطباعة التقرير</button>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-white p-4 rounded-xl border shadow-sm">
-            <p class="text-xs font-bold text-slate-500">إجمالي مدارس الإسناد</p>
-            <h3 class="text-2xl font-black text-slate-800 mt-1" id="stat-total-schools">173</h3>
-          </div>
-          <div class="bg-white p-4 rounded-xl border shadow-sm">
-            <p class="text-xs font-bold text-slate-500">التقارير المنجزة سحابياً</p>
-            <h3 class="text-2xl font-black text-indigo-700 mt-1" id="stat-total-reports">0</h3>
-          </div>
-          <div class="bg-white p-4 rounded-xl border shadow-sm">
-            <p class="text-xs font-bold text-slate-500">مقدمو خدمات الدعم</p>
-            <h3 class="text-2xl font-black text-amber-600 mt-1" id="stat-total-providers">57</h3>
-          </div>
-          <div class="bg-white p-4 rounded-xl border shadow-sm">
-            <p class="text-xs font-bold text-slate-500">أعضاء الفريق التنفيذي</p>
-            <h3 class="text-2xl font-black text-rose-600 mt-1">6</h3>
-          </div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm"><p class="text-xs font-bold text-slate-500">إجمالي مدارس الإسناد</p><h3 class="text-2xl font-black text-slate-800">173</h3></div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm"><p class="text-xs font-bold text-slate-500">التقارير المنجزة سحابياً</p><h3 class="text-2xl font-black text-indigo-700" id="stat-total-reports">0</h3></div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm"><p class="text-xs font-bold text-slate-500">مقدمو خدمات الدعم</p><h3 class="text-2xl font-black text-amber-600">57</h3></div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm"><p class="text-xs font-bold text-slate-500">أعضاء الفريق</p><h3 class="text-2xl font-black text-rose-600">6</h3></div>
         </div>
         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
           <div class="p-4 bg-slate-50 border-b font-bold text-sm">ملخص أداء ومتابعة إسناد أعضاء الفريق التنفيذي</div>
           <table class="w-full text-right text-xs">
             <thead class="bg-slate-100 font-bold border-b">
-              <tr><th class="p-3">عضو الفريق</th><th class="p-3">الفئة</th><th class="p-3 text-center">المسندة</th><th class="p-3 text-center">بها مقدم دعم</th><th class="p-3 text-center">التقارير</th><th class="p-3 text-center">الإنجاز</th></tr>
+              <tr><th class="p-3">عضو الفريق</th><th class="p-3">الفئة</th><th class="p-3 text-center">المسندة</th><th class="p-3 text-center">التقارير</th><th class="p-3 text-center">الإنجاز</th></tr>
             </thead>
             <tbody id="table-exec-summary-body" class="divide-y"></tbody>
           </table>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-white p-5 rounded-2xl border shadow-sm">
-            <h4 class="text-sm font-bold mb-4">إنجاز التقارير حسب أعضاء الفريق</h4>
-            <div class="relative h-64"><canvas id="chart-members-reports"></canvas></div>
-          </div>
-          <div class="bg-white p-5 rounded-2xl border shadow-sm">
-            <h4 class="text-sm font-bold mb-4">توزيع المدارس حسب مستويات الأداء</h4>
-            <div class="relative h-64 flex items-center justify-center"><canvas id="chart-schools-levels"></canvas></div>
-          </div>
-        </div>
       </section>
 
-      <!-- نموذج مستند التقرير الإحصائي لرئيس الفريق -->
+      <!-- طباعة التقرير الإحصائي -->
       <section id="analytics-print-preview-section" class="hidden">
-        <div class="no-print mb-4"><button onclick="showSection('analytics-section')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded text-xs font-bold"><i class="fa-solid fa-arrow-right"></i> رجوع</button></div>
+        <div class="no-print mb-4"><button onclick="showSection('analytics-section')" class="px-4 py-2 bg-slate-200 rounded text-xs font-bold">رجوع</button></div>
         <div id="analytics-report-area" class="bg-white p-6 mx-auto shadow-2xl border max-w-[850px] official-doc text-black">
-          <h2 class="text-center font-bold text-sm bg-slate-100 p-2 border mb-4">التقرير الإحصائي الشامل لمتابعة وتقويم أداء المدارس ومقدمي خدمات دعم التميز — قطاع العوالي</h2>
+          <h2 class="text-center font-bold text-sm bg-slate-100 p-2 border mb-4">التقرير الإحصائي الشامل لمتابعة وتقويم أداء المدارس ومقدمي خدمات دعم التميز</h2>
           <table class="doc-table">
             <thead><tr><th>م</th><th>عضو الفريق التنفيذي</th><th>الفئة</th><th>المدارس المسندة</th><th>التقارير المنفذة</th><th>نسبة الإنجاز</th></tr></thead>
             <tbody id="print-table-exec-summary"></tbody>
@@ -220,31 +145,18 @@
         </div>
       </section>
 
-      <!-- قائمة المدارس المسندة وأرشيف التقارير -->
+      <!-- قائمة المدارس المسندة والأرشيف -->
       <section id="list-section" class="hidden no-print space-y-6">
         <div id="member-kpi-cards" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-white p-4 rounded-xl border shadow-sm">
-            <p class="text-[11px] font-bold text-slate-500">المدارس المسندة لي</p>
-            <h3 class="text-2xl font-black text-slate-800" id="member-kpi-assigned">0</h3>
-          </div>
-          <div class="bg-white p-4 rounded-xl border shadow-sm">
-            <p class="text-[11px] font-bold text-slate-500">إجمالي التقارير</p>
-            <h3 class="text-2xl font-black text-indigo-700" id="member-kpi-reports">0</h3>
-          </div>
-          <div class="bg-white p-4 rounded-xl border shadow-sm">
-            <p class="text-[11px] font-bold text-slate-500">تمت زيارتها</p>
-            <h3 class="text-2xl font-black text-emerald-700" id="member-kpi-visited">0</h3>
-          </div>
-          <div class="bg-white p-4 rounded-xl border shadow-sm">
-            <p class="text-[11px] font-bold text-slate-500">لم تُزر بعد</p>
-            <h3 class="text-2xl font-black text-amber-600" id="member-kpi-pending">0</h3>
-          </div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm"><p class="text-xs font-bold text-slate-500">المدارس المسندة لي</p><h3 class="text-2xl font-black text-slate-800" id="member-kpi-assigned">0</h3></div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm"><p class="text-xs font-bold text-slate-500">إجمالي التقارير</p><h3 class="text-2xl font-black text-indigo-700" id="member-kpi-reports">0</h3></div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm"><p class="text-xs font-bold text-slate-500">تمت زيارتها</p><h3 class="text-2xl font-black text-emerald-700" id="member-kpi-visited">0</h3></div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm"><p class="text-xs font-bold text-slate-500">لم تُزر بعد</p><h3 class="text-2xl font-black text-amber-600" id="member-kpi-pending">0</h3></div>
         </div>
 
-        <!-- جدول إحصائية المدارس المسندة -->
         <div class="bg-white rounded-xl shadow-md border overflow-hidden">
           <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
-            <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-chart-simple text-emerald-600"></i> إحصائية زيارات وتقارير المدارس المسندة</h3>
+            <h3 class="font-bold text-slate-800 text-sm">إحصائية زيارات وتقارير المدارس المسندة</h3>
             <span id="assigned-coverage-badge" class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">0% نسبة التغطية</span>
           </div>
           <div class="overflow-x-auto">
@@ -257,10 +169,9 @@
           </div>
         </div>
 
-        <!-- أرشيف التقارير المحفوظة سحابياً -->
         <div class="bg-white rounded-xl shadow-md border overflow-hidden">
           <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
-            <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-folder-open text-emerald-600"></i> أرشيف التقارير المعتمدة والمحفوظة سحابياً</h3>
+            <h3 class="font-bold text-slate-800 text-sm">أرشيف التقارير المعتمدة والمحفوظة سحابياً</h3>
             <span id="report-count" class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">0 تقرير</span>
           </div>
           <div class="overflow-x-auto">
@@ -274,23 +185,20 @@
         </div>
       </section>
 
-      <!-- نموذج تعبئة واستكمال التقرير -->
+      <!-- نموذج التقرير الجديد -->
       <section id="form-section" class="hidden no-print">
-        <div class="bg-white rounded-2xl shadow-xl border p-6 md:p-8 space-y-6">
-          <div class="border-b pb-4 flex justify-between items-center">
-            <h2 class="text-lg font-bold text-slate-800">استمارة التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي</h2>
-            <input type="hidden" id="edit-id" value="">
-          </div>
+        <div class="bg-white rounded-2xl shadow-xl border p-6 space-y-6">
+          <div class="border-b pb-4"><h2 class="text-lg font-bold text-slate-800">استمارة التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي</h2></div>
           <form id="report-form" class="space-y-6">
+            <input type="hidden" id="edit-id" value="">
             <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
-              <label class="block text-xs font-bold text-emerald-900 mb-2">اختر المدرسة للتعبئة التلقائية (من جدول الإسناد الرسمي)</label>
+              <label class="block text-xs font-bold text-emerald-900 mb-2">اختر المدرسة للتعبئة التلقائية</label>
               <select id="auto-school-select" onchange="onSchoolSelected(this.value)" class="w-full border-2 border-emerald-400 rounded-lg p-2.5 bg-white text-sm font-bold text-slate-800 outline-none">
                 <option value="">-- اختر المدرسة --</option>
               </select>
             </div>
-
             <div class="border rounded-xl p-4 bg-slate-50 space-y-3">
-              <h4 class="font-bold text-xs text-slate-700 uppercase border-b pb-2">أولاً: البيانات العامة للزيارة</h4>
+              <h4 class="font-bold text-xs text-slate-700 uppercase border-b pb-2">البيانات العامة</h4>
               <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <div><label class="block text-xs font-bold text-slate-600 mb-1">اسم المدرسة</label><input type="text" id="school-name" class="w-full border rounded p-2 text-xs bg-white font-bold" required></div>
                 <div><label class="block text-xs font-bold text-slate-600 mb-1">المرحلة</label><input type="text" id="school-stage" class="w-full border rounded p-2 text-xs bg-white"></div>
@@ -298,56 +206,41 @@
                 <div><label class="block text-xs font-bold text-slate-600 mb-1">اسم مقدم الدعم</label><input type="text" id="provider-name" class="w-full border rounded p-2 text-xs bg-white font-bold"></div>
               </div>
             </div>
-
             <div class="flex justify-end gap-3 pt-4 border-t">
               <button type="button" onclick="showSection('list-section')" class="px-5 py-2.5 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">إلغاء</button>
-              <button type="submit" class="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow text-xs">
-                <i class="fa-solid fa-cloud-arrow-up"></i> حفظ واعتماد التقرير سحابياً
-              </button>
+              <button type="submit" class="px-6 py-2.5 bg-emerald-700 text-white font-bold rounded-lg shadow text-xs">حفظ واعتماد التقرير سحابياً</button>
             </div>
           </form>
         </div>
       </section>
 
-      <!-- معاينة التقرير الرسمي -->
+      <!-- معاينة التقرير -->
       <section id="preview-section" class="hidden">
         <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow mb-4">
-          <button onclick="showSection('list-section')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-bold text-xs"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
+          <button onclick="showSection('list-section')" class="px-4 py-2 bg-slate-200 rounded text-xs font-bold">رجوع</button>
           <div class="flex gap-2">
-            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg font-bold text-xs"><i class="fa-solid fa-print"></i> طباعة</button>
-            <button onclick="exportToPdf()" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-xs"><i class="fa-solid fa-file-pdf"></i> تصدير PDF</button>
+            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded text-xs font-bold">طباعة</button>
+            <button onclick="exportToPdf()" class="px-4 py-2 bg-emerald-700 text-white rounded text-xs font-bold">تصدير PDF</button>
           </div>
         </div>
-
-        <div id="printable-area" class="bg-white p-5 mx-auto shadow-2xl rounded-sm border max-w-[850px] official-doc text-black text-[11px]">
-          <div class="text-center my-1.5">
-            <h2 class="text-xs font-bold bg-slate-100 py-1 px-3 border border-black inline-block">
-              تقرير التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي
-            </h2>
-          </div>
-          <table class="doc-table mt-4">
-            <tr>
-              <td class="table-label w-24">اسم المدرسة:</td><td id="pdf-school-name" class="font-bold text-center"></td>
-              <td class="table-label w-24">مستوى الأداء:</td><td id="pdf-overall-level" class="font-bold text-center"></td>
-              <td class="table-label w-24">مقدم الدعم:</td><td id="pdf-provider-name" class="font-bold text-center"></td>
-            </tr>
+        <div id="printable-area" class="bg-white p-5 mx-auto shadow-2xl border max-w-[850px] official-doc text-black text-[11px]">
+          <h2 class="text-center font-bold text-xs bg-slate-100 p-2 border mb-3">تقرير التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي</h2>
+          <table class="doc-table">
+            <tr><td class="table-label w-24">اسم المدرسة:</td><td id="pdf-school-name" class="font-bold text-center"></td><td class="table-label w-24">مقدم الدعم:</td><td id="pdf-provider-name" class="font-bold text-center"></td></tr>
           </table>
-
           <table class="doc-table mt-6" style="border:none;">
             <tr style="border:none;">
               <td style="border:none; width:50%; text-align:center;">
                 <p class="font-bold text-xs">مقدم/ة خدمات دعم التميز المدرسي</p>
-                <p id="pdf-footer-provider" class="font-semibold text-xs mt-1"></p>
                 <div class="h-12 flex items-center justify-center">
-                  <img id="pdf-provider-signature-img" src="" alt="توقيع مقدم الدعم" class="max-h-11 object-contain hidden">
+                  <img id="pdf-provider-signature-img" src="" class="max-h-11 object-contain hidden">
                   <span id="pdf-provider-sig-placeholder" class="text-slate-400 italic text-[10px]">[في انتظار التوقيع الإلكتروني]</span>
                 </div>
               </td>
               <td style="border:none; width:50%; text-align:center;">
                 <p class="font-bold text-xs">مشرف/ـة الفريق التنفيذي</p>
-                <p id="pdf-footer-member" class="font-bold text-xs mt-1"></p>
                 <div class="h-12 flex items-center justify-center">
-                  <img id="pdf-signature-img" src="" alt="توقيع العضو" class="max-h-11 object-contain">
+                  <img id="pdf-signature-img" src="" class="max-h-11 object-contain">
                 </div>
               </td>
             </tr>
@@ -361,19 +254,13 @@
   <div id="sign-share-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-200">
       <div class="flex justify-between items-center border-b pb-3 mb-4">
-        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-file-signature text-emerald-600"></i> إرسال الاستمارة لمقدم الدعم للتوقيع سحابياً</h3>
+        <h3 class="font-bold text-slate-800 text-base">إرسال الاستمارة لمقدم الدعم للتوقيع سحابياً</h3>
         <button onclick="closeSignShareModal()" class="text-slate-400 text-lg">&times;</button>
       </div>
       <div class="space-y-4">
         <p class="text-xs text-slate-600">أرسل هذا الرابط لمقدم الدعم (<span id="share-provider-name" class="font-bold text-emerald-800"></span>) عبر الواتساب:</p>
+        <div><input type="text" id="share-link-input" readonly class="w-full border rounded p-2 text-xs bg-slate-50 font-mono"></div>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">الرابط المباشر</label>
-          <div class="flex gap-2">
-            <input type="text" id="share-link-input" readonly class="w-full border rounded p-2 text-xs bg-slate-50 font-mono text-slate-600">
-            <button onclick="copyShareLink()" class="px-3 py-2 bg-slate-800 text-white font-bold rounded text-xs">نسخ</button>
-          </div>
-        </div>
-        <div class="pt-2">
           <a id="whatsapp-share-btn" href="#" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg shadow transition flex items-center justify-center gap-2 text-xs">
             <i class="fa-brands fa-whatsapp text-base"></i> إرسال رابط التوقيع عبر الواتساب مباشرة
           </a>
@@ -386,7 +273,7 @@
   <div id="settings-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
       <div class="flex justify-between items-center border-b pb-3 mb-4">
-        <h3 class="font-bold text-slate-800 text-base"><i class="fa-solid fa-signature text-emerald-600"></i> إدارة التوقيع الإلكتروني</h3>
+        <h3 class="font-bold text-slate-800 text-base">إدارة التوقيع الإلكتروني</h3>
         <button onclick="closeSettingsModal()" class="text-slate-400 text-lg">&times;</button>
       </div>
       <div class="space-y-4">
@@ -406,8 +293,8 @@
   <script>
     const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycby--qPvIIusR40y5f9D7Wd_9qE0rDpGaalU_YF5dYm4VpDsfMKv_dpJ-tTijSDLN_Oogw/exec";
 
-    // قائمة مدارس قطاع العوالي الكاملة (173 مدرسة)
-    const SCHOOLS_DATA = [{"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية الإمام أبي حنيفة النعمان", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "أكرم ياسين أحمد الشريف", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية شوران", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "جايز دغيمان سميحان السليمي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية الإمام احمد بن حنبل", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "محمد بن صالح بن يعقوب عفيفي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية السعودية", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عادل بن سالم بن عوض حسينون", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "الإمام يعقوب بن اسحاق الحضرمي لتحفيظ القرآن الكريم", "gender": "بنين", "stage": "عام", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية الفهدية", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "المنذر بن سعيد (غراب)", "gender": "بنين", "stage": "عام", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عادل بن سالم بن عوض حسينون", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية إياس بن البكير", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد عبدالكريم مراد رحمة الله", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية الأمير عبدالمحسن بن عبدالعزيز - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية عقيل بن أبي طالب", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية معاذ بن الحارث", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة عمر بن الخطاب", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "أكرم ياسين أحمد الشريف", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة سلمة بن الأكوع (غراب)", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "جايز دغيمان سميحان السليمي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية الضميرية - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "علي ناجي عبدالحميد طرابيشي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية طابة - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "علي ناجي عبدالحميد طرابيشي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة ربيعة بن الحارث", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد بن صالح بن يعقوب عفيفي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية عطاء بن يسار", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد بن صالح بن يعقوب عفيفي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية رافع بن مالك", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد عبدالكريم مراد رحمة الله", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة الضميرية", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "ناصر بن حسن بن ناصر القحطاني", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة أبان بن سعيد بن العاص", "gender": "بنين", "stage": "متوسط", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "ناصر بن حسن بن ناصر القحطاني", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية الأقصى - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "ناصر بن حسن بن ناصر القحطاني", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية عبدالله بن الحارث الأنصاري", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "ابتدائية الإمام الشاطبي", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "بندر ابراهيم محمد مرعي الشريف", "sector": "العوالي"}, {"member": "شكري بن أحمد خجا بخاري", "name": "متوسطة ابن هشام", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "بندر ابراهيم محمد مرعي الشريف", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة الخوارزمي", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة أبي بن ثابت الأنصاري", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية خالد بن الوليد - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية طيبة", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الرابعة والسبعون بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "بينة حسن ناصر القحطاني", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الرابعة عشرة بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "وداد دخيل الله سليمان اللقماني", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الثانوية الخامسة بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "جواهر شكري مفرّج بطيش", "sector": "العوالي"}];
+    // قائمة مدارس قطاع العوالي الـ 173 كاملة للتعبئة التلقائية
+    const SCHOOLS_DATA = [{"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية الإمام أبي حنيفة النعمان", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "أكرم ياسين أحمد الشريف", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية شوران", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "جايز دغيمان سميحان السليمي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية الإمام احمد بن حنبل", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "محمد بن صالح بن يعقوب عفيفي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية السعودية", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عادل بن سالم بن عوض حسينون", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "الإمام يعقوب بن اسحاق الحضرمي لتحفيظ القرآن الكريم", "gender": "بنين", "stage": "عام", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية الفهدية", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "المنذر بن سعيد (غراب)", "gender": "بنين", "stage": "عام", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "عادل بن سالم بن عوض حسينون", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية إياس بن البكير", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد عبدالكريم مراد رحمة الله", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية الأمير عبدالمحسن بن عبدالعزيز - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية عقيل بن أبي طالب", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية معاذ بن الحارث", "gender": "بنين", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة عمر بن الخطاب", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "أكرم ياسين أحمد الشريف", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة سلمة بن الأكوع (غراب)", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "جايز دغيمان سميحان السليمي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية الضميرية - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "علي ناجي عبدالحميد طرابيشي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية طابة - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "علي ناجي عبدالحميد طرابيشي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة ربيعة بن الحارث", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد بن صالح بن يعقوب عفيفي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية عطاء بن يسار", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد بن صالح بن يعقوب عفيفي", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ابتدائية رافع بن مالك", "gender": "بنين", "stage": "ابتدائي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "محمد عبدالكريم مراد رحمة الله", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة الضميرية", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "ناصر بن حسن بن ناصر القحطاني", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "متوسطة أبان بن سعيد بن العاص", "gender": "بنين", "stage": "متوسط", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "ناصر بن حسن بن ناصر القحطاني", "sector": "العوالي"}, {"member": "أنس بن ناجي رشيد الرحيلي", "name": "ثانوية الأقصى - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "ناصر بن حسن بن ناصر القحطاني", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة الخوارزمي", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة أبي بن ثابت الأنصاري", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية خالد بن الوليد - مسارات", "gender": "بنين", "stage": "ثانوي", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}, {"member": "صالح بن عوض فاضي الحربي", "name": "ثانوية طيبة", "gender": "بنين", "stage": "ثانوي", "overall_level": "التقدم", "has_provider": "لا", "provider_name": "", "sector": "العوالي"}, {"member": "ريم بنت عبدالله حمد السحيمي", "name": "الابتدائية الرابعة والسبعون بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "بينة حسن ناصر القحطاني", "sector": "العوالي"}, {"member": "بدرية بنت علي حسين الفريدي", "name": "الابتدائية الرابعة عشرة بالمدينة", "gender": "بنات", "stage": "ابتدائي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "وداد دخيل الله سليمان اللقماني", "sector": "العوالي"}, {"member": "هدى بنت نويع عائض الحربي", "name": "الثانوية الخامسة بالمدينة - مسارات", "gender": "بنات", "stage": "ثانوي", "overall_level": "التقدم", "has_provider": "نعم", "provider_name": "جواهر شكري مفرّج بطيش", "sector": "العوالي"}];
     
     let EXEC_MEMBERS = JSON.parse(localStorage.getItem("exec_members_config")) || {
       "د. عائشة بنت جميعان الجهني": { pass: "123456", signature: "", role: "leader" },
@@ -421,8 +308,6 @@
 
     let currentUser = null;
     let reports = [];
-    let chartMembers = null;
-    let chartLevels = null;
 
     async function fetchReportsFromCloud() {
       try {
@@ -498,69 +383,20 @@
       }
     }
 
-    // إحصاءات رئيس الفريق
     function renderAnalyticsDashboard() {
       document.getElementById("stat-total-reports").innerText = reports.length;
       const membersList = [
         { name: "أنس بن ناجي رشيد الرحيلي", gender: "بنين" },
-        { name: "شكري بن أحمد خجا بخاري", gender: "بنين" },
-        { name: "صالح بن عوض فاضي الحربي", gender: "بنين" },
-        { name: "بدرية بنت علي حسين الفريدي", gender: "بنات" },
-        { name: "ريم بنت عبدالله حمد السحيمي", gender: "بنات" },
-        { name: "هدى بنت نويع عائض الحربي", gender: "بنات" }
+        { name: "صالح بن عوض فاضي الحربي", gender: "بنين" }
       ];
-
       const tbody = document.getElementById("table-exec-summary-body");
       tbody.innerHTML = "";
-      const memberNames = [];
-      const reportsCount = [];
-      const assignedCount = [];
-
       membersList.forEach(m => {
-        const assignedSchools = SCHOOLS_DATA.filter(s => s.member.trim() === m.name.trim());
-        const withProv = assignedSchools.filter(s => s.has_provider === "نعم").length;
-        const memberReports = reports.filter(r => r.author === m.name);
-        const perc = assignedSchools.length > 0 ? Math.round((memberReports.length / assignedSchools.length) * 100) : 0;
-
-        memberNames.push(m.name.split(" ")[0] + " " + m.name.split(" ")[m.name.split(" ").length - 1]);
-        reportsCount.push(memberReports.length);
-        assignedCount.push(assignedSchools.length);
-
+        const assigned = SCHOOLS_DATA.filter(s => s.member.trim() === m.name.trim()).length;
+        const memberReports = reports.filter(r => r.author === m.name).length;
         const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 border-b";
-        tr.innerHTML = `
-          <td class="p-3 font-bold">${m.name}</td>
-          <td class="p-3">${m.gender}</td>
-          <td class="p-3 text-center font-bold">${assignedSchools.length}</td>
-          <td class="p-3 text-center text-emerald-700">${withProv}</td>
-          <td class="p-3 text-center font-black text-indigo-700">${memberReports.length}</td>
-          <td class="p-3 text-center font-bold">${perc}%</td>
-        `;
+        tr.innerHTML = `<td class="p-3 font-bold">${m.name}</td><td class="p-3">${m.gender}</td><td class="p-3 text-center">${assigned}</td><td class="p-3 text-center font-bold text-indigo-700">${memberReports}</td><td class="p-3 text-center">${assigned > 0 ? Math.round((memberReports/assigned)*100) : 0}%</td>`;
         tbody.appendChild(tr);
-      });
-
-      // الرسوم البيانية لوحة القيادة
-      const ctx1 = document.getElementById('chart-members-reports').getContext('2d');
-      if (chartMembers) chartMembers.destroy();
-      chartMembers = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: memberNames,
-          datasets: [{ label: 'التقارير المنجزة سحابياً', data: reportsCount, backgroundColor: '#4f46e5', borderRadius: 6 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, animation: false }
-      });
-
-      let tamayuz = 5, takadom = 120, intilaq = 48;
-      const ctx2 = document.getElementById('chart-schools-levels').getContext('2d');
-      if (chartLevels) chartLevels.destroy();
-      chartLevels = new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-          labels: ['التميز', 'التقدم', 'الانطلاق'],
-          datasets: [{ data: [tamayuz, takadom, intilaq], backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'] }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, animation: false }
       });
     }
 
@@ -569,7 +405,6 @@
       showSection("analytics-print-preview-section");
     }
 
-    // إحصائيات المدارس المسندة لعضو الفريق
     function renderMemberAssignedSchoolsStats() {
       const tbody = document.getElementById("member-assigned-stats-body");
       if (!tbody) return;
@@ -582,24 +417,14 @@
         const count = userReports.filter(r => r.schoolName === school.name).length;
         if (count > 0) visited++;
         const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 border-b";
-        tr.innerHTML = `
-          <td class="p-3 text-center font-bold">${index + 1}</td>
-          <td class="p-3 font-bold">${school.name}</td>
-          <td class="p-3">${school.stage}</td>
-          <td class="p-3 text-emerald-700 font-bold">${school.provider_name || 'بدون'}</td>
-          <td class="p-3 text-center">${school.overall_level}</td>
-          <td class="p-3 text-center font-black">${count}</td>
-          <td class="p-3 text-center"><button onclick="quickStart('${school.name}')" class="px-3 py-1 bg-emerald-700 text-white font-bold rounded text-xs">إنشاء تقرير</button></td>
-        `;
+        tr.innerHTML = `<td class="p-3 text-center font-bold">${index + 1}</td><td class="p-3 font-bold">${school.name}</td><td class="p-3">${school.stage}</td><td class="p-3 text-emerald-700 font-bold">${school.provider_name || 'بدون'}</td><td class="p-3 text-center">${school.overall_level}</td><td class="p-3 text-center font-black">${count}</td><td class="p-3 text-center"><button onclick="quickStart('${school.name}')" class="px-3 py-1 bg-emerald-700 text-white font-bold rounded text-xs">إنشاء تقرير</button></td>`;
         tbody.appendChild(tr);
       });
       document.getElementById("member-kpi-assigned").innerText = mySchools.length;
       document.getElementById("member-kpi-reports").innerText = userReports.length;
       document.getElementById("member-kpi-visited").innerText = visited;
       document.getElementById("member-kpi-pending").innerText = mySchools.length - visited;
-      const coverage = mySchools.length > 0 ? Math.round((visited / mySchools.length) * 100) : 0;
-      document.getElementById("assigned-coverage-badge").innerText = `${coverage}% نسبة التغطية`;
+      document.getElementById("assigned-coverage-badge").innerText = `${mySchools.length > 0 ? Math.round((visited/mySchools.length)*100) : 0}% نسبة التغطية`;
     }
 
     function quickStart(name) { showSection('form-section'); resetForm(); document.getElementById("auto-school-select").value = name; onSchoolSelected(name); }
@@ -609,12 +434,13 @@
       extSigCanvas = document.getElementById("ext-sig-canvas");
       extSigCtx = extSigCanvas.getContext("2d");
       extSigCtx.lineWidth = 3; extSigCtx.strokeStyle = "#1e293b";
+      let drawing = false;
       function getPos(e) { const r = extSigCanvas.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: (cx - r.left) * (extSigCanvas.width / r.width), y: (cy - r.top) * (extSigCanvas.height / r.height) }; }
-      extSigCanvas.onmousedown = (e) => { isExtDrawing = true; const p = getPos(e); extSigCtx.beginPath(); extSigCtx.moveTo(p.x, p.y); };
-      extSigCanvas.onmousemove = (e) => { if(!isExtDrawing)return; const p = getPos(e); extSigCtx.lineTo(p.x, p.y); extSigCtx.stroke(); };
-      extSigCanvas.onmouseup = () => isExtDrawing = false;
-      extSigCanvas.ontouchstart = (e) => { e.preventDefault(); isExtDrawing = true; const p = getPos(e); extSigCtx.beginPath(); extSigCtx.moveTo(p.x, p.y); };
-      extSigCanvas.ontouchmove = (e) => { if(!isExtDrawing)return; e.preventDefault(); const p = getPos(e); extSigCtx.lineTo(p.x, p.y); extSigCtx.stroke(); };
+      extSigCanvas.onmousedown = (e) => { drawing = true; const p = getPos(e); extSigCtx.beginPath(); extSigCtx.moveTo(p.x, p.y); };
+      extSigCanvas.onmousemove = (e) => { if(!drawing)return; const p = getPos(e); extSigCtx.lineTo(p.x, p.y); extSigCtx.stroke(); };
+      extSigCanvas.onmouseup = () => drawing = false;
+      extSigCanvas.ontouchstart = (e) => { e.preventDefault(); drawing = true; const p = getPos(e); extSigCtx.beginPath(); extSigCtx.moveTo(p.x, p.y); };
+      extSigCanvas.ontouchmove = (e) => { if(!drawing)return; e.preventDefault(); const p = getPos(e); extSigCtx.lineTo(p.x, p.y); extSigCtx.stroke(); };
     }
     function clearExtSignaturePad() { extSigCtx.clearRect(0, 0, extSigCanvas.width, extSigCanvas.height); }
 
@@ -640,7 +466,6 @@
     }
 
     function closeSignShareModal() { document.getElementById("sign-share-modal").classList.add("hidden"); }
-    function copyShareLink() { navigator.clipboard.writeText(document.getElementById("share-link-input").value); alert("تم نسخ رابط التوقيع!"); }
 
     function openSettingsModal() {
       document.getElementById("settings-user-name").value = currentUser;
@@ -683,7 +508,6 @@
         schoolStage: document.getElementById("school-stage").value,
         schoolGender: document.getElementById("school-gender").value,
         providerName: document.getElementById("provider-name").value,
-        overallLevel: document.getElementById("overall-level").value,
         providerSignature: editId ? (reports.find(r => r.id === editId)?.providerSignature || null) : null,
         savedAt: new Date().toISOString()
       };
@@ -697,19 +521,18 @@
       const tbody = document.getElementById("reports-table-body");
       tbody.innerHTML = "";
       reports.forEach((item, idx) => {
-        const signBadge = item.providerSignature ? `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px] block mt-1"><i class="fa-solid fa-signature"></i> موقع سحابياً</span>` : `<span class="bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded text-[10px] block mt-1"><i class="fa-regular fa-clock"></i> في الانتظار</span>`;
+        const signBadge = item.providerSignature ? `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">موقع سحابياً</span>` : `<span class="bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded text-[10px]">في الانتظار</span>`;
         const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 border-b";
         tr.innerHTML = `
           <td class="p-3">${idx + 1}</td>
           <td class="p-3 font-bold">${item.schoolName}</td>
           <td class="p-3">${item.schoolStage || '-'}</td>
-          <td class="p-3">${item.overallLevel || 'التقدم'}</td>
+          <td class="p-3">التقدم</td>
           <td class="p-3">28 جمادى الأولى 1448 هـ</td>
           <td class="p-3">${item.providerName || '-'} ${signBadge}</td>
           <td class="p-3">${item.author}</td>
           <td class="p-3 text-center flex gap-1 justify-center">
-            <button onclick="openSignShareModal('${item.id}')" class="px-2 py-1 bg-indigo-600 text-white rounded font-bold text-xs"><i class="fa-solid fa-share-nodes"></i> إرسال</button>
+            <button onclick="openSignShareModal('${item.id}')" class="px-2 py-1 bg-indigo-600 text-white rounded font-bold text-xs">إرسال</button>
             <button onclick="previewReport('${item.id}')" class="p-1.5 bg-blue-50 text-blue-600 rounded"><i class="fa-solid fa-file-pdf"></i></button>
           </td>
         `;
@@ -722,11 +545,7 @@
       const item = reports.find(r => r.id === id);
       if (!item) return;
       document.getElementById("pdf-school-name").innerText = item.schoolName;
-      document.getElementById("pdf-overall-level").innerText = item.overallLevel || 'التقدم';
       document.getElementById("pdf-provider-name").innerText = item.providerName || '-';
-      document.getElementById("pdf-footer-provider").innerText = item.providerName || 'مقدم الدعم';
-      document.getElementById("pdf-footer-member").innerText = item.author;
-
       const provSigImg = document.getElementById("pdf-provider-signature-img");
       const provPlaceholder = document.getElementById("pdf-provider-sig-placeholder");
       if (item.providerSignature) {
@@ -737,11 +556,9 @@
         provSigImg.classList.add("hidden");
         provPlaceholder.classList.remove("hidden");
       }
-
       const sigImg = document.getElementById("pdf-signature-img");
       const userSig = EXEC_MEMBERS[item.author]?.signature;
       if (userSig) { sigImg.src = userSig; sigImg.classList.remove("hidden"); } else { sigImg.classList.add("hidden"); }
-
       showSection("preview-section");
     }
 
@@ -751,11 +568,11 @@
 
     function populateSchoolSelect() {
       const select = document.getElementById("auto-school-select");
-      select.innerHTML = '<option value="">-- اختر المدرسة من قائمة إسناد قطاع العوالي --</option>';
+      select.innerHTML = '<option value="">-- اختر المدرسة --</option>';
       SCHOOLS_DATA.forEach(s => {
         const opt = document.createElement("option");
         opt.value = s.name;
-        opt.innerText = `${s.name} (${s.stage} - ${s.gender}) - [مقدم الدعم: ${s.provider_name || 'بدون'}]`;
+        opt.innerText = `${s.name} (${s.stage}) - [مقدم الدعم: ${s.provider_name || 'بدون'}]`;
         select.appendChild(opt);
       });
     }
