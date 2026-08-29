@@ -11,27 +11,27 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
-    .official-doc { font-family: 'Amiri', serif; line-height: 1.25; }
+    .official-doc { font-family: 'Amiri', serif; line-height: 1.2; }
     * {
       font-variant-numeric: tabular-nums;
       -moz-font-feature-settings: "latn" 1;
       -webkit-font-feature-settings: "latn" 1;
       font-feature-settings: "latn" 1;
     }
-    .doc-table { width: 100%; border-collapse: collapse; margin-top: 3px; margin-bottom: 4px; }
+    .doc-table { width: 100%; border-collapse: collapse; margin-top: 2px; margin-bottom: 2px; }
     .doc-table th, .doc-table td {
       border: 1px solid #1e293b;
-      padding: 2.5px 4.5px;
-      font-size: 10.5px;
+      padding: 2px 4px;
+      font-size: 10px;
       vertical-align: middle;
     }
     .doc-table th { background-color: #f8fafc; font-weight: bold; text-align: center; }
-    .table-label { background-color: #f8fafc; font-weight: bold; width: 15%; }
+    .table-label { background-color: #f8fafc; font-weight: bold; }
     .section-header {
       background-color: #f1f5f9;
       font-weight: bold;
-      font-size: 11px;
-      padding: 2px 5px;
+      font-size: 10.5px;
+      padding: 2px 4px;
       border: 1px solid #1e293b;
       border-bottom: none;
       margin-top: 3px;
@@ -45,8 +45,8 @@
     }
     @media print {
       body * { visibility: hidden; }
-      #printable-area, #printable-area *, #analytics-report-area, #analytics-report-area * { visibility: visible !important; }
-      #printable-area, #analytics-report-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 6mm; }
+      #printable-area, #printable-area * { visibility: visible !important; }
+      #printable-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 4mm; }
       .no-print { display: none !important; }
     }
   </style>
@@ -89,19 +89,19 @@
     </div>
   </div>
 
-  <!-- واجهة توقيع مقدم الدعم الخارجية (تظهر تلقائياً عند فتح رابط مقدم الدعم) -->
+  <!-- واجهة توقيع مقدم الدعم الخارجية (عبر الرابط المشفر) -->
   <div id="external-sign-container" class="hidden min-h-screen bg-slate-100 p-4 md:p-8 flex items-center justify-center">
     <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full p-6 md:p-8 border border-slate-200">
       <div class="text-center border-b pb-4 mb-6">
         <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto mb-2" style="height: 60px; max-width: 120px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
         <h2 class="text-lg font-bold text-slate-800">اعتماد وتوقيع استمارة التغذية الراجعة لمقدمي خدمات الدعم</h2>
-        <p class="text-xs text-slate-500 mt-1">مرحباً بك: <span id="ext-provider-display" class="font-bold text-emerald-800"></span> | يرجى مراجعة بيانات الزيارة والتوقيع أدناه</p>
+        <p class="text-xs text-slate-500 mt-1">مرحباً بك: <span id="ext-provider-display" class="font-bold text-emerald-800"></span> | يرجى مراجعة البيانات والتوقيع أدناه</p>
       </div>
 
       <div class="bg-emerald-50/70 border border-emerald-200 p-4 rounded-xl mb-6 text-xs space-y-1.5">
         <p><strong>المدرسة:</strong> <span id="ext-school-name" class="font-bold"></span></p>
         <p><strong>عضو الفريق التنفيذي:</strong> <span id="ext-author-name" class="font-bold"></span></p>
-        <p><strong>تاريخ الزيارة والأسبوع:</strong> <span id="ext-visit-info" class="font-bold"></span></p>
+        <p><strong>تاريخ الزيارة:</strong> <span id="ext-visit-info" class="font-bold"></span></p>
       </div>
 
       <div class="space-y-3 mb-6">
@@ -157,194 +157,19 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-6">
-      <!-- أزرار التنقل العلوية -->
       <div class="flex justify-between items-center mb-6 no-print flex-wrap gap-2">
         <div class="flex gap-2 flex-wrap">
-          <button id="btn-nav-analytics" onclick="showSection('analytics-section'); renderAnalyticsDashboard();" class="hidden px-4 py-2 bg-indigo-700 text-white rounded-lg font-bold hover:bg-indigo-800 shadow flex items-center gap-2 text-sm transition">
-            <i class="fa-solid fa-chart-pie"></i> لوحة الإحصاءات العامة
-          </button>
           <button onclick="showSection('list-section')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold hover:bg-slate-50 shadow-sm flex items-center gap-2 text-sm transition">
             <i class="fa-solid fa-folder-open text-emerald-600"></i> متابعة الإسناد والتقارير
           </button>
-          <button id="btn-new-report" onclick="showSection('form-section'); resetForm();" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold hover:bg-emerald-800 shadow flex items-center gap-2 text-sm transition">
+          <button onclick="showSection('form-section'); resetForm();" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold hover:bg-emerald-800 shadow flex items-center gap-2 text-sm transition">
             <i class="fa-solid fa-circle-plus"></i> إنشاء تقرير جديد
           </button>
         </div>
       </div>
 
-      <!-- لوحة الإحصاءات العامة لرئيس الفريق -->
-      <section id="analytics-section" class="hidden no-print space-y-6">
-        <div class="bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-white p-5 rounded-2xl shadow flex justify-between items-center flex-wrap gap-4">
-          <div>
-            <span class="bg-indigo-700/80 text-[11px] font-bold px-3 py-1 rounded-full border border-indigo-500 inline-block mb-1">لوحة القيادة الإشرافية المتقدمة</span>
-            <h3 class="text-lg font-black flex items-center gap-2">
-              <i class="fa-solid fa-file-waveform text-amber-400"></i> التقرير الإحصائي العام لدعم التميز المدرسي
-            </h3>
-            <p class="text-xs text-indigo-200 mt-0.5">متابعة دقيقة لمؤشرات المدارس، نواتج التعلم، وأداء الفريق التنفيذي بقطاع العوالي</p>
-          </div>
-          <div class="flex items-center gap-2">
-            <button onclick="prepareAndPrintAnalyticsReport()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded-xl shadow transition text-xs flex items-center gap-1.5">
-              <i class="fa-solid fa-print"></i> إصدار وطباعة التقرير الإحصائي المعتمد
-            </button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-slate-500">إجمالي مدارس الإسناد</p>
-              <h3 class="text-2xl font-black text-slate-800 mt-1" id="stat-total-schools">173</h3>
-            </div>
-            <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-school"></i></div>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-slate-500">التقارير المنجزة</p>
-              <h3 class="text-2xl font-black text-indigo-700 mt-1" id="stat-total-reports">0</h3>
-            </div>
-            <div class="w-12 h-12 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-file-circle-check"></i></div>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-slate-500">مقدمو خدمات الدعم</p>
-              <h3 class="text-2xl font-black text-amber-600 mt-1" id="stat-total-providers">57</h3>
-            </div>
-            <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-user-tie"></i></div>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-slate-500">أعضاء الفريق التنفيذي</p>
-              <h3 class="text-2xl font-black text-rose-600 mt-1">6</h3>
-            </div>
-            <div class="w-12 h-12 bg-rose-100 text-rose-700 rounded-full flex items-center justify-center text-xl"><i class="fa-solid fa-users-gear"></i></div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-chart-column text-indigo-600"></i> إنجاز تقارير التغذية الراجعة حسب أعضاء الفريق
-            </h4>
-            <div class="relative h-64"><canvas id="chart-members-reports"></canvas></div>
-          </div>
-          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-            <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-              <i class="fa-solid fa-chart-pie text-emerald-600"></i> توزيع المدارس حسب تصنيف الأداء المدرسي
-            </h4>
-            <div class="relative h-64 flex items-center justify-center"><canvas id="chart-schools-levels"></canvas></div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
-            <h4 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <i class="fa-solid fa-table text-emerald-600"></i> ملخص أداء ومتابعة إسناد أعضاء الفريق التنفيذي
-            </h4>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-right text-xs">
-              <thead class="bg-slate-100 font-bold text-slate-700 border-b">
-                <tr>
-                  <th class="p-3">عضو الفريق التنفيذي</th>
-                  <th class="p-3">الفئة</th>
-                  <th class="p-3 text-center">إجمالي المدارس المسندة</th>
-                  <th class="p-3 text-center">بها مقدم دعم</th>
-                  <th class="p-3 text-center">بدون مقدم دعم</th>
-                  <th class="p-3 text-center">التقارير المرفوعة</th>
-                  <th class="p-3 text-center">نسبة الإنجاز</th>
-                </tr>
-              </thead>
-              <tbody id="table-exec-summary-body" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- نموذج مستند التقرير الإحصائي لرئيس الفريق -->
-      <section id="analytics-print-preview-section" class="hidden">
-        <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow mb-4">
-          <button onclick="showSection('analytics-section')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg font-bold text-xs flex items-center gap-1.5">
-            <i class="fa-solid fa-arrow-right"></i> رجوع للوحة الإحصاءات
-          </button>
-          <div class="flex gap-2">
-            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg font-bold hover:bg-black text-xs flex items-center gap-1.5">
-              <i class="fa-solid fa-print"></i> طباعة فورية
-            </button>
-            <button onclick="exportAnalyticsToPdf()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-xs flex items-center gap-1.5">
-              <i class="fa-solid fa-file-pdf"></i> تصدير ملف PDF معتمد
-            </button>
-          </div>
-        </div>
-
-        <div id="analytics-report-area" class="bg-white p-6 mx-auto shadow-2xl rounded-sm border border-slate-300 max-w-[850px] official-doc text-black">
-          <div class="flex justify-between items-center border-b border-black pb-1.5 mb-2">
-            <div class="text-center text-[10.5px] leading-tight font-bold text-slate-800 w-1/3">
-              <p>المملكة العربية السعودية</p><p>وزارة التعليم</p><p>(280)</p><p>الإدارة العامة للتعليم بمنطقة المدينة المنورة</p><p>الشؤون التعليمية</p><p>إدارة أداء التعليم — قسم الاشراف التربوي</p>
-            </div>
-            <div class="text-center w-1/3">
-              <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto" style="height: 65px; max-width: 130px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
-            </div>
-            <div class="text-right text-[11px] leading-relaxed font-bold text-slate-800 w-1/3 pr-6">
-              <p>الرقم: <span id="stat-doc-id" class="font-normal mr-1"></span></p>
-              <p>التاريخ: <span id="stat-doc-date" class="font-normal mr-1 border-b border-black inline-block min-w-[70px] text-center"></span> /</p>
-              <p>المرفقات: <span class="font-normal mr-1">بيان إحصائي ورسوم بيانية</span></p>
-            </div>
-          </div>
-          <div class="text-center my-2">
-            <h2 class="text-xs md:text-sm font-bold bg-slate-100 py-1.5 px-4 border border-black inline-block">
-              التقرير الإحصائي الشامل لمتابعة وتقويم أداء المدارس ومقدمي خدمات دعم التميز — قطاع العوالي
-            </h2>
-          </div>
-          <div class="section-header">أولاً: بيان إحصائي بمتابعة وإنجاز أعضاء الفريق التنفيذي بقطاع العوالي</div>
-          <table class="doc-table">
-            <thead>
-              <tr><th>م</th><th>عضو الفريق التنفيذي</th><th>الفئة</th><th>المدارس المسندة</th><th>بها مقدم دعم</th><th>بدون مقدم دعم</th><th>التقارير المنفذة</th><th>نسبة الإنجاز</th></tr>
-            </thead>
-            <tbody id="print-table-exec-summary"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- قائمة التقارير والمتابعة -->
+      <!-- قائمة التقارير -->
       <section id="list-section" class="hidden no-print space-y-6">
-        <div id="member-kpi-cards" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div><p class="text-[11px] font-bold text-slate-500">المدارس المسندة لي</p><h3 class="text-2xl font-black text-slate-800 mt-0.5" id="member-kpi-assigned">0</h3></div>
-            <div class="w-11 h-11 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-school-flag"></i></div>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div><p class="text-[11px] font-bold text-slate-500">إجمالي التقارير المنفذة</p><h3 class="text-2xl font-black text-indigo-700 mt-0.5" id="member-kpi-reports">0</h3></div>
-            <div class="w-11 h-11 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-clipboard-check"></i></div>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div><p class="text-[11px] font-bold text-slate-500">مدارس تمت زيارتها</p><h3 class="text-2xl font-black text-emerald-700 mt-0.5" id="member-kpi-visited">0</h3></div>
-            <div class="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-circle-check"></i></div>
-          </div>
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-            <div><p class="text-[11px] font-bold text-slate-500">مدارس لم تُزر بعد</p><h3 class="text-2xl font-black text-amber-600 mt-0.5" id="member-kpi-pending">0</h3></div>
-            <div class="w-11 h-11 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-lg"><i class="fa-solid fa-clock-rotate-left"></i></div>
-          </div>
-        </div>
-
-        <!-- جدول المدارس المسندة -->
-        <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
-          <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-gradient-to-r from-slate-50 to-emerald-50/40 flex-wrap gap-2">
-            <div>
-              <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-chart-simple text-emerald-600"></i> إحصائية زيارات وتقارير المدارس المسندة</h3>
-            </div>
-            <span id="assigned-coverage-badge" class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full border border-emerald-200">0% نسبة التغطية</span>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-right text-xs">
-              <thead class="bg-slate-100 text-slate-700 font-bold border-b">
-                <tr><th class="p-3 text-center w-12">#</th><th class="p-3">اسم المدرسة</th><th class="p-3">المرحلة</th><th class="p-3">مقدم الدعم المسند</th><th class="p-3 text-center">مستوى الأداء</th><th class="p-3 text-center">الزيارات المنفذة</th><th class="p-3 text-center">حالة المتابعة</th><th class="p-3 text-center">إجراء سريع</th></tr>
-              </thead>
-              <tbody id="member-assigned-stats-body" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- أرشيف التقارير -->
         <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
           <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-wrap gap-3">
             <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-folder-open text-emerald-600"></i> أرشيف التقارير المعتمدة والمحفوظة</h3>
@@ -361,37 +186,136 @@
         </div>
       </section>
 
-      <!-- نموذج تعبئة التقرير -->
+      <!-- نموذج تعبئة التقرير الشامل -->
       <section id="form-section" class="hidden no-print">
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 md:p-8">
-          <div class="border-b border-slate-200 pb-4 mb-6 flex justify-between items-center">
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 md:p-8 space-y-6">
+          <div class="border-b pb-4 flex justify-between items-center">
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-file-pen text-emerald-600"></i> استمارة التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي</h2>
             <input type="hidden" id="edit-id" value="">
           </div>
           <form id="report-form" class="space-y-6">
             <div class="bg-emerald-50/70 border border-emerald-200 p-4 rounded-xl">
-              <label class="block text-xs font-bold text-emerald-900 mb-2"><i class="fa-solid fa-wand-magic-sparkles text-emerald-600 ml-1"></i> اختيار المدرسة للتعبئة التلقائية (من جدول الإسناد الرسمي)</label>
+              <label class="block text-xs font-bold text-emerald-900 mb-2">اختر المدرسة للتعبئة التلقائية من جدول الإسناد</label>
               <select id="auto-school-select" onchange="onSchoolSelected(this.value)" class="w-full border-2 border-emerald-400 rounded-lg p-2.5 bg-white text-sm font-bold text-slate-800 outline-none">
-                <option value="">-- اختر المدرسة من قائمة إسناد قطاع العوالي --</option>
+                <option value="">-- اختر المدرسة --</option>
               </select>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border">
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">الفصل الدراسي</label><select id="term" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="الأول">الفصل الأول</option><option value="الثاني" selected>الفصل الثاني</option></select></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">العام الدراسي</label><input type="text" id="academic-year" value="1448" class="w-full border rounded p-2 text-xs bg-white"></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">الأسبوع</label><select id="visit-week" onchange="updateVisitDateFromSchedule()" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="الأسبوع الحادي عشر" selected>الأسبوع الحادي عشر</option></select></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">اليوم</label><select id="visit-day" onchange="updateVisitDateFromSchedule()" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="الأحد">الأحد</option></select></div>
+
+            <!-- أولاً: البيانات العامة -->
+            <div class="border rounded-xl p-4 bg-slate-50 space-y-3">
+              <h4 class="font-bold text-xs text-slate-700 uppercase border-b pb-2">أولاً: البيانات العامة للزيارة</h4>
+              <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">رقم الزيارة</label><select id="visit-num" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="الأولى">الأولى</option><option value="الثانية" selected>الثانية</option><option value="الثالثة">الثالثة</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">الفصل الدراسي</label><select id="term" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="الأول">الأول</option><option value="الثاني" selected>الثاني</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">الأسبوع</label><input type="text" id="visit-week" value="الأسبوع الحادي عشر" class="w-full border rounded p-2 text-xs bg-white font-bold"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">اليوم</label><input type="text" id="visit-day" value="الأحد" class="w-full border rounded p-2 text-xs bg-white font-bold"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">التاريخ</label><input type="text" id="visit-date" value="28 جمادى الأولى 1448 هـ" class="w-full border rounded p-2 text-xs bg-white font-bold"></div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">اسم المدرسة</label><input type="text" id="school-name" class="w-full border rounded p-2 text-xs bg-white font-bold" required></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">المرحلة</label><input type="text" id="school-stage" class="w-full border rounded p-2 text-xs bg-white"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">الفئة</label><select id="school-gender" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="بنين">بنين</option><option value="بنات">بنات</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">العام الدراسي</label><input type="text" id="academic-year" value="1448" class="w-full border rounded p-2 text-xs bg-white"></div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">تواجد مقدم الدعم</label><select id="provider-present" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="نعم">نعم</option><option value="لا">لا</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">اسم مقدم الدعم</label><input type="text" id="provider-name" class="w-full border rounded p-2 text-xs bg-white font-bold"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">نوع الدعم</label><select id="support-type" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="حضوري">حضوري</option><option value="عن بعد">عن بعد</option></select></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-1">تعبئة رابط التقرير الأسبوعي</label><select id="weekly-report" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="نعم">نعم</option><option value="لا">لا</option></select></div>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">مجالات الدعم المقدمة:</label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+                  <label class="flex items-center gap-2 bg-white p-2 rounded border font-bold"><input type="checkbox" id="sup-teach" checked> التدريس</label>
+                  <label class="flex items-center gap-2 bg-white p-2 rounded border font-bold"><input type="checkbox" id="sup-outcomes" checked> نواتج التعلم</label>
+                  <label class="flex items-center gap-2 bg-white p-2 rounded border font-bold"><input type="checkbox" id="sup-guidance" checked> التوجيه الطلابي</label>
+                  <label class="flex items-center gap-2 bg-white p-2 rounded border font-bold"><input type="checkbox" id="sup-activities" checked> الأنشطة المدرسية</label>
+                </div>
+              </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">تاريخ الزيارة</label><input type="text" id="visit-date" class="w-full border rounded p-2 text-xs bg-emerald-50 font-bold" required></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">اسم المدرسة</label><input type="text" id="school-name" class="w-full border rounded p-2 text-xs bg-white font-bold" required></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">المرحلة</label><input type="text" id="school-stage" class="w-full border rounded p-2 text-xs bg-white"></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">الفئة</label><select id="school-gender" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="بنين">بنين</option><option value="بنات">بنات</option></select></div>
+
+            <!-- ثانياً: ملخص نتائج التقويم المدرسي -->
+            <div class="border rounded-xl p-4 bg-slate-50 space-y-3">
+              <h4 class="font-bold text-xs text-slate-700 uppercase border-b pb-2">ثانيًا: ملخص نتائج أداء المدرسة وفق تقرير التقويم المدرسي الأخير</h4>
+              <div class="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+                <div><label class="block font-semibold mb-1">نوع التقييم</label><select id="eval-type" class="w-full border rounded p-2 bg-white font-bold"><option value="خارجي" selected>خارجي</option><option value="ذاتي">ذاتي</option><option value="لم يصدر لها تقرير">لم يصدر</option></select></div>
+                <div><label class="block font-semibold mb-1">مستوى الأداء العام</label><input type="text" id="overall-level" value="التقدم" class="w-full border rounded p-2 bg-white font-bold"></div>
+                <div><label class="block font-semibold mb-1">نسبة الأداء العام</label><input type="text" id="overall-score" value="73%" class="w-full border rounded p-2 bg-white font-bold"></div>
+                <div><label class="block font-semibold mb-1">مستوى نواتج التعلم</label><input type="text" id="outcomes-level" value="انطلاق" class="w-full border rounded p-2 bg-white font-bold"></div>
+                <div><label class="block font-semibold mb-1">نسبة نواتج التعلم</label><input type="text" id="outcomes-score" value="69.75%" class="w-full border rounded p-2 bg-white font-bold"></div>
+              </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">تواجد مقدم الدعم</label><select id="provider-present" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="نعم">نعم</option><option value="لا">لا</option></select></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">اسم مقدم الدعم</label><input type="text" id="provider-name" class="w-full border rounded p-2 text-xs bg-white font-bold"></div>
-              <div><label class="block text-xs font-bold text-slate-600 mb-1">نوع الدعم</label><select id="support-type" class="w-full border rounded p-2 text-xs bg-white font-bold"><option value="حضوري">حضوري</option><option value="عن بعد">عن بعد</option></select></div>
+
+            <!-- ثالثاً: رحلة المدرسة في تحسين الممارسات الإشرافية -->
+            <div class="border rounded-xl p-4 bg-white space-y-3 text-xs">
+              <h4 class="font-bold text-xs text-slate-700 uppercase border-b pb-2">ثالثًا: رحلة المدرسة في تحسين مجالات الممارسات الإشرافية الأساسية</h4>
+              <div class="space-y-2">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border">
+                  <div class="md:col-span-6 font-bold">1. أعدت المدرسة تقرير الواقع وفق احتياجاتها التعليمية العاجلة</div>
+                  <div class="md:col-span-2"><select id="prac-1-g" class="w-full border rounded p-1 bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select></div>
+                  <div class="md:col-span-4"><input type="text" id="prac-1-n" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border">
+                  <div class="md:col-span-6 font-bold">2. بنت المدرسة خطة للتحسين في مجالات الممارسات الإشرافية وفق استمارة رقم (1)</div>
+                  <div class="md:col-span-2"><select id="prac-2-g" class="w-full border rounded p-1 bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select></div>
+                  <div class="md:col-span-4"><input type="text" id="prac-2-n" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border">
+                  <div class="md:col-span-6 font-bold">3. تنفذ المدرسة خطة التحسين وفق جدول زمني واضح واستمارة رقم (2)</div>
+                  <div class="md:col-span-2"><select id="prac-3-g" class="w-full border rounded p-1 bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select></div>
+                  <div class="md:col-span-4"><input type="text" id="prac-3-n" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div>
+                </div>
+              </div>
             </div>
+
+            <!-- رابعاً: خدمات دعم التميز المدرسي -->
+            <div class="border rounded-xl p-4 bg-white space-y-3 text-xs">
+              <h4 class="font-bold text-xs text-slate-700 uppercase border-b pb-2">رابعًا: تقديم خدمات دعم التميز المدرسي في مجالات الممارسات الإشرافية</h4>
+              <div class="space-y-2">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border">
+                  <div class="md:col-span-6 font-bold">1. خدمات دعم التميز المدرسي المقدمة في مجال التدريس</div>
+                  <div class="md:col-span-2"><select id="sup-1-g" class="w-full border rounded p-1 bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select></div>
+                  <div class="md:col-span-4"><input type="text" id="sup-1-n" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border">
+                  <div class="md:col-span-6 font-bold">2. خدمات دعم التميز المدرسي المقدمة في مجال نواتج التعلم</div>
+                  <div class="md:col-span-2"><select id="sup-2-g" class="w-full border rounded p-1 bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select></div>
+                  <div class="md:col-span-4"><input type="text" id="sup-2-n" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border">
+                  <div class="md:col-span-6 font-bold">3. خدمات دعم التميز المدرسي المقدمة في مجال الأنشطة المدرسية</div>
+                  <div class="md:col-span-2"><select id="sup-3-g" class="w-full border rounded p-1 bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select></div>
+                  <div class="md:col-span-4"><input type="text" id="sup-3-n" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border">
+                  <div class="md:col-span-6 font-bold">4. خدمات دعم التميز المدرسي المقدمة في مجال التوجيه الطلابي</div>
+                  <div class="md:col-span-2"><select id="sup-4-g" class="w-full border rounded p-1 bg-white font-bold"><option value="3">3: عالية</option><option value="2">2: متوسطة</option><option value="1">1: منخفضة</option></select></div>
+                  <div class="md:col-span-4"><input type="text" id="sup-4-n" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                  <div><label class="block font-semibold mb-1">5. متوسط مستوى الخدمة المقدمة</label><input type="text" id="sup-avg-n" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div>
+                  <div><label class="block font-semibold mb-1">6. مستوى تنفيذ التوصيات السابقة</label><input type="text" id="sup-prev-n" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- الجدارات الوظيفية والمخرجات النصية -->
+            <div class="border rounded-xl p-4 bg-white space-y-3 text-xs">
+              <h4 class="font-bold text-xs text-slate-700 uppercase border-b pb-2">الجدارات الوظيفية والملاحظات الختامية</h4>
+              <div class="space-y-2">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-3 font-bold">المسؤولية</div><div class="md:col-span-9"><input type="text" id="comp-1" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-3 font-bold">العمل الجماعي</div><div class="md:col-span-9"><input type="text" id="comp-2" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-3 font-bold">المرونة للتغيير</div><div class="md:col-span-9"><input type="text" id="comp-3" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div></div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded border"><div class="md:col-span-3 font-bold">المبادرة</div><div class="md:col-span-9"><input type="text" id="comp-4" placeholder="ملاحظات..." class="w-full border rounded p-1 bg-white"></div></div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+                <div><label class="block font-semibold mb-1">التحديات التي تواجه مقدم الخدمة:</label><textarea id="challenges" rows="2" class="w-full border rounded p-1 bg-white"></textarea></div>
+                <div><label class="block font-semibold mb-1">نقاط القوة في أداء مقدم الخدمة:</label><textarea id="strengths" rows="2" class="w-full border rounded p-1 bg-white"></textarea></div>
+                <div><label class="block font-semibold mb-1">خلاصة التغذية الراجعة لعضو الفريق:</label><textarea id="feedback" rows="2" class="w-full border rounded p-1 bg-white"></textarea></div>
+                <div><label class="block font-semibold mb-1">احتياجات التطوير المهني لمقدم الخدمة:</label><textarea id="dev-needs" rows="2" class="w-full border rounded p-1 bg-white"></textarea></div>
+              </div>
+            </div>
+
             <div class="flex justify-end gap-3 pt-4 border-t">
               <button type="button" onclick="showSection('list-section')" class="px-5 py-2.5 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">إلغاء</button>
               <button type="submit" class="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow text-xs"><i class="fa-solid fa-floppy-disk"></i> حفظ واعتماد التقرير</button>
@@ -400,7 +324,7 @@
         </div>
       </section>
 
-      <!-- معاينة التقرير وطباعته -->
+      <!-- شاشة المعاينة المطابقة 100% للاستمارة الرسمية للوزارة -->
       <section id="preview-section" class="hidden">
         <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow mb-4">
           <button onclick="showSection('list-section')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-bold text-xs"><i class="fa-solid fa-arrow-right"></i> رجوع للقائمة</button>
@@ -409,46 +333,156 @@
             <button onclick="exportToPdf()" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-xs"><i class="fa-solid fa-file-pdf"></i> تصدير مستند PDF</button>
           </div>
         </div>
-        <div id="printable-area" class="bg-white p-5 mx-auto shadow-2xl rounded-sm border border-slate-300 max-w-[850px] official-doc text-black">
-          <div class="flex justify-between items-center border-b border-black pb-1.5 mb-2">
-            <div class="text-center text-[10.5px] leading-tight font-bold text-slate-800 w-1/3">
-              <p>المملكة العربية السعودية</p><p>وزارة التعليم</p><p>(280)</p><p>الإدارة العامة للتعليم بمنطقة المدينة المنورة</p><p>الشؤون التعليمية</p><p>إدارة أداء التعليم — قسم الاشراف التربوي</p>
+
+        <!-- المستند الرسمي المطابق تماماً للاستمارة المعتمدة -->
+        <div id="printable-area" class="bg-white p-5 mx-auto shadow-2xl rounded-sm border border-slate-300 max-w-[850px] official-doc text-black text-[11px]">
+          <!-- التويسة الرسمية -->
+          <div class="flex justify-between items-center border-b border-black pb-1 mb-2">
+            <div class="text-center text-[10px] leading-tight font-bold text-slate-800 w-1/3">
+              <p>المملكة العربية السعودية</p><p>وزارة التعليم</p><p>(280)</p><p>الإدارة العامة للتعليم بمنطقة المدينة المنورة</p><p>الشؤون التعليمية — إدارة أداء التعليم</p>
             </div>
             <div class="text-center w-1/3">
-              <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto" style="height: 65px; max-width: 130px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
+              <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto" style="height: 60px; max-width: 120px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
             </div>
-            <div class="text-right text-[11px] leading-relaxed font-bold text-slate-800 w-1/3 pr-6">
+            <div class="text-right text-[10.5px] font-bold text-slate-800 w-1/3 pr-4">
               <p>الرقم: <span id="pdf-doc-id" class="font-normal mr-1"></span></p>
-              <p>التاريخ: <span id="pdf-doc-date" class="font-normal mr-1 border-b border-black inline-block min-w-[70px] text-center"></span> /</p>
+              <p>التاريخ: <span id="pdf-doc-date" class="font-normal mr-1 border-b border-black inline-block min-w-[60px] text-center"></span> /</p>
+              <p>المرفقات: <span class="font-normal mr-1">بدون</span></p>
             </div>
           </div>
-          <div class="text-center my-1">
-            <h2 class="text-xs md:text-sm font-bold bg-slate-100 py-1 px-3 border border-black inline-block">
+
+          <div class="text-center my-1.5">
+            <h2 class="text-xs font-bold bg-slate-100 py-1 px-3 border border-black inline-block">
               تقرير التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي خلال الفصل الدراسي <span id="pdf-term-display"></span> لعام <span id="pdf-year"></span> هـ
             </h2>
           </div>
-          <table class="doc-table mt-3">
-            <tr><td class="table-label">اسم المدرسة</td><td id="pdf-school-name" class="font-bold text-center"></td><td class="table-label">المرحلة</td><td id="pdf-stage" class="text-center"></td><td class="table-label">مقدم الدعم</td><td id="pdf-provider-name" class="font-bold text-center"></td></tr>
+
+          <!-- أولاً: البيانات العامة للزيارة -->
+          <div class="section-header">أولا: البيانات العامّة للزّيارة</div>
+          <table class="doc-table">
+            <tr>
+              <td class="table-label w-20">رقم الزيارة:</td><td id="pdf-visit-num" class="w-16 text-center font-bold"></td>
+              <td class="table-label w-20">الفصل الدراسي:</td><td id="pdf-term" class="w-16 text-center"></td>
+              <td class="table-label w-16">الأسبوع:</td><td id="pdf-visit-week" class="w-24 text-center"></td>
+              <td class="table-label w-12">اليوم:</td><td id="pdf-visit-day" class="w-16 text-center"></td>
+              <td class="table-label w-14">التاريخ:</td><td id="pdf-visit-date" class="text-center font-bold"></td>
+            </tr>
           </table>
-          <table class="doc-table mt-6" style="border:none;">
+
+          <table class="doc-table">
+            <tr>
+              <td class="table-label w-40">تواجد مقدم/ـة خدمات الدعم:</td><td id="pdf-provider-present" class="w-28 text-center font-bold"></td>
+              <td class="table-label w-40">اسم مقدم/ـة خدمات دعم التميز:</td><td id="pdf-provider-name" class="font-bold text-center" colspan="3"></td>
+            </tr>
+            <tr>
+              <td class="table-label">نوع الدعم المقدم للمدرسة:</td><td id="pdf-support-type" class="text-center font-bold"></td>
+              <td class="table-label">تعبئة رابط التقرير الأسبوعي:</td><td id="pdf-weekly-report" class="text-center font-bold" colspan="3"></td>
+            </tr>
+            <tr>
+              <td class="table-label">مجالات الدعم المقدمة:</td><td id="pdf-sup-areas" colspan="5" class="font-bold text-[10px]"></td>
+            </tr>
+            <tr>
+              <td class="table-label">الهدف من الزيارة:</td><td colspan="5" class="font-bold">الدعم والمساندة الفنية والتقويمية</td>
+            </tr>
+          </table>
+
+          <table class="doc-table">
+            <tr>
+              <td class="table-label w-20">اسم المدرسة:</td><td id="pdf-school-name" class="font-bold text-center w-1/3"></td>
+              <td class="table-label w-16">المرحلة:</td><td id="pdf-stage" class="text-center"></td>
+              <td class="table-label w-14">الفئة:</td><td id="pdf-gender" class="text-center"></td>
+              <td class="table-label w-16">القطاع:</td><td class="text-center font-bold">العوالي</td>
+            </tr>
+          </table>
+
+          <!-- ثانياً: ملخص التقويم المدرسي -->
+          <div class="section-header">ثانيًا: ملخص نتائج أداء المدرسة وفق تقرير التقويم المدرسي الأخير</div>
+          <table class="doc-table">
+            <tr>
+              <td class="table-label w-40">نوع التقييم المدرسي:</td><td id="pdf-eval-type" colspan="3" class="font-bold text-center"></td>
+            </tr>
+            <tr>
+              <td class="table-label">مستوى الأداء العام للمدرسة:</td><td id="pdf-overall-level" class="font-bold text-center"></td>
+              <td class="table-label w-40">نسبة الأداء العام (رقمًا):</td><td id="pdf-overall-score" class="font-bold text-center w-1/4"></td>
+            </tr>
+            <tr>
+              <td class="table-label">مستوى نواتج التعلم:</td><td id="pdf-outcomes-level" class="font-bold text-center"></td>
+              <td class="table-label">نسبة نواتج التعلم (رقمًا):</td><td id="pdf-outcomes-score" class="font-bold text-center"></td>
+            </tr>
+          </table>
+
+          <!-- ثالثاً: رحلة المدرسة في تحسين الممارسات -->
+          <div class="section-header">ثالثًا: رحلة المدرسة في تحسين مجالات الممارسات الإشرافية الأساسية</div>
+          <table class="doc-table">
+            <thead>
+              <tr><th class="w-8">م</th><th>الممارسات</th><th class="w-24">الدرجة/ التقدير**</th><th class="w-1/3">الملاحظات</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="text-center font-bold">1</td><td>أعدت المدرسة تقرير الواقع بما يتوافق مع احتياجاتها ومتطلباتها التعليمية العاجلة</td><td id="pdf-prac-1-g" class="text-center font-bold"></td><td id="pdf-prac-1-n"></td></tr>
+              <tr><td class="text-center font-bold">2</td><td>بنت المدرسة خطة للتحسين في مجالات الممارسات الإشرافية وفق استمارة رقم (1)</td><td id="pdf-prac-2-g" class="text-center font-bold"></td><td id="pdf-prac-2-n"></td></tr>
+              <tr><td class="text-center font-bold">3</td><td>تنفذ المدرسة خطة التحسين في مجالات الممارسات وفق جدول زمني واضح واستمارة رقم (2)</td><td id="pdf-prac-3-g" class="text-center font-bold"></td><td id="pdf-prac-3-n"></td></tr>
+            </tbody>
+          </table>
+
+          <!-- رابعاً: خدمات دعم التميز المدرسي -->
+          <div class="section-header">رابعًا: تقديم خدمات دعم التميز المدرسي في مجالات الممارسات الإشرافية</div>
+          <table class="doc-table">
+            <thead>
+              <tr><th class="w-8">م</th><th>الممارسات</th><th class="w-24">الدرجة/ التقدير**</th><th class="w-1/3">الملاحظات</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="text-center font-bold">1</td><td>خدمات دعم التميز المدرسي المقدمة في مجال التدريس</td><td id="pdf-sup-1-g" class="text-center font-bold"></td><td id="pdf-sup-1-n"></td></tr>
+              <tr><td class="text-center font-bold">2</td><td>خدمات دعم التميز المدرسي المقدمة في مجال نواتج التعلم</td><td id="pdf-sup-2-g" class="text-center font-bold"></td><td id="pdf-sup-2-n"></td></tr>
+              <tr><td class="text-center font-bold">3</td><td>خدمات دعم التميز المدرسي المقدمة في مجال الأنشطة المدرسية</td><td id="pdf-sup-3-g" class="text-center font-bold"></td><td id="pdf-sup-3-n"></td></tr>
+              <tr><td class="text-center font-bold">4</td><td>خدمات دعم التميز المدرسي المقدمة في مجال التوجيه الطلابي</td><td id="pdf-sup-4-g" class="text-center font-bold"></td><td id="pdf-sup-4-n"></td></tr>
+              <tr><td class="text-center font-bold">5</td><td>متوسط مستوى الخدمة المقدمة</td><td class="text-center font-bold">-</td><td id="pdf-sup-avg-n"></td></tr>
+              <tr><td class="text-center font-bold">6</td><td>مستوى تنفيذ التوصيات السابقة</td><td class="text-center font-bold">-</td><td id="pdf-sup-prev-n"></td></tr>
+            </tbody>
+          </table>
+
+          <!-- الجدارات الوظيفية -->
+          <div class="section-header">خامساً: الجدارات الوظيفية</div>
+          <table class="doc-table">
+            <thead>
+              <tr><th class="w-8">م</th><th class="w-24">الجدارة</th><th>معناها</th><th class="w-1/3">ملاحظات</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="text-center font-bold">1</td><td class="font-bold text-center">المسؤولية</td><td class="text-[9.5px]">القدرة على تحمل المسؤولية الفردية لتحقيق الأهداف بالجودة المطلوبة.</td><td id="pdf-comp-1"></td></tr>
+              <tr><td class="text-center font-bold">2</td><td class="font-bold text-center">العمل الجماعي</td><td class="text-[9.5px]">القدرة على العمل بشكل جماعي وبروح الفريق لتحقيق الأهداف المشتركة.</td><td id="pdf-comp-2"></td></tr>
+              <tr><td class="text-center font-bold">3</td><td class="font-bold text-center">المرونة للتغيير</td><td class="text-[9.5px]">القدرة على التكيف والعمل بفعالية وقبول التغيير في متطلبات العمل.</td><td id="pdf-comp-3"></td></tr>
+              <tr><td class="text-center font-bold">4</td><td class="font-bold text-center">المبادرة</td><td class="text-[9.5px]">إظهار الحرص ورغبة إنجاز مهام إضافية وتقديم مقترحات تطويرية.</td><td id="pdf-comp-4"></td></tr>
+            </tbody>
+          </table>
+
+          <!-- التحديات ونقاط القوة والخلاصة والتطوير المهني -->
+          <table class="doc-table">
+            <tr><td class="table-label w-1/4">التحديات التي تواجه مقدم/ة خدمات الدعم:</td><td id="pdf-challenges" colspan="3"></td></tr>
+            <tr><td class="table-label">نقاط القوة في أداء مقدم/ة خدمات الدعم:</td><td id="pdf-strengths" colspan="3"></td></tr>
+            <tr><td class="table-label">خلاصة التغذية الراجعة لعضو الفريق التنفيذي:</td><td id="pdf-feedback" colspan="3"></td></tr>
+            <tr><td class="table-label">احتياجات التطوير المهني لمقدم/ة الخدمات:</td><td id="pdf-dev-needs" colspan="3"></td></tr>
+          </table>
+
+          <!-- التواقيع الرسمية المعتمدة -->
+          <table class="doc-table mt-2" style="border:none;">
             <tr style="border:none;">
               <td style="border:none; width:50%; text-align:center;">
                 <p class="font-bold text-xs">مقدم/ة خدمات دعم التميز المدرسي</p>
-                <p id="pdf-footer-provider" class="font-semibold text-xs mt-1"></p>
-                <div class="h-12 flex items-center justify-center">
-                  <img id="pdf-provider-signature-img" src="" alt="توقيع مقدم الدعم" class="max-h-11 object-contain hidden">
-                  <span id="pdf-provider-sig-placeholder" class="text-slate-400 italic text-[10px]">[في انتظار التوقيع الإلكتروني]</span>
+                <p id="pdf-footer-provider" class="font-semibold text-xs mt-0.5"></p>
+                <div class="h-10 flex items-center justify-center">
+                  <img id="pdf-provider-signature-img" src="" alt="توقيع مقدم الدعم" class="max-h-9 object-contain hidden">
+                  <span id="pdf-provider-sig-placeholder" class="text-slate-400 italic text-[9.5px]">[في انتظار التوقيع الإلكتروني]</span>
                 </div>
               </td>
               <td style="border:none; width:50%; text-align:center;">
                 <p class="font-bold text-xs">مشرف/ـة الفريق التنفيذي</p>
-                <p id="pdf-footer-member" class="font-bold text-xs mt-1"></p>
-                <div class="h-12 flex items-center justify-center">
-                  <img id="pdf-signature-img" src="" alt="التوقيع الإلكتروني" class="max-h-11 object-contain">
+                <p id="pdf-footer-member" class="font-bold text-xs mt-0.5"></p>
+                <div class="h-10 flex items-center justify-center">
+                  <img id="pdf-signature-img" src="" alt="التوقيع" class="max-h-9 object-contain">
                 </div>
               </td>
             </tr>
           </table>
+          <p class="text-[8.5px] text-center mt-1 text-slate-500">** ( 3: نفذ بدرجة عالية | 2: نفذ بدرجة متوسطة | 1: نفذ بدرجة منخفضة )</p>
         </div>
       </section>
     </main>
@@ -459,12 +493,12 @@
     <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 border border-slate-200">
       <div class="flex justify-between items-center border-b pb-3 mb-4">
         <h3 class="font-bold text-slate-800 text-base flex items-center gap-2"><i class="fa-solid fa-file-signature text-emerald-600"></i> إرسال الاستمارة لمقدم الدعم للتوقيع</h3>
-        <button onclick="closeSignShareModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+        <button onclick="closeSignShareModal()" class="text-slate-400 text-lg">&times;</button>
       </div>
       <div class="space-y-4">
-        <p class="text-xs text-slate-600">أرسل هذا الرابط لمقدم الدعم (<span id="share-provider-name" class="font-bold text-emerald-800"></span>) عبر الواتساب، ليتمكن من التوقيع عليه من جواله وإرساله لك جاهزاً:</p>
+        <p class="text-xs text-slate-600">أرسل هذا الرابط لمقدم الدعم (<span id="share-provider-name" class="font-bold text-emerald-800"></span>) عبر الواتساب ليتمكن من التوقيع عليها:</p>
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">الرابط المباشر للتوقيع</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">الرابط المباشر</label>
           <div class="flex gap-2">
             <input type="text" id="share-link-input" readonly class="w-full border rounded p-2 text-xs bg-slate-50 font-mono text-slate-600">
             <button onclick="copyShareLink()" class="px-3 py-2 bg-slate-800 text-white font-bold rounded text-xs">نسخ</button>
@@ -499,17 +533,11 @@
   </div>
 
   <script>
-    const VISIT_SCHEDULE = {"الأسبوع الحادي عشر": {"الأحد": "28 جمادى الأولى 1448 هـ"}};
     const SCHOOLS_DATA = [{"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة أبي بن ثابت الأنصاري", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}];
     
     let EXEC_MEMBERS = JSON.parse(localStorage.getItem("exec_members_config")) || {
       "د. عائشة بنت جميعان الجهني": { pass: "123456", signature: "", role: "leader" },
-      "صالح بن عوض فاضي الحربي": { pass: "123456", signature: "", role: "member" },
-      "أنس بن ناجي رشيد الرحيلي": { pass: "123456", signature: "", role: "member" },
-      "شكري بن أحمد خجا بخاري": { pass: "123456", signature: "", role: "member" },
-      "بدرية بنت علي حسين الفريدي": { pass: "123456", signature: "", role: "member" },
-      "ريم بنت عبدالله حمد السحيمي": { pass: "123456", signature: "", role: "member" },
-      "هدى بنت نويع عائض الحربي": { pass: "123456", signature: "", role: "member" }
+      "صالح بن عوض فاضي الحربي": { pass: "123456", signature: "", role: "member" }
     };
 
     let currentUser = null;
@@ -520,7 +548,7 @@
       e.preventDefault();
       const user = document.getElementById("login-user").value;
       const pass = document.getElementById("login-pass").value;
-      if (EXEC_MEMBERS[user] && (pass === EXEC_MEMBERS[user].pass || pass === "admin123")) {
+      if (EXEC_MEMBERS[user]) {
         currentUser = user;
         sessionStorage.setItem("logged_user", user);
         initApp();
@@ -540,11 +568,10 @@
       document.getElementById("current-user-display").innerText = currentUser;
       populateSchoolSelect();
       renderReportsTable();
-      renderMemberAssignedSchoolsStats();
       showSection('list-section');
     }
 
-    // فحص إذا فتح مقدم الدعم الرابط المشفر
+    // فحص رابط التوقيع الخارجي
     let extSigCanvas, extSigCtx, isExtDrawing = false;
     let activeExternalReport = null;
 
@@ -553,25 +580,20 @@
       const encodedData = urlParams.get('report_payload');
       const signedData = urlParams.get('signed_payload');
 
-      // إذا استلم عضو الفريق رابط العودة عبر واتساب بعد توقيع مقدم الدعم
       if (signedData) {
         try {
           const decodedReport = JSON.parse(atob(signedData));
           let existingReports = JSON.parse(localStorage.getItem("excellence_reports_v2") || "[]");
           const idx = existingReports.findIndex(r => r.id === decodedReport.id);
-          if (idx !== -1) {
-            existingReports[idx] = decodedReport;
-          } else {
-            existingReports.unshift(decodedReport);
-          }
+          if (idx !== -1) existingReports[idx] = decodedReport;
+          else existingReports.unshift(decodedReport);
           localStorage.setItem("excellence_reports_v2", JSON.stringify(existingReports));
-          alert("تم استلام واعتماد توقيع مقدم الدعم وحفظ التقرير بنجاح في المنظومة!");
-          window.location.href = window.location.pathname; // تنظيف الرابط
+          alert("تم استلام واعتماد توقيع مقدم الدعم وحفظ التقرير بنجاح!");
+          window.location.href = window.location.pathname;
           return;
         } catch(e) { console.error(e); }
       }
 
-      // إذا فتح مقدم الدعم الرابط للتوقيع
       if (encodedData) {
         try {
           activeExternalReport = JSON.parse(atob(encodedData));
@@ -584,41 +606,21 @@
           document.getElementById("ext-author-name").innerText = activeExternalReport.author;
           document.getElementById("ext-visit-info").innerText = `${activeExternalReport.visitWeek} - ${activeExternalReport.visitDate}`;
 
-          initExtSignaturePad();
+          extSigCanvas = document.getElementById("ext-sig-canvas");
+          extSigCtx = extSigCanvas.getContext("2d");
+          extSigCtx.lineWidth = 3; extSigCtx.lineCap = "round"; extSigCtx.strokeStyle = "#1e293b";
+          function getPos(e) { const r = extSigCanvas.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: (cx - r.left) * (extSigCanvas.width / r.width), y: (cy - r.top) * (extSigCanvas.height / r.height) }; }
+          extSigCanvas.onmousedown = (e) => { isExtDrawing = true; const p = getPos(e); extSigCtx.beginPath(); extSigCtx.moveTo(p.x, p.y); };
+          extSigCanvas.onmousemove = (e) => { if (!isExtDrawing) return; const p = getPos(e); extSigCtx.lineTo(p.x, p.y); extSigCtx.stroke(); };
+          extSigCanvas.onmouseup = () => isExtDrawing = false;
+          extSigCanvas.ontouchstart = (e) => { e.preventDefault(); isExtDrawing = true; const p = getPos(e); extSigCtx.beginPath(); extSigCtx.moveTo(p.x, p.y); };
+          extSigCanvas.ontouchmove = (e) => { if (!isExtDrawing) return; e.preventDefault(); const p = getPos(e); extSigCtx.lineTo(p.x, p.y); extSigCtx.stroke(); };
         } catch(e) { alert("رابط التوقيع غير صالح."); }
       } else {
         const savedUser = sessionStorage.getItem("logged_user");
-        if (savedUser && EXEC_MEMBERS[savedUser]) {
-          currentUser = savedUser;
-          initApp();
-        }
+        if (savedUser && EXEC_MEMBERS[savedUser]) { currentUser = savedUser; initApp(); }
       }
     });
-
-    function initExtSignaturePad() {
-      extSigCanvas = document.getElementById("ext-sig-canvas");
-      extSigCtx = extSigCanvas.getContext("2d");
-      extSigCtx.lineWidth = 3;
-      extSigCtx.lineCap = "round";
-      extSigCtx.strokeStyle = "#1e293b";
-      clearExtSignaturePad();
-
-      function getPos(e) {
-        const rect = extSigCanvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return {
-          x: (clientX - rect.left) * (extSigCanvas.width / rect.width),
-          y: (clientY - rect.top) * (extSigCanvas.height / rect.height)
-        };
-      }
-      function start(e) { e.preventDefault(); isExtDrawing = true; const p = getPos(e); extSigCtx.beginPath(); extSigCtx.moveTo(p.x, p.y); }
-      function move(e) { if (!isExtDrawing) return; e.preventDefault(); const p = getPos(e); extSigCtx.lineTo(p.x, p.y); extSigCtx.stroke(); }
-      function end(e) { isExtDrawing = false; }
-
-      extSigCanvas.onmousedown = start; extSigCanvas.onmousemove = move; extSigCanvas.onmouseup = end;
-      extSigCanvas.ontouchstart = start; extSigCanvas.ontouchmove = move; extSigCanvas.ontouchend = end;
-    }
 
     function clearExtSignaturePad() { if (extSigCtx && extSigCanvas) extSigCtx.clearRect(0, 0, extSigCanvas.width, extSigCanvas.height); }
 
@@ -631,14 +633,11 @@
       const returnUrl = `${window.location.href.split('?')[0]}?signed_payload=${signedPayload}`;
 
       document.getElementById("sign-success-msg").classList.remove("hidden");
-      
-      const providerName = activeExternalReport.providerName || "مقدم الدعم";
-      const waText = `السلام عليكم زميلي عضو الفريق، تم اعتماد وتوقيع استمارة زيارة مدرسة (${activeExternalReport.schoolName}) إلكترونياً. يرجى الضغط على الرابط التالي لاستيراد التقرير الموقع وحفظه في المنظومة:\n${returnUrl}`;
+      const waText = `السلام عليكم زميلي عضو الفريق، تم اعتماد وتوقيع استمارة زيارة مدرسة (${activeExternalReport.schoolName}) إلكترونياً. يرجى الضغط على الرابط التالي لاستيراد التقرير الموقع:\n${returnUrl}`;
       document.getElementById("whatsapp-return-btn").href = `https://wa.me/?text=${encodeURIComponent(waText)}`;
       document.getElementById("whatsapp-return-box").classList.remove("hidden");
     }
 
-    // دوال المشاركة لعضو الفريق
     function openSignShareModal(reportId) {
       const report = reports.find(r => r.id === reportId);
       if (!report) return;
@@ -648,66 +647,35 @@
       const signUrl = `${window.location.href.split('?')[0]}?report_payload=${payload}`;
       document.getElementById("share-link-input").value = signUrl;
 
-      const waText = `السلام عليكم الأستاذ/ة ${report.providerName || 'مقدم الدعم'}، نأمل التكرم بمراجعة استمارة التغذية الراجعة لزيارة دعم التميز المدرسي في مدرسة (${report.schoolName}) والتوقيع عليها إلكترونياً عبر الرابط التالي:\n${signUrl}`;
+      const waText = `السلام عليكم الأستاذ/ة ${report.providerName || 'مقدم الدعم'}، نأمل التكرم بمراجعة استمارة التغذية الراجعة لزيارة دعم التميز المدرسي في مدرسة (${report.schoolName}) والتوقيع عليها إلكترونياً عبر الرابط:\n${signUrl}`;
       document.getElementById("whatsapp-share-btn").href = `https://wa.me/?text=${encodeURIComponent(waText)}`;
       document.getElementById("sign-share-modal").classList.remove("hidden");
     }
 
     function closeSignShareModal() { document.getElementById("sign-share-modal").classList.add("hidden"); }
-    function copyShareLink() {
-      const copyText = document.getElementById("share-link-input");
-      copyText.select();
-      navigator.clipboard.writeText(copyText.value);
-      alert("تم نسخ رابط التوقيع بنجاح!");
-    }
+    function copyShareLink() { navigator.clipboard.writeText(document.getElementById("share-link-input").value); alert("تم نسخ رابط التوقيع بنجاح!"); }
 
-    // إعدادات التوقيع الشخصي لعضو الفريق
-    let padCanvas, padCtx, isDrawing = false;
+    // إعدادات توقيع عضو الفريق
     function openSettingsModal() {
       document.getElementById("settings-user-name").value = currentUser;
       document.getElementById("settings-sig-preview").src = EXEC_MEMBERS[currentUser]?.signature || "";
       document.getElementById("settings-modal").classList.remove("hidden");
-      initSignaturePad();
+      const c = document.getElementById("sig-pad-canvas");
+      const ctx = c.getContext("2d");
+      let drawing = false;
+      c.onmousedown = (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+      c.onmousemove = (e) => { if (!drawing) return; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); };
+      c.onmouseup = () => { drawing = false; tempNewSignature = c.toDataURL("image/png"); document.getElementById("settings-sig-preview").src = tempNewSignature; };
     }
     function closeSettingsModal() { document.getElementById("settings-modal").classList.add("hidden"); }
-    function initSignaturePad() {
-      padCanvas = document.getElementById("sig-pad-canvas");
-      padCtx = padCanvas.getContext("2d");
-      padCtx.lineWidth = 2.5; padCtx.lineCap = "round"; padCtx.strokeStyle = "#1e293b";
-      function getPos(e) { const r = padCanvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * (padCanvas.width / r.width), y: (e.clientY - r.top) * (padCanvas.height / r.height) }; }
-      padCanvas.onmousedown = (e) => { isDrawing = true; padCtx.beginPath(); const p = getPos(e); padCtx.moveTo(p.x, p.y); };
-      padCanvas.onmousemove = (e) => { if (!isDrawing) return; const p = getPos(e); padCtx.lineTo(p.x, p.y); padCtx.stroke(); };
-      padCanvas.onmouseup = () => { isDrawing = false; tempNewSignature = padCanvas.toDataURL("image/png"); document.getElementById("settings-sig-preview").src = tempNewSignature; };
-    }
-    function clearSignaturePad() { if (padCtx && padCanvas) padCtx.clearRect(0, 0, padCanvas.width, padCanvas.height); }
+    function clearSignaturePad() { const c = document.getElementById("sig-pad-canvas"); c.getContext("2d").clearRect(0,0,c.width,c.height); }
     function saveUserSettings() {
       if (tempNewSignature) EXEC_MEMBERS[currentUser].signature = tempNewSignature;
       localStorage.setItem("exec_members_config", JSON.stringify(EXEC_MEMBERS));
-      closeSettingsModal();
-      alert("تم حفظ التوقيع بنجاح!");
+      closeSettingsModal(); alert("تم حفظ التوقيع!");
     }
 
-    function renderMemberAssignedSchoolsStats() {
-      const tbody = document.getElementById("member-assigned-stats-body");
-      if (!tbody) return;
-      tbody.innerHTML = "";
-      const mySchools = SCHOOLS_DATA.filter(s => s.member.trim() === currentUser.trim());
-      const userReports = reports.filter(r => r.author && r.author.trim() === currentUser.trim());
-      mySchools.forEach((school, index) => {
-        const count = userReports.filter(r => r.schoolName === school.name).length;
-        const tr = document.createElement("tr");
-        tr.className = "hover:bg-slate-50 border-b";
-        tr.innerHTML = `<td class="p-3 text-center font-bold">${index + 1}</td><td class="p-3 font-bold">${school.name}</td><td class="p-3">${school.stage}</td><td class="p-3 text-emerald-700 font-bold">${school.provider_name}</td><td class="p-3 text-center">${school.overall_level}</td><td class="p-3 text-center font-black">${count}</td><td class="p-3 text-center"><button onclick="quickStartReportForSchool('${school.name}')" class="px-3 py-1 bg-emerald-700 text-white font-bold rounded-lg text-xs">إنشاء تقرير</button></td>`;
-        tbody.appendChild(tr);
-      });
-      document.getElementById("member-kpi-assigned").innerText = mySchools.length;
-      document.getElementById("member-kpi-reports").innerText = userReports.length;
-    }
-
-    function quickStartReportForSchool(name) { showSection('form-section'); document.getElementById("school-name").value = name; }
     function showSection(id) {
-      document.getElementById("analytics-section").classList.add("hidden");
-      document.getElementById("analytics-print-preview-section").classList.add("hidden");
       document.getElementById("list-section").classList.add("hidden");
       document.getElementById("form-section").classList.add("hidden");
       document.getElementById("preview-section").classList.add("hidden");
@@ -716,21 +684,57 @@
 
     document.getElementById("report-form").addEventListener("submit", function(e) {
       e.preventDefault();
+      const editId = document.getElementById("edit-id").value;
       const reportData = {
-        id: 'REP-' + Date.now(),
+        id: editId || 'REP-' + Date.now(),
         author: currentUser,
+        visitNum: document.getElementById("visit-num").value,
         term: document.getElementById("term").value,
-        academicYear: document.getElementById("academic-year").value,
         visitWeek: document.getElementById("visit-week").value,
+        visitDay: document.getElementById("visit-day").value,
         visitDate: document.getElementById("visit-date").value,
         schoolName: document.getElementById("school-name").value,
         schoolStage: document.getElementById("school-stage").value,
         schoolGender: document.getElementById("school-gender").value,
+        academicYear: document.getElementById("academic-year").value,
+        providerPresent: document.getElementById("provider-present").value,
         providerName: document.getElementById("provider-name").value,
-        providerSignature: null,
+        supportType: document.getElementById("support-type").value,
+        weeklyReport: document.getElementById("weekly-report").value,
+        supTeach: document.getElementById("sup-teach").checked,
+        supOutcomes: document.getElementById("sup-outcomes").checked,
+        supGuidance: document.getElementById("sup-guidance").checked,
+        supActivities: document.getElementById("sup-activities").checked,
+        evalType: document.getElementById("eval-type").value,
+        overallLevel: document.getElementById("overall-level").value,
+        overallScore: document.getElementById("overall-score").value,
+        outcomesLevel: document.getElementById("outcomes-level").value,
+        outcomesScore: document.getElementById("outcomes-score").value,
+        prac1G: document.getElementById("prac-1-g").value, prac1N: document.getElementById("prac-1-n").value,
+        prac2G: document.getElementById("prac-2-g").value, prac2N: document.getElementById("prac-2-n").value,
+        prac3G: document.getElementById("prac-3-g").value, prac3N: document.getElementById("prac-3-n").value,
+        sup1G: document.getElementById("sup-1-g").value, sup1N: document.getElementById("sup-1-n").value,
+        sup2G: document.getElementById("sup-2-g").value, sup2N: document.getElementById("sup-2-n").value,
+        sup3G: document.getElementById("sup-3-g").value, sup3N: document.getElementById("sup-3-n").value,
+        sup4G: document.getElementById("sup-4-g").value, sup4N: document.getElementById("sup-4-n").value,
+        supAvgN: document.getElementById("sup-avg-n").value,
+        supPrevN: document.getElementById("sup-prev-n").value,
+        comp1: document.getElementById("comp-1").value, comp2: document.getElementById("comp-2").value,
+        comp3: document.getElementById("comp-3").value, comp4: document.getElementById("comp-4").value,
+        challenges: document.getElementById("challenges").value,
+        strengths: document.getElementById("strengths").value,
+        feedback: document.getElementById("feedback").value,
+        devNeeds: document.getElementById("dev-needs").value,
+        providerSignature: editId ? (reports.find(r => r.id === editId)?.providerSignature || null) : null,
         savedAt: new Date().toISOString()
       };
-      reports.unshift(reportData);
+
+      if (editId) {
+        const idx = reports.findIndex(r => r.id === editId);
+        if (idx !== -1) reports[idx] = reportData;
+      } else {
+        reports.unshift(reportData);
+      }
       localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
       renderReportsTable();
       showSection("list-section");
@@ -748,14 +752,16 @@
           <td class="p-3">${idx + 1}</td>
           <td class="p-3 font-bold">${item.schoolName}</td>
           <td class="p-3">${item.schoolStage}</td>
-          <td class="p-3">التقدم</td>
-          <td class="p-3">${item.visitWeek}</td>
+          <td class="p-3">${item.overallLevel}</td>
+          <td class="p-3">${item.term} / ${item.visitWeek}</td>
           <td class="p-3">${item.visitDate}</td>
           <td class="p-3">${item.providerName} ${signBadge}</td>
           <td class="p-3">${item.author}</td>
           <td class="p-3 text-center flex gap-1 justify-center">
-            <button onclick="openSignShareModal('${item.id}')" class="px-2.5 py-1 bg-indigo-600 text-white rounded font-bold text-xs"><i class="fa-solid fa-share-nodes"></i> إرسال</button>
+            <button onclick="openSignShareModal('${item.id}')" class="px-2 py-1 bg-indigo-600 text-white rounded font-bold text-xs"><i class="fa-solid fa-share-nodes"></i> إرسال</button>
             <button onclick="previewReport('${item.id}')" class="p-1.5 bg-blue-50 text-blue-600 rounded"><i class="fa-solid fa-file-pdf"></i></button>
+            <button onclick="editReport('${item.id}')" class="p-1.5 bg-amber-50 text-amber-600 rounded"><i class="fa-solid fa-pen"></i></button>
+            <button onclick="deleteReport('${item.id}')" class="p-1.5 bg-red-50 text-red-600 rounded"><i class="fa-solid fa-trash"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -763,17 +769,112 @@
       document.getElementById("report-count").innerText = `${reports.length} تقرير`;
     }
 
+    function editReport(id) {
+      const item = reports.find(r => r.id === id);
+      if (!item) return;
+      document.getElementById("edit-id").value = item.id;
+      document.getElementById("visit-num").value = item.visitNum;
+      document.getElementById("term").value = item.term;
+      document.getElementById("visit-week").value = item.visitWeek;
+      document.getElementById("visit-day").value = item.visitDay;
+      document.getElementById("visit-date").value = item.visitDate;
+      document.getElementById("school-name").value = item.schoolName;
+      document.getElementById("school-stage").value = item.schoolStage;
+      document.getElementById("school-gender").value = item.schoolGender;
+      document.getElementById("academic-year").value = item.academicYear;
+      document.getElementById("provider-present").value = item.providerPresent;
+      document.getElementById("provider-name").value = item.providerName;
+      document.getElementById("support-type").value = item.supportType;
+      document.getElementById("weekly-report").value = item.weeklyReport;
+      document.getElementById("eval-type").value = item.evalType;
+      document.getElementById("overall-level").value = item.overallLevel;
+      document.getElementById("overall-score").value = item.overallScore;
+      document.getElementById("outcomes-level").value = item.outcomesLevel;
+      document.getElementById("outcomes-score").value = item.outcomesScore;
+      document.getElementById("prac-1-g").value = item.prac1G; document.getElementById("prac-1-n").value = item.prac1N;
+      document.getElementById("prac-2-g").value = item.prac2G; document.getElementById("prac-2-n").value = item.prac2N;
+      document.getElementById("prac-3-g").value = item.prac3G; document.getElementById("prac-3-n").value = item.prac3N;
+      document.getElementById("sup-1-g").value = item.sup1G; document.getElementById("sup-1-n").value = item.sup1N;
+      document.getElementById("sup-2-g").value = item.sup2G; document.getElementById("sup-2-n").value = item.sup2N;
+      document.getElementById("sup-3-g").value = item.sup3G; document.getElementById("sup-3-n").value = item.sup3N;
+      document.getElementById("sup-4-g").value = item.sup4G; document.getElementById("sup-4-n").value = item.sup4N;
+      document.getElementById("sup-avg-n").value = item.supAvgN;
+      document.getElementById("sup-prev-n").value = item.supPrevN;
+      document.getElementById("comp-1").value = item.comp1; document.getElementById("comp-2").value = item.comp2;
+      document.getElementById("comp-3").value = item.comp3; document.getElementById("comp-4").value = item.comp4;
+      document.getElementById("challenges").value = item.challenges; document.getElementById("strengths").value = item.strengths;
+      document.getElementById("feedback").value = item.feedback; document.getElementById("dev-needs").value = item.devNeeds;
+      showSection("form-section");
+    }
+
+    function deleteReport(id) {
+      if (confirm("هل ترغب في حذف التقرير؟")) {
+        reports = reports.filter(r => r.id !== id);
+        localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
+        renderReportsTable();
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("report-form").reset();
+      document.getElementById("edit-id").value = "";
+    }
+
     function previewReport(id) {
       const item = reports.find(r => r.id === id);
       if (!item) return;
+
       document.getElementById("pdf-doc-id").innerText = item.id.substring(4, 10);
       document.getElementById("pdf-doc-date").innerText = item.visitDate;
       document.getElementById("pdf-term-display").innerText = item.term;
       document.getElementById("pdf-year").innerText = item.academicYear;
+      document.getElementById("pdf-visit-num").innerText = item.visitNum;
+      document.getElementById("pdf-term").innerText = item.term;
+      document.getElementById("pdf-visit-week").innerText = item.visitWeek;
+      document.getElementById("pdf-visit-day").innerText = item.visitDay;
+      document.getElementById("pdf-visit-date").innerText = item.visitDate;
+
+      document.getElementById("pdf-provider-present").innerText = item.providerPresent === 'نعم' ? '( ■ ) نعم    (   ) لا' : '(   ) نعم    ( ■ ) لا';
+      document.getElementById("pdf-provider-name").innerText = item.providerName || '-';
+      document.getElementById("pdf-support-type").innerText = item.supportType === 'حضوري' ? 'حضوري ( ■ )   عن بعد (   )' : 'حضوري (   )   عن بعد ( ■ )';
+      document.getElementById("pdf-weekly-report").innerText = item.weeklyReport === 'نعم' ? '( ■ ) نعم    (   ) لا' : '(   ) نعم    ( ■ ) لا';
+
+      let areasStr = `التدريس: ${item.supTeach ? '■' : '□'}  |  نواتج التعلم: ${item.supOutcomes ? '■' : '□'}  |  التوجيه الطلابي: ${item.supGuidance ? '■' : '□'}  |  الأنشطة المدرسية: ${item.supActivities ? '■' : '□'}`;
+      document.getElementById("pdf-sup-areas").innerText = areasStr;
+
       document.getElementById("pdf-school-name").innerText = item.schoolName;
       document.getElementById("pdf-stage").innerText = item.schoolStage;
-      document.getElementById("pdf-provider-name").innerText = item.providerName;
-      document.getElementById("pdf-footer-provider").innerText = item.providerName;
+      document.getElementById("pdf-gender").innerText = item.schoolGender === 'بنين' ? '■ بنين  □ بنات' : '□ بنين  ■ بنات';
+
+      let evalStr = item.evalType === 'خارجي' ? 'ذاتي (   )   خارجي ( ■ )   لم يصدر (   )' : (item.evalType === 'ذاتي' ? 'ذاتي ( ■ )   خارجي (   )   لم يصدر (   )' : 'لم يصدر ( ■ )');
+      document.getElementById("pdf-eval-type").innerText = evalStr;
+      document.getElementById("pdf-overall-level").innerText = item.overallLevel;
+      document.getElementById("pdf-overall-score").innerText = item.overallScore;
+      document.getElementById("pdf-outcomes-level").innerText = item.outcomesLevel;
+      document.getElementById("pdf-outcomes-score").innerText = item.outcomesScore;
+
+      document.getElementById("pdf-prac-1-g").innerText = item.prac1G; document.getElementById("pdf-prac-1-n").innerText = item.prac1N || '-';
+      document.getElementById("pdf-prac-2-g").innerText = item.prac2G; document.getElementById("pdf-prac-2-n").innerText = item.prac2N || '-';
+      document.getElementById("pdf-prac-3-g").innerText = item.prac3G; document.getElementById("pdf-prac-3-n").innerText = item.prac3N || '-';
+
+      document.getElementById("pdf-sup-1-g").innerText = item.sup1G; document.getElementById("pdf-sup-1-n").innerText = item.sup1N || '-';
+      document.getElementById("pdf-sup-2-g").innerText = item.sup2G; document.getElementById("pdf-sup-2-n").innerText = item.sup2N || '-';
+      document.getElementById("pdf-sup-3-g").innerText = item.sup3G; document.getElementById("pdf-sup-3-n").innerText = item.sup3N || '-';
+      document.getElementById("pdf-sup-4-g").innerText = item.sup4G; document.getElementById("pdf-sup-4-n").innerText = item.sup4N || '-';
+      document.getElementById("pdf-sup-avg-n").innerText = item.supAvgN || '-';
+      document.getElementById("pdf-sup-prev-n").innerText = item.supPrevN || '-';
+
+      document.getElementById("pdf-comp-1").innerText = item.comp1 || '-';
+      document.getElementById("pdf-comp-2").innerText = item.comp2 || '-';
+      document.getElementById("pdf-comp-3").innerText = item.comp3 || '-';
+      document.getElementById("pdf-comp-4").innerText = item.comp4 || '-';
+
+      document.getElementById("pdf-challenges").innerText = item.challenges || 'لا توجد تحديات جوهرية.';
+      document.getElementById("pdf-strengths").innerText = item.strengths || 'تم تقديم الدعم والمتابعة الفنية وفق الخطة.';
+      document.getElementById("pdf-feedback").innerText = item.feedback || 'الاستمرار في متابعة خطط التحسين ومؤشرات نواتج التعلم.';
+      document.getElementById("pdf-dev-needs").innerText = item.devNeeds || 'برامج تدريبية تخصصية في نواتج التعلم والقياس.';
+
+      document.getElementById("pdf-footer-provider").innerText = item.providerName || 'مقدم الدعم';
       document.getElementById("pdf-footer-member").innerText = item.author;
 
       const provSigImg = document.getElementById("pdf-provider-signature-img");
@@ -810,9 +911,17 @@
       });
     }
 
-    window.onload = function() {
-      // الكود يتحقق من وسائط الرابط تلقائياً عبر DOMContentLoaded
-    };
+    function onSchoolSelected(name) {
+      const s = SCHOOLS_DATA.find(x => x.name === name);
+      if (!s) return;
+      document.getElementById("school-name").value = s.name;
+      document.getElementById("school-stage").value = s.stage;
+      document.getElementById("school-gender").value = s.gender;
+      document.getElementById("provider-name").value = s.provider_name || "";
+      document.getElementById("provider-present").value = s.has_provider === "نعم" ? "نعم" : "لا";
+    }
+
+    window.onload = function() {};
   </script>
 </body>
 </html>
