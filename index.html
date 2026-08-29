@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
-    .official-doc { font-family: 'Amiri', serif; line-height: 1.2; }
+    .official-doc { font-family: 'Amiri', serif; line-height: 1.25; }
     * {
       font-variant-numeric: tabular-nums;
       -moz-font-feature-settings: "latn" 1;
@@ -21,17 +21,17 @@
     .doc-table { width: 100%; border-collapse: collapse; margin-top: 2px; margin-bottom: 2px; }
     .doc-table th, .doc-table td {
       border: 1px solid #1e293b;
-      padding: 2px 4px;
+      padding: 2.5px 4.5px;
       font-size: 10px;
       vertical-align: middle;
     }
     .doc-table th { background-color: #f8fafc; font-weight: bold; text-align: center; }
-    .table-label { background-color: #f8fafc; font-weight: bold; }
+    .table-label { background-color: #f8fafc; font-weight: bold; width: 15%; }
     .section-header {
       background-color: #f1f5f9;
       font-weight: bold;
       font-size: 10.5px;
-      padding: 2px 4px;
+      padding: 2px 5px;
       border: 1px solid #1e293b;
       border-bottom: none;
       margin-top: 3px;
@@ -45,8 +45,8 @@
     }
     @media print {
       body * { visibility: hidden; }
-      #printable-area, #printable-area * { visibility: visible !important; }
-      #printable-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 4mm; }
+      #printable-area, #printable-area *, #analytics-report-area, #analytics-report-area * { visibility: visible !important; }
+      #printable-area, #analytics-report-area { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 4mm; }
       .no-print { display: none !important; }
     }
   </style>
@@ -68,7 +68,7 @@
       <form id="login-form" class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">المستخدم (رئيس / عضو الفريق)</label>
-          <select id="login-user" class="w-full border rounded-lg p-2.5 bg-slate-50 text-sm focus:ring-2 focus:ring-emerald-500 outline-none font-bold text-slate-800">
+          <select id="login-user" class="w-full border rounded-lg p-2.5 bg-slate-50 text-sm font-bold text-slate-800 outline-none">
             <optgroup label="الإدارة والإشراف العام">
               <option value="د. عائشة بنت جميعان الجهني">د. عائشة بنت جميعان الجهني (رئيس الفريق التنفيذي)</option>
             </optgroup>
@@ -84,7 +84,7 @@
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
-          <input type="password" id="login-pass" value="123456" placeholder="كلمة المرور" class="w-full border rounded-lg p-2.5 bg-slate-50 text-sm outline-none font-mono">
+          <input type="password" id="login-pass" value="123456" class="w-full border rounded-lg p-2.5 bg-slate-50 text-sm font-mono">
         </div>
         <button type="submit" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-lg shadow transition">
           <i class="fa-solid fa-right-to-bracket"></i> دخول المنظومة
@@ -98,27 +98,23 @@
     <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full p-6 md:p-8 border border-slate-200">
       <div class="text-center border-b pb-4 mb-6">
         <h2 class="text-lg font-bold text-slate-800">اعتماد وتوقيع استمارة التغذية الراجعة لمقدمي خدمات الدعم</h2>
-        <p class="text-xs text-slate-500 mt-1">مرحباً بك: <span id="ext-provider-display" class="font-bold text-emerald-800"></span> | يرجى مراجعة البيانات والتوقيع أدناه</p>
+        <p class="text-xs text-slate-500 mt-1">مرحباً بك: <span id="ext-provider-display" class="font-bold text-emerald-800"></span></p>
       </div>
-
       <div class="bg-emerald-50/70 border border-emerald-200 p-4 rounded-xl mb-6 text-xs space-y-1.5">
         <p><strong>المدرسة:</strong> <span id="ext-school-name" class="font-bold"></span></p>
         <p><strong>عضو الفريق التنفيذي:</strong> <span id="ext-author-name" class="font-bold"></span></p>
-        <p><strong>تاريخ الزيارة:</strong> <span id="ext-visit-info" class="font-bold"></span></p>
       </div>
-
       <div class="space-y-3 mb-6">
         <div class="flex justify-between items-center">
           <label class="block text-xs font-bold text-slate-700">ارسم توقيعك الإلكتروني المعتمد بالأسفل:</label>
-          <button type="button" onclick="clearExtSignaturePad()" class="text-xs text-red-600 hover:underline font-bold">مسح اللوحة</button>
+          <button type="button" onclick="clearExtSignaturePad()" class="text-xs text-red-600 font-bold">مسح اللوحة</button>
         </div>
         <canvas id="ext-sig-canvas" width="500" height="130" class="w-full h-32 border-2 border-dashed border-emerald-500 rounded-lg bg-slate-50 cursor-crosshair"></canvas>
       </div>
-
       <div class="flex justify-between items-center pt-4 border-t">
-        <span id="sign-success-msg" class="text-xs text-emerald-700 font-bold hidden"><i class="fa-solid fa-circle-check"></i> تم التوقيع والحفظ في السحاب بنجاح!</span>
-        <button onclick="submitProviderSignature()" class="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs shadow flex items-center gap-1.5">
-          <i class="fa-solid fa-check-double"></i> اعتماد وتوقيع الاستمارة سحابياً
+        <span id="sign-success-msg" class="text-xs text-emerald-700 font-bold hidden"><i class="fa-solid fa-circle-check"></i> تم التوقيع والحفظ في السحاب!</span>
+        <button onclick="submitProviderSignature()" class="px-6 py-2.5 bg-emerald-700 text-white font-bold rounded-lg text-xs shadow">
+          اعتماد وتوقيع الاستمارة سحابياً
         </button>
       </div>
     </div>
@@ -139,10 +135,10 @@
             <i class="fa-solid fa-user-check text-emerald-300"></i>
             <span id="current-user-display" class="font-semibold"></span>
           </span>
-          <button onclick="openSettingsModal()" title="إدارة التوقيع" class="text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg font-bold shadow">
+          <button onclick="openSettingsModal()" class="text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg font-bold shadow">
             <i class="fa-solid fa-signature"></i> توقيعي
           </button>
-          <button onclick="logout()" class="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-bold">خروج</button>
+          <button onclick="logout()" class="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg font-bold">خروج</button>
         </div>
       </div>
     </header>
@@ -150,43 +146,134 @@
     <main class="max-w-7xl mx-auto px-4 py-6">
       <div class="flex justify-between items-center mb-6 no-print flex-wrap gap-2">
         <div class="flex gap-2 flex-wrap">
-          <button onclick="showSection('list-section')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold text-sm">
-            <i class="fa-solid fa-folder-open text-emerald-600"></i> متابعة التقارير المحفوظة سحابياً
+          <button id="btn-nav-analytics" onclick="showSection('analytics-section'); renderAnalyticsDashboard();" class="hidden px-4 py-2 bg-indigo-700 text-white rounded-lg font-bold text-sm shadow">
+            <i class="fa-solid fa-chart-pie"></i> لوحة الإحصاءات العامة
           </button>
-          <button onclick="showSection('form-section'); resetForm();" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-sm">
+          <button onclick="showSection('list-section')" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg font-bold text-sm shadow-sm">
+            <i class="fa-solid fa-folder-open text-emerald-600"></i> متابعة الإسناد والتقارير
+          </button>
+          <button onclick="showSection('form-section'); resetForm();" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-sm shadow">
             <i class="fa-solid fa-circle-plus"></i> إنشاء تقرير جديد
           </button>
         </div>
       </div>
 
-      <!-- قائمة التقارير -->
+      <!-- لوحة الإحصاءات العامة (لرئيس الفريق) -->
+      <section id="analytics-section" class="hidden no-print space-y-6">
+        <div class="bg-gradient-to-r from-indigo-900 to-slate-900 text-white p-5 rounded-2xl shadow flex justify-between items-center flex-wrap gap-4">
+          <div>
+            <span class="bg-indigo-700 text-[11px] font-bold px-3 py-1 rounded-full inline-block mb-1">لوحة القيادة الإشرافية</span>
+            <h3 class="text-lg font-black">التقرير الإحصائي العام لدعم التميز المدرسي بقطاع العوالي</h3>
+          </div>
+          <button onclick="prepareAndPrintAnalyticsReport()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded-xl text-xs">
+            <i class="fa-solid fa-print"></i> إصدار وطباعة التقرير الإحصائي
+          </button>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-xs font-bold text-slate-500">إجمالي مدارس الإسناد</p>
+            <h3 class="text-2xl font-black text-slate-800 mt-1" id="stat-total-schools">173</h3>
+          </div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-xs font-bold text-slate-500">التقارير المنجزة سحابياً</p>
+            <h3 class="text-2xl font-black text-indigo-700 mt-1" id="stat-total-reports">0</h3>
+          </div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-xs font-bold text-slate-500">مقدمو خدمات الدعم</p>
+            <h3 class="text-2xl font-black text-amber-600 mt-1" id="stat-total-providers">57</h3>
+          </div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-xs font-bold text-slate-500">أعضاء الفريق التنفيذي</p>
+            <h3 class="text-2xl font-black text-rose-600 mt-1">6</h3>
+          </div>
+        </div>
+        <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
+          <div class="p-4 bg-slate-50 border-b font-bold text-sm">ملخص أداء ومتابعة إسناد أعضاء الفريق التنفيذي</div>
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-100 font-bold border-b">
+              <tr><th class="p-3">عضو الفريق</th><th class="p-3">الفئة</th><th class="p-3 text-center">المسندة</th><th class="p-3 text-center">بها مقدم دعم</th><th class="p-3 text-center">التقارير</th><th class="p-3 text-center">الإنجاز</th></tr>
+            </thead>
+            <tbody id="table-exec-summary-body" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- نموذج مستند التقرير الإحصائي لرئيس الفريق -->
+      <section id="analytics-print-preview-section" class="hidden">
+        <div class="no-print mb-4"><button onclick="showSection('analytics-section')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded text-xs font-bold"><i class="fa-solid fa-arrow-right"></i> رجوع</button></div>
+        <div id="analytics-report-area" class="bg-white p-6 mx-auto shadow-2xl border max-w-[850px] official-doc text-black">
+          <h2 class="text-center font-bold text-sm bg-slate-100 p-2 border mb-4">التقرير الإحصائي الشامل لمتابعة وتقويم أداء المدارس ومقدمي خدمات دعم التميز — قطاع العوالي</h2>
+          <table class="doc-table">
+            <thead><tr><th>م</th><th>عضو الفريق التنفيذي</th><th>الفئة</th><th>المدارس المسندة</th><th>التقارير المنفذة</th><th>نسبة الإنجاز</th></tr></thead>
+            <tbody id="print-table-exec-summary"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- قائمة المدارس المسندة وأرشيف التقارير -->
       <section id="list-section" class="hidden no-print space-y-6">
-        <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
-          <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 flex-wrap gap-3">
-            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-folder-open text-emerald-600"></i> أرشيف التقارير المعتمدة والمحفوظة سحابياً</h3>
+        <div id="member-kpi-cards" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-[11px] font-bold text-slate-500">المدارس المسندة لي</p>
+            <h3 class="text-2xl font-black text-slate-800" id="member-kpi-assigned">0</h3>
+          </div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-[11px] font-bold text-slate-500">إجمالي التقارير</p>
+            <h3 class="text-2xl font-black text-indigo-700" id="member-kpi-reports">0</h3>
+          </div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-[11px] font-bold text-slate-500">تمت زيارتها</p>
+            <h3 class="text-2xl font-black text-emerald-700" id="member-kpi-visited">0</h3>
+          </div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-[11px] font-bold text-slate-500">لم تُزر بعد</p>
+            <h3 class="text-2xl font-black text-amber-600" id="member-kpi-pending">0</h3>
+          </div>
+        </div>
+
+        <!-- جدول إحصائية المدارس المسندة -->
+        <div class="bg-white rounded-xl shadow-md border overflow-hidden">
+          <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
+            <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-chart-simple text-emerald-600"></i> إحصائية زيارات وتقارير المدارس المسندة</h3>
+            <span id="assigned-coverage-badge" class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">0% نسبة التغطية</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-100 font-bold border-b">
+                <tr><th class="p-3 text-center">#</th><th class="p-3">اسم المدرسة</th><th class="p-3">المرحلة</th><th class="p-3">مقدم الدعم المسند</th><th class="p-3 text-center">مستوى الأداء</th><th class="p-3 text-center">الزيارات</th><th class="p-3 text-center">إجراء سريع</th></tr>
+              </thead>
+              <tbody id="member-assigned-stats-body" class="divide-y"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- أرشيف التقارير المحفوظة سحابياً -->
+        <div class="bg-white rounded-xl shadow-md border overflow-hidden">
+          <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
+            <h3 class="font-bold text-slate-800 text-sm"><i class="fa-solid fa-folder-open text-emerald-600"></i> أرشيف التقارير المعتمدة والمحفوظة سحابياً</h3>
             <span id="report-count" class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">0 تقرير</span>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-right text-xs">
-              <thead class="bg-slate-100 text-slate-700 font-bold border-b">
+              <thead class="bg-slate-100 font-bold border-b">
                 <tr><th class="p-3">#</th><th class="p-3">المدرسة</th><th class="p-3">المرحلة</th><th class="p-3">مستوى الأداء</th><th class="p-3">تاريخ الزيارة</th><th class="p-3">مقدم الدعم</th><th class="p-3">عضو الفريق</th><th class="p-3 text-center">الإجراءات</th></tr>
               </thead>
-              <tbody id="reports-table-body" class="divide-y divide-slate-100"></tbody>
+              <tbody id="reports-table-body" class="divide-y"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- نموذج تعبئة التقرير -->
+      <!-- نموذج تعبئة واستكمال التقرير (مع التعبئة التلقائية الذكية) -->
       <section id="form-section" class="hidden no-print">
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 md:p-8 space-y-6">
+        <div class="bg-white rounded-2xl shadow-xl border p-6 space-y-6">
           <div class="border-b pb-4 flex justify-between items-center">
             <h2 class="text-lg font-bold text-slate-800">استمارة التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي</h2>
             <input type="hidden" id="edit-id" value="">
           </div>
           <form id="report-form" class="space-y-6">
-            <div class="bg-emerald-50/70 border border-emerald-200 p-4 rounded-xl">
-              <label class="block text-xs font-bold text-emerald-900 mb-2">اختر المدرسة للتعبئة التلقائية</label>
+            <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+              <label class="block text-xs font-bold text-emerald-900 mb-2">اختر المدرسة للتعبئة التلقائية (من جدول الإسناد الرسمي)</label>
               <select id="auto-school-select" onchange="onSchoolSelected(this.value)" class="w-full border-2 border-emerald-400 rounded-lg p-2.5 bg-white text-sm font-bold text-slate-800 outline-none">
                 <option value="">-- اختر المدرسة --</option>
               </select>
@@ -202,6 +289,16 @@
               </div>
             </div>
 
+            <!-- ثانياً: ملخص نتائج التقويم المدرسي -->
+            <div class="border rounded-xl p-4 bg-slate-50 space-y-3">
+              <h4 class="font-bold text-xs text-slate-700 uppercase border-b pb-2">ثانيًا: ملخص نتائج أداء المدرسة وفق تقرير التقويم المدرسي الأخير</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div><label class="block font-semibold mb-1">مستوى الأداء العام</label><input type="text" id="overall-level" value="التقدم" class="w-full border rounded p-2 bg-white font-bold"></div>
+                <div><label class="block font-semibold mb-1">مستوى نواتج التعلم</label><input type="text" id="outcomes-level" value="انطلاق" class="w-full border rounded p-2 bg-white font-bold"></div>
+                <div><label class="block font-semibold mb-1">تاريخ الزيارة</label><input type="text" id="visit-date" value="28 جمادى الأولى 1448 هـ" class="w-full border rounded p-2 bg-white font-bold"></div>
+              </div>
+            </div>
+
             <div class="flex justify-end gap-3 pt-4 border-t">
               <button type="button" onclick="showSection('list-section')" class="px-5 py-2.5 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">إلغاء</button>
               <button type="submit" class="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow text-xs">
@@ -212,10 +309,10 @@
         </div>
       </section>
 
-      <!-- شاشة المعاينة والطباعة -->
+      <!-- معاينة التقرير الرسمي الطابعة / PDF -->
       <section id="preview-section" class="hidden">
         <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow mb-4">
-          <button onclick="showSection('list-section')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-bold text-xs"><i class="fa-solid fa-arrow-right"></i> رجوع للقائمة</button>
+          <button onclick="showSection('list-section')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-bold text-xs"><i class="fa-solid fa-arrow-right"></i> رجوع</button>
           <div class="flex gap-2">
             <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg font-bold text-xs"><i class="fa-solid fa-print"></i> طباعة</button>
             <button onclick="exportToPdf()" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-xs"><i class="fa-solid fa-file-pdf"></i> تصدير PDF</button>
@@ -231,6 +328,7 @@
           <table class="doc-table mt-4">
             <tr>
               <td class="table-label w-24">اسم المدرسة:</td><td id="pdf-school-name" class="font-bold text-center"></td>
+              <td class="table-label w-24">مستوى الأداء:</td><td id="pdf-overall-level" class="font-bold text-center"></td>
               <td class="table-label w-24">مقدم الدعم:</td><td id="pdf-provider-name" class="font-bold text-center"></td>
             </tr>
           </table>
@@ -280,14 +378,11 @@
             <i class="fa-brands fa-whatsapp text-base"></i> إرسال رابط التوقيع عبر الواتساب مباشرة
           </a>
         </div>
-        <div class="flex justify-end pt-3 border-t">
-          <button onclick="closeSignShareModal()" class="px-4 py-2 bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">إغلاق</button>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- نافذة إعدادات الحساب -->
+  <!-- نافذة إعدادات الحساب وتوقيع العضو -->
   <div id="settings-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
       <div class="flex justify-between items-center border-b pb-3 mb-4">
@@ -309,42 +404,37 @@
   </div>
 
   <script>
-    // رابط السحاب الخاص بك
     const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycby--qPvIIusR40y5f9D7Wd_9qE0rDpGaalU_YF5dYm4VpDsfMKv_dpJ-tTijSDLN_Oogw/exec";
 
-    const SCHOOLS_DATA = [{"member": "صالح بن عوض فاضي الحربي", "name": "متوسطة أبي بن ثابت الأنصاري", "gender": "بنين", "stage": "متوسط", "overall_level": "الانطلاق", "has_provider": "نعم", "provider_name": "سعد سعود سعد الحربي", "sector": "العوالي"}];
+    const SCHOOLS_DATA = [
+      { member: "صالح بن عوض فاضي الحربي", name: "متوسطة الخوارزمي", gender: "بنين", stage: "متوسط", overall_level: "الانطلاق", has_provider: "نعم", provider_name: "سعد سعود سعد الحربي", sector: "العوالي" },
+      { member: "صالح بن عوض فاضي الحربي", name: "متوسطة أبي بن ثابت الأنصاري", gender: "بنين", stage: "متوسط", overall_level: "الانطلاق", has_provider: "نعم", provider_name: "سعد سعود سعد الحربي", sector: "العوالي" },
+      { member: "صالح بن عوض فاضي الحربي", name: "ثانوية طيبة", gender: "بنين", stage: "ثانوي", overall_level: "التقدم", has_provider: "لا", provider_name: "", sector: "العوالي" }
+    ];
     
     let EXEC_MEMBERS = JSON.parse(localStorage.getItem("exec_members_config")) || {
       "د. عائشة بنت جميعان الجهني": { pass: "123456", signature: "", role: "leader" },
-      "صالح بن عوض فاضي الحربي": { pass: "123456", signature: "", role: "member" }
+      "صالح بن عوض فاضي الحربي": { pass: "123456", signature: "", role: "member" },
+      "أنس بن ناجي رشيد الرحيلي": { pass: "123456", signature: "", role: "member" }
     };
 
     let currentUser = null;
     let reports = [];
 
-    // جلب التقارير من السحاب عند فتح الصفحة
     async function fetchReportsFromCloud() {
       try {
         const response = await fetch(CLOUD_API_URL);
         reports = await response.json();
-      } catch(e) {
-        console.error("فشل الجلب السحابي", e);
-      }
+      } catch(e) { console.error(e); }
       document.getElementById("cloud-loader").classList.add("hidden");
     }
 
-    // حفظ التقرير أو التحديث في السحاب
     async function saveReportToCloud(reportData) {
       document.getElementById("cloud-loader").classList.remove("hidden");
       try {
-        await fetch(CLOUD_API_URL, {
-          method: "POST",
-          body: JSON.stringify(reportData)
-        });
+        await fetch(CLOUD_API_URL, { method: "POST", body: JSON.stringify(reportData) });
         await fetchReportsFromCloud();
-      } catch(e) {
-        alert("حدث خطأ أثناء الاتصال بالسحاب.");
-      }
+      } catch(e) { alert("حدث خطأ أثناء الاتصال بالسحاب."); }
       document.getElementById("cloud-loader").classList.add("hidden");
     }
 
@@ -354,34 +444,24 @@
       const urlParams = new URLSearchParams(window.location.search);
       const signId = urlParams.get('sign_id');
       
-      // إذا فتح مقدم الدعم رابط التوقيع
       if (signId) {
         const report = reports.find(r => r.id === signId);
         if (report) {
           document.getElementById("login-modal").classList.add("hidden");
           document.getElementById("main-app").classList.add("hidden");
           document.getElementById("external-sign-container").classList.remove("hidden");
-
           document.getElementById("ext-provider-display").innerText = report.providerName || "مقدم الدعم";
           document.getElementById("ext-school-name").innerText = report.schoolName;
           document.getElementById("ext-author-name").innerText = report.author;
-          document.getElementById("ext-visit-info").innerText = report.visitDate || "العام الدراسي 1448 هـ";
-
-          initExtSignaturePad();
+          initExtSigPad();
           window.activeSignReport = report;
           return;
-        } else {
-          alert("عذراً، لم يتم العثور على التقرير المطلوب في السحاب.");
         }
       }
 
       const savedUser = sessionStorage.getItem("logged_user");
-      if (savedUser) {
-        currentUser = savedUser;
-        initApp();
-      } else {
-        document.getElementById("login-modal").classList.remove("hidden");
-      }
+      if (savedUser) { currentUser = savedUser; initApp(); }
+      else { document.getElementById("login-modal").classList.remove("hidden"); }
     });
 
     document.getElementById("login-form").addEventListener("submit", function(e) {
@@ -391,21 +471,75 @@
       initApp();
     });
 
-    function logout() {
-      sessionStorage.removeItem("logged_user");
-      location.reload();
-    }
+    function logout() { sessionStorage.removeItem("logged_user"); location.reload(); }
 
     function initApp() {
       document.getElementById("login-modal").classList.add("hidden");
       document.getElementById("main-app").classList.remove("hidden");
       document.getElementById("current-user-display").innerText = currentUser;
+
+      const isLeader = (currentUser === "د. عائشة بنت جميعان الجهني" || EXEC_MEMBERS[currentUser]?.role === "leader");
+      if (isLeader) {
+        document.getElementById("btn-nav-analytics").classList.remove("hidden");
+        showSection('analytics-section');
+        renderAnalyticsDashboard();
+      } else {
+        showSection('list-section');
+      }
       populateSchoolSelect();
       renderReportsTable();
-      showSection('list-section');
+      renderMemberAssignedSchoolsStats();
     }
 
-    // لوحة توقيع مقدم الدعم الخارجية
+    // إحصاءات رئيس الفريق
+    function renderAnalyticsDashboard() {
+      document.getElementById("stat-total-reports").innerText = reports.length;
+      const tbody = document.getElementById("table-exec-summary-body");
+      tbody.innerHTML = "";
+      const member = "صالح بن عوض فاضي الحربي";
+      const assigned = SCHOOLS_DATA.length;
+      const memberReports = reports.filter(r => r.author === member);
+      tbody.innerHTML = `<tr><td class="p-3 font-bold">${member}</td><td class="p-3">بنين</td><td class="p-3 text-center">${assigned}</td><td class="p-3 text-center">2</td><td class="p-3 text-center font-bold">${memberReports.length}</td><td class="p-3 text-center">${Math.round((memberReports.length/assigned)*100)}%</td></tr>`;
+    }
+
+    function prepareAndPrintAnalyticsReport() {
+      document.getElementById("print-table-exec-summary").innerHTML = document.getElementById("table-exec-summary-body").innerHTML;
+      showSection("analytics-print-preview-section");
+    }
+
+    // إحصائيات المدارس المسندة للعضو
+    function renderMemberAssignedSchoolsStats() {
+      const tbody = document.getElementById("member-assigned-stats-body");
+      if (!tbody) return;
+      tbody.innerHTML = "";
+      const mySchools = SCHOOLS_DATA.filter(s => s.member.trim() === currentUser.trim());
+      const userReports = reports.filter(r => r.author === currentUser);
+      let visited = 0;
+
+      mySchools.forEach((school, index) => {
+        const count = userReports.filter(r => r.schoolName === school.name).length;
+        if (count > 0) visited++;
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 border-b";
+        tr.innerHTML = `
+          <td class="p-3 text-center font-bold">${index + 1}</td>
+          <td class="p-3 font-bold">${school.name}</td>
+          <td class="p-3">${school.stage}</td>
+          <td class="p-3 text-emerald-700 font-bold">${school.provider_name || 'بدون'}</td>
+          <td class="p-3 text-center">${school.overall_level}</td>
+          <td class="p-3 text-center font-black">${count}</td>
+          <td class="p-3 text-center"><button onclick="quickStart('${school.name}')" class="px-3 py-1 bg-emerald-700 text-white font-bold rounded text-xs">إنشاء تقرير</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      document.getElementById("member-kpi-assigned").innerText = mySchools.length;
+      document.getElementById("member-kpi-reports").innerText = userReports.length;
+      document.getElementById("member-kpi-visited").innerText = visited;
+      document.getElementById("member-kpi-pending").innerText = mySchools.length - visited;
+    }
+
+    function quickStart(name) { showSection('form-section'); resetForm(); document.getElementById("auto-school-select").value = name; onSchoolSelected(name); }
+
     let extSigCanvas, extSigCtx, isExtDrawing = false;
     function initExtSigPad() {
       extSigCanvas = document.getElementById("ext-sig-canvas");
@@ -425,7 +559,6 @@
       if (!window.activeSignReport) return;
       window.activeSignReport.providerSignature = extSigCanvas.toDataURL("image/png");
       window.activeSignReport.providerSignedAt = new Date().toISOString();
-
       await saveReportToCloud(window.activeSignReport);
       document.getElementById("sign-success-msg").classList.remove("hidden");
       alert("تم اعتماد وتوقيع الاستمارة وحفظها سحابياً بنجاح!");
@@ -436,11 +569,9 @@
       const report = reports.find(r => r.id === id);
       if (!report) return;
       document.getElementById("share-provider-name").innerText = report.providerName || "مقدم الدعم";
-
       const signUrl = `${window.location.href.split('?')[0]}?sign_id=${report.id}`;
       document.getElementById("share-link-input").value = signUrl;
-
-      const waText = `السلام عليكم الأستاذ/ة ${report.providerName || 'مقدم الدعم'}، نأمل التكرم بمراجعة استمارة التغذية الراجعة لزيارة دعم التميز المدرسي في مدرسة (${report.schoolName}) والتوقيع عليها إلكترونياً عبر الرابط:\n${signUrl}`;
+      const waText = `السلام عليكم الأستاذ/ة ${report.providerName || 'مقدم الدعم'}، نأمل التكرم بمراجعة التقرير والتوقيع عليه عبر الرابط:\n${signUrl}`;
       document.getElementById("whatsapp-share-btn").href = `https://wa.me/?text=${encodeURIComponent(waText)}`;
       document.getElementById("sign-share-modal").classList.remove("hidden");
     }
@@ -448,8 +579,6 @@
     function closeSignShareModal() { document.getElementById("sign-share-modal").classList.add("hidden"); }
     function copyShareLink() { navigator.clipboard.writeText(document.getElementById("share-link-input").value); alert("تم نسخ رابط التوقيع!"); }
 
-    // إعدادات توقيع عضو الفريق
-    let tempNewSignature = null;
     function openSettingsModal() {
       document.getElementById("settings-user-name").value = currentUser;
       document.getElementById("settings-modal").classList.remove("hidden");
@@ -459,13 +588,13 @@
       let drawing = false;
       c.onmousedown = (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
       c.onmousemove = (e) => { if (!drawing) return; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); };
-      c.onmouseup = () => { drawing = false; tempNewSignature = c.toDataURL("image/png"); };
+      c.onmouseup = () => { drawing = false; window.tempSig = c.toDataURL("image/png"); };
     }
     function closeSettingsModal() { document.getElementById("settings-modal").classList.add("hidden"); }
     function clearSignaturePad() { const c = document.getElementById("sig-pad-canvas"); c.getContext("2d").clearRect(0,0,c.width,c.height); }
     function saveUserSettings() {
-      if (tempNewSignature) {
-        EXEC_MEMBERS[currentUser].signature = tempNewSignature;
+      if (window.tempSig) {
+        EXEC_MEMBERS[currentUser].signature = window.tempSig;
         localStorage.setItem("exec_members_config", JSON.stringify(EXEC_MEMBERS));
       }
       closeSettingsModal();
@@ -473,6 +602,8 @@
     }
 
     function showSection(id) {
+      document.getElementById("analytics-section").classList.add("hidden");
+      document.getElementById("analytics-print-preview-section").classList.add("hidden");
       document.getElementById("list-section").classList.add("hidden");
       document.getElementById("form-section").classList.add("hidden");
       document.getElementById("preview-section").classList.add("hidden");
@@ -489,12 +620,13 @@
         schoolStage: document.getElementById("school-stage").value,
         schoolGender: document.getElementById("school-gender").value,
         providerName: document.getElementById("provider-name").value,
+        overallLevel: document.getElementById("overall-level").value,
         providerSignature: editId ? (reports.find(r => r.id === editId)?.providerSignature || null) : null,
         savedAt: new Date().toISOString()
       };
-
       await saveReportToCloud(reportData);
       renderReportsTable();
+      renderMemberAssignedSchoolsStats();
       showSection("list-section");
     });
 
@@ -509,14 +641,13 @@
           <td class="p-3">${idx + 1}</td>
           <td class="p-3 font-bold">${item.schoolName}</td>
           <td class="p-3">${item.schoolStage || '-'}</td>
-          <td class="p-3">التقدم</td>
+          <td class="p-3">${item.overallLevel || 'التقدم'}</td>
           <td class="p-3">28 جمادى الأولى 1448 هـ</td>
           <td class="p-3">${item.providerName || '-'} ${signBadge}</td>
           <td class="p-3">${item.author}</td>
           <td class="p-3 text-center flex gap-1 justify-center">
             <button onclick="openSignShareModal('${item.id}')" class="px-2 py-1 bg-indigo-600 text-white rounded font-bold text-xs"><i class="fa-solid fa-share-nodes"></i> إرسال</button>
             <button onclick="previewReport('${item.id}')" class="p-1.5 bg-blue-50 text-blue-600 rounded"><i class="fa-solid fa-file-pdf"></i></button>
-            <button onclick="deleteReport('${item.id}')" class="p-1.5 bg-red-50 text-red-600 rounded"><i class="fa-solid fa-trash"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -524,24 +655,11 @@
       document.getElementById("report-count").innerText = `${reports.length} تقرير`;
     }
 
-    async function deleteReport(id) {
-      if (confirm("هل ترغب في حذف التقرير سحابياً؟")) {
-        reports = reports.filter(r => r.id !== id);
-        // إرسال تقرير فارغ أو الحذف (في النسخة البسيطة سيتم حفظ القائمة الجديدة المحدثة)
-        renderReportsTable();
-      }
-    }
-
-    function resetForm() {
-      document.getElementById("report-form").reset();
-      document.getElementById("edit-id").value = "";
-    }
-
     function previewReport(id) {
       const item = reports.find(r => r.id === id);
       if (!item) return;
-
       document.getElementById("pdf-school-name").innerText = item.schoolName;
+      document.getElementById("pdf-overall-level").innerText = item.overallLevel || 'التقدم';
       document.getElementById("pdf-provider-name").innerText = item.providerName || '-';
       document.getElementById("pdf-footer-provider").innerText = item.providerName || 'مقدم الدعم';
       document.getElementById("pdf-footer-member").innerText = item.author;
@@ -565,17 +683,16 @@
     }
 
     function exportToPdf() {
-      const element = document.getElementById('printable-area');
-      html2pdf().from(element).save(`تقرير_التغذية_الراجعة.pdf`);
+      html2pdf().from(document.getElementById('printable-area')).save(`تقرير_التغذية_الراجعة.pdf`);
     }
 
     function populateSchoolSelect() {
       const select = document.getElementById("auto-school-select");
-      select.innerHTML = '<option value="">-- اختر المدرسة --</option>';
+      select.innerHTML = '<option value="">-- اختر المدرسة من قائمة إسناد قطاع العوالي --</option>';
       SCHOOLS_DATA.forEach(s => {
         const opt = document.createElement("option");
         opt.value = s.name;
-        opt.innerText = `${s.name} - [مقدم الدعم: ${s.provider_name}]`;
+        opt.innerText = `${s.name} (${s.stage} - ${s.gender}) - [مقدم الدعم: ${s.provider_name || 'بدون'}]`;
         select.appendChild(opt);
       });
     }
@@ -587,6 +704,12 @@
       document.getElementById("school-stage").value = s.stage;
       document.getElementById("school-gender").value = s.gender;
       document.getElementById("provider-name").value = s.provider_name || "";
+      document.getElementById("overall-level").value = s.overall_level || "التقدم";
+    }
+
+    function resetForm() {
+      document.getElementById("report-form").reset();
+      document.getElementById("edit-id").value = "";
     }
   </script>
 </body>
