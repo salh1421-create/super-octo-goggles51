@@ -53,35 +53,43 @@
 </head>
 <body class="min-h-screen">
 
-  <!-- شاشة توقيع مقدم خدمة الدعم (تظهر عند فتح الرابط المخصص) -->
-  <div id="provider-signing-view" class="hidden min-h-screen bg-slate-100 p-4 md:p-8 flex flex-col items-center justify-center">
-    <div class="bg-white max-w-xl w-full rounded-2xl shadow-2xl border border-slate-200 p-6 space-y-5">
-      <div class="text-center border-b pb-4">
-        <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto mb-2" style="height: 60px; max-width: 120px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
-        <h2 class="text-lg font-black text-slate-800">بوابة التوقيع والاعتماد الإلكتروني لمقدم الخدمة</h2>
-        <p class="text-xs text-slate-500 mt-1">منظومة دعم التميز المدرسي — قطاع العوالي</p>
+  <!-- بوابة توقيع مقدم الدعم الذكية (تفتح فوراً بدون تسجيل دخول) -->
+  <div id="provider-signing-view" class="hidden min-h-screen bg-slate-900/90 backdrop-blur-sm p-4 md:p-6 flex flex-col items-center justify-center">
+    <div class="bg-white max-w-xl w-full rounded-2xl shadow-2xl border border-slate-200 p-6 space-y-4">
+      <div class="text-center border-b pb-3">
+        <img src="moe-logo.png" alt="وزارة التعليم" class="moe-logo-img mx-auto mb-2" style="height: 55px; max-width: 120px;" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/moe-gov-sa/assets/main/logo.png';">
+        <h2 class="text-base md:text-lg font-black text-slate-800">بوابة التوقيع والاعتماد الإلكتروني لمقدم الخدمة</h2>
+        <p class="text-xs text-slate-500 mt-0.5">منظومة دعم التميز المدرسي — قطاع العوالي</p>
       </div>
 
-      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 text-xs text-slate-700 space-y-1.5">
-        <div class="flex justify-between">
-          <span class="font-bold text-emerald-900">المدرسة:</span>
+      <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-xs space-y-1.5">
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-emerald-950">المدرسة المستهدفة:</span>
           <span id="sign-school-name" class="font-black text-slate-900"></span>
         </div>
-        <div class="flex justify-between">
-          <span class="font-bold text-emerald-900">تاريخ الزيارة:</span>
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-emerald-950">تاريخ الزيارة:</span>
           <span id="sign-visit-date" class="font-semibold text-slate-800"></span>
         </div>
-        <div class="flex justify-between">
-          <span class="font-bold text-emerald-900">المشرف الزائر:</span>
-          <span id="sign-author-name" class="font-semibold text-slate-800"></span>
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-emerald-950">المشرف الزائر:</span>
+          <span id="sign-author-name" class="font-bold text-slate-800"></span>
         </div>
-        <div class="flex justify-between">
-          <span class="font-bold text-emerald-900">مقدم/ـة الدعم:</span>
+        <div class="flex justify-between items-center">
+          <span class="font-bold text-emerald-950">مقدم/ـة خدمات الدعم:</span>
           <span id="sign-provider-name" class="font-black text-emerald-800"></span>
         </div>
       </div>
 
-      <div class="space-y-3">
+      <!-- إشعار عند اكتمال التوقيع -->
+      <div id="sign-success-box" class="hidden bg-emerald-100 border border-emerald-300 text-emerald-900 p-3 rounded-xl text-xs space-y-2 text-center">
+        <p class="font-bold"><i class="fa-solid fa-circle-check text-emerald-600 text-base"></i> تم توقيع واعتماد الاستمارة بنجاح وحفظها رسمياً!</p>
+        <button onclick="downloadSignedPdfFromPayload()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow text-xs inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-file-pdf"></i> تحميل نسخة التقرير المعتمد (PDF)
+        </button>
+      </div>
+
+      <div id="sign-inputs-container" class="space-y-3">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">
             <i class="fa-solid fa-cloud-arrow-up text-indigo-600 ml-1"></i> الخيار الأول: رفع ملف صورة التوقيع
@@ -92,30 +100,30 @@
         <div>
           <div class="flex justify-between items-center mb-1">
             <label class="block text-xs font-bold text-slate-700">
-              <i class="fa-solid fa-pen-nib text-emerald-600 ml-1"></i> الخيار الثاني: التوقيع الحي في المربع
+              <i class="fa-solid fa-pen-nib text-emerald-600 ml-1"></i> الخيار الثاني: التوقيع الحي في المربع (باللمس أو الماوس)
             </label>
-            <button type="button" onclick="clearProviderSignaturePad()" class="text-[11px] text-red-600 hover:underline font-bold">مسح التوقيع</button>
+            <button type="button" onclick="clearProviderSignaturePad()" class="text-[11px] text-red-600 hover:underline font-bold">مسح اللوحة</button>
           </div>
           <canvas id="provider-sig-canvas" width="400" height="110" class="w-full h-28 border-2 border-dashed border-emerald-400 rounded-xl bg-slate-50 cursor-crosshair"></canvas>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">معاينة التوقيع المعتمد</label>
+          <label class="block text-xs font-bold text-slate-700 mb-1">معاينة التوقيع</label>
           <div class="p-2 border rounded-xl bg-slate-50 flex items-center justify-center h-16">
             <img id="provider-sig-preview" src="" class="max-h-12 object-contain" alt="معاينة التوقيع">
           </div>
         </div>
-      </div>
 
-      <div class="flex gap-2 pt-3 border-t">
-        <button onclick="submitProviderSignature()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl shadow transition text-xs flex items-center justify-center gap-2">
-          <i class="fa-solid fa-file-circle-check"></i> اعتماد وتوقيع الاستمارة وحفظها
-        </button>
+        <div class="pt-2 border-t flex gap-2">
+          <button onclick="submitProviderSignature()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-2.5 rounded-xl shadow transition text-xs flex items-center justify-center gap-2">
+            <i class="fa-solid fa-signature"></i> اعتماد التوقيع وحفظ الاستمارة
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- شاشة الدخول -->
+  <!-- شاشة الدخول للمنظومة -->
   <div id="login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border border-slate-200">
       <div class="text-center mb-6">
@@ -180,7 +188,6 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-6">
-      <!-- أزرار التنقل العلوية -->
       <div class="flex justify-between items-center mb-6 no-print flex-wrap gap-2">
         <div class="flex gap-2 flex-wrap">
           <button id="btn-nav-analytics" onclick="showSection('analytics-section'); renderAnalyticsDashboard();" class="hidden px-4 py-2 bg-indigo-700 text-white rounded-lg font-bold hover:bg-indigo-800 shadow flex items-center gap-2 text-sm transition">
@@ -899,6 +906,9 @@
           </button>
           
           <div class="flex gap-2 flex-wrap">
+            <button id="btn-preview-import" onclick="openImportSignatureModal()" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow">
+              <i class="fa-solid fa-file-import"></i> إدراج توقيع مقدم الدعم
+            </button>
             <button id="btn-preview-whatsapp" onclick="" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs flex items-center gap-1.5 shadow">
               <i class="fa-brands fa-whatsapp text-sm"></i> إرسال للتوقيع عبر الواتساب
             </button>
@@ -1179,6 +1189,41 @@
     </main>
   </div>
 
+  <!-- نافذة إدراج واستيراد توقيع مقدم الدعم -->
+  <div id="import-signature-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
+      <div class="flex justify-between items-center border-b pb-3 mb-4">
+        <h3 class="font-bold text-slate-800 text-base flex items-center gap-2">
+          <i class="fa-solid fa-file-signature text-emerald-600"></i> إدراج توقيع مقدم الدعم في التقرير
+        </h3>
+        <button onclick="closeImportSignatureModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">
+            <i class="fa-solid fa-cloud-arrow-up text-indigo-600 ml-1"></i> رفع صورة توقيع مقدم الدعم (PNG أو JPG)
+          </label>
+          <input type="file" id="direct-provider-sig-file" accept="image/*" onchange="handleDirectProviderSignature(this)" class="w-full border rounded-lg p-2 text-xs bg-slate-50">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">معاينة التوقيع</label>
+          <div class="p-2 border rounded-xl bg-slate-50 flex items-center justify-center h-16">
+            <img id="direct-provider-sig-preview" src="" class="max-h-12 object-contain" alt="معاينة التوقيع">
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-3 border-t">
+          <button onclick="closeImportSignatureModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-lg text-xs">إلغاء</button>
+          <button onclick="saveDirectProviderSignature()" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg text-xs shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-check"></i> حفظ التوقيع في التقرير
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- نافذة إعدادات المستخدم وتحديث التوقيع -->
   <div id="settings-modal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
@@ -1263,40 +1308,60 @@
     let chartMembers = null;
     let chartLevels = null;
 
-    // حالة توقيع مقدم الدعم
-    let signingReportId = null;
+    let activePayloadReport = null;
     let providerPadCanvas, providerPadCtx, isProviderDrawing = false;
     let tempProviderSignature = null;
+    let currentPreviewReportId = null;
+    let tempDirectProviderSignature = null;
 
-    // التحقق من وجود معلمة التوقيع بالرابط
+    // تشفير وفك تشفير الرابط والبيانات الذكية (Unicode Safe)
+    function encodePayload(obj) {
+      return encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(obj)))));
+    }
+
+    function decodePayload(str) {
+      try {
+        return JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(str))))));
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // فحص الرابط عند الفتح
     function checkSigningUrlParam() {
       const params = new URLSearchParams(window.location.search);
+      const payloadStr = params.get("payload");
       const signId = params.get("sign_id");
-      if (signId) {
-        const item = reports.find(r => r.id === signId);
-        if (item) {
-          signingReportId = signId;
-          document.getElementById("login-modal").classList.add("hidden");
-          document.getElementById("main-app").classList.add("hidden");
-          document.getElementById("provider-signing-view").classList.remove("hidden");
-          
-          document.getElementById("sign-school-name").innerText = item.schoolName;
-          document.getElementById("sign-visit-date").innerText = item.visitDate;
-          document.getElementById("sign-author-name").innerText = item.author;
-          document.getElementById("sign-provider-name").innerText = item.providerName || "مقدم الدعم";
 
-          if (item.providerSignature) {
-            document.getElementById("provider-sig-preview").src = item.providerSignature;
-            tempProviderSignature = item.providerSignature;
-          }
-          initProviderSignaturePad();
-          return true;
+      let item = null;
+      if (payloadStr) {
+        item = decodePayload(payloadStr);
+      } else if (signId) {
+        item = reports.find(r => r.id === signId);
+      }
+
+      if (item) {
+        activePayloadReport = item;
+        document.getElementById("login-modal").classList.add("hidden");
+        document.getElementById("main-app").classList.add("hidden");
+        document.getElementById("provider-signing-view").classList.remove("hidden");
+        
+        document.getElementById("sign-school-name").innerText = item.schoolName;
+        document.getElementById("sign-visit-date").innerText = item.visitDate;
+        document.getElementById("sign-author-name").innerText = item.author;
+        document.getElementById("sign-provider-name").innerText = item.providerName || "مقدم الدعم";
+
+        if (item.providerSignature) {
+          document.getElementById("provider-sig-preview").src = item.providerSignature;
+          tempProviderSignature = item.providerSignature;
+          document.getElementById("sign-success-box").classList.remove("hidden");
         }
+        initProviderSignaturePad();
+        return true;
       }
       return false;
     }
 
-    // إعداد لوحة توقيع مقدم الخدمة
     function initProviderSignaturePad() {
       providerPadCanvas = document.getElementById("provider-sig-canvas");
       if (!providerPadCanvas) return;
@@ -1370,31 +1435,86 @@
         return;
       }
 
-      const idx = reports.findIndex(r => r.id === signingReportId);
-      if (idx !== -1) {
-        reports[idx].providerSignature = tempProviderSignature;
-        reports[idx].providerSignedAt = new Date().toLocaleString("ar-SA");
-        localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
-        alert("تم اعتماد وتوقيع الاستمارة وحفظها بنجاح!");
-        
-        // إزالة المعلمة من الرابط والعودة للدخول
-        window.history.replaceState({}, document.title, window.location.pathname);
-        document.getElementById("provider-signing-view").classList.add("hidden");
-        document.getElementById("login-modal").classList.remove("hidden");
+      activePayloadReport.providerSignature = tempProviderSignature;
+      activePayloadReport.providerSignedAt = new Date().toLocaleString("ar-SA");
+
+      // الحفظ في التخزين المحلي للجهاز
+      const localIndex = reports.findIndex(r => r.id === activePayloadReport.id);
+      if (localIndex !== -1) {
+        reports[localIndex] = activePayloadReport;
+      } else {
+        reports.unshift(activePayloadReport);
       }
+      localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
+
+      document.getElementById("sign-inputs-container").classList.add("hidden");
+      document.getElementById("sign-success-box").classList.remove("hidden");
+      alert("تم اعتماد التوقيع وحفظ الاستمارة المعتمدة بنجاح!");
     }
 
-    // توليد روابط التوقيع والمشاركة
-    function getSigningLink(reportId) {
+    function downloadSignedPdfFromPayload() {
+      if (!activePayloadReport) return;
+      populatePdfElements(activePayloadReport);
+      exportToPdf();
+    }
+
+    // توليد رابط التوقيع الذكي المحتوي على كافة البيانات
+    function generateSmartSigningLink(reportId) {
+      const item = reports.find(r => r.id === reportId);
+      if (!item) return "";
+
+      const lightItem = {
+        id: item.id,
+        author: item.author,
+        term: item.term,
+        academicYear: item.academicYear,
+        visitNum: item.visitNum,
+        visitWeek: item.visitWeek,
+        visitDay: item.visitDay,
+        visitDate: item.visitDate,
+        schoolName: item.schoolName,
+        schoolStage: item.schoolStage,
+        schoolGender: item.schoolGender,
+        providerPresent: item.providerPresent,
+        providerName: item.providerName,
+        supportType: item.supportType,
+        weeklyReport: item.weeklyReport,
+        supTeach: item.supTeach,
+        supOutcomes: item.supOutcomes,
+        supGuidance: item.supGuidance,
+        supActivities: item.supActivities,
+        evalType: item.evalType,
+        overallLevel: item.overallLevel,
+        overallScore: item.overallScore,
+        outcomesLevel: item.outcomesLevel,
+        outcomesScore: item.outcomesScore,
+        prac1G: item.prac1G, prac1N: item.prac1N,
+        prac2G: item.prac2G, prac2N: item.prac2N,
+        prac3G: item.prac3G, prac3N: item.prac3N,
+        sup1G: item.sup1G, sup1N: item.sup1N,
+        sup2G: item.sup2G, sup2N: item.sup2N,
+        sup3G: item.sup3G, sup3N: item.sup3N,
+        sup4G: item.sup4G, sup4N: item.sup4N,
+        supAvgN: item.supAvgN,
+        supPrevN: item.supPrevN,
+        comp1: item.comp1, comp2: item.comp2, comp3: item.comp3, comp4: item.comp4,
+        challenges: item.challenges,
+        strengths: item.strengths,
+        feedback: item.feedback,
+        devNeeds: item.devNeeds,
+        authorSignature: EXEC_MEMBERS[item.author]?.signature || ""
+      };
+
+      const payload = encodePayload(lightItem);
       const url = new URL(window.location.href.split('?')[0]);
-      url.searchParams.set("sign_id", reportId);
+      url.searchParams.set("payload", payload);
       return url.toString();
     }
 
     function copySigningLink(reportId) {
-      const link = getSigningLink(reportId);
+      const link = generateSmartSigningLink(reportId);
       navigator.clipboard.writeText(link).then(() => {
-        alert("تم نسخ رابط توقيع الاستمارة الإلكتروني بنجاح!");
+        alert("تم نسخ رابط التوقيع الذكي بنجاح!");
       }).catch(() => {
         prompt("انسخ الرابط التالي:", link);
       });
@@ -1404,11 +1524,51 @@
       const item = reports.find(r => r.id === reportId);
       if (!item) return;
 
-      const link = getSigningLink(reportId);
+      const link = generateSmartSigningLink(reportId);
       const text = `السلام عليكم ورحمة الله وبركاته،\nالأستاذ/ة الفاضل/ـة: ${item.providerName || 'مقدم الدعم'}\n\nنأمل التكرم بالاطلاع على استمارة التغذية الراجعة لزيارة دعم التميز المدرسي لمدرسة (${item.schoolName}) واعتماد التوقيع إلكترونياً عبر الرابط المباشر التالي:\n${link}\n\nشاكرين ومقدرين جهودكم المتميزة.\nمشرف الفريق التنفيذي: ${item.author}`;
       
       const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
       window.open(whatsappUrl, '_blank');
+    }
+
+    // إدراج التوقيع مباشرة من قبل المشرف
+    function openImportSignatureModal() {
+      tempDirectProviderSignature = null;
+      document.getElementById("direct-provider-sig-file").value = "";
+      document.getElementById("direct-provider-sig-preview").src = "";
+      document.getElementById("import-signature-modal").classList.remove("hidden");
+    }
+
+    function closeImportSignatureModal() {
+      document.getElementById("import-signature-modal").classList.add("hidden");
+    }
+
+    function handleDirectProviderSignature(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          tempDirectProviderSignature = e.target.result;
+          document.getElementById("direct-provider-sig-preview").src = tempDirectProviderSignature;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function saveDirectProviderSignature() {
+      if (!tempDirectProviderSignature) {
+        alert("يرجى اختيار ملف التوقيع أولاً.");
+        return;
+      }
+
+      const idx = reports.findIndex(r => r.id === currentPreviewReportId);
+      if (idx !== -1) {
+        reports[idx].providerSignature = tempDirectProviderSignature;
+        reports[idx].providerSignedAt = new Date().toLocaleString("ar-SA");
+        localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
+        closeImportSignatureModal();
+        previewReport(currentPreviewReportId);
+        alert("تم إدراج توقيع مقدم الدعم وحفظ التقرير بنجاح!");
+      }
     }
 
     // تسجيل الدخول
@@ -1456,7 +1616,7 @@
       }
     }
 
-    // إعدادات الحساب وتحديث توقيع عضو الفريق
+    // إدارة الحساب وتوقيع المشرف
     let padCanvas, padCtx, isDrawing = false;
     function openSettingsModal() {
       document.getElementById("settings-user-name").value = currentUser;
@@ -1550,7 +1710,7 @@
       alert("تم حفظ التوقيع وبيانات الحساب بنجاح!");
     }
 
-    // بناء وتحديث جدول إحصائية الزيارات
+    // جدول إحصائيات إسناد المدارس
     function renderMemberAssignedSchoolsStats() {
       const tbody = document.getElementById("member-assigned-stats-body");
       if (!tbody) return;
@@ -1638,7 +1798,7 @@
       onSchoolSelected(schoolName);
     }
 
-    // بناء لوحة الإحصاءات العامة
+    // لوحة الإحصاءات
     function renderAnalyticsDashboard() {
       const stageFilter = document.getElementById("analytics-filter-stage")?.value || "الكل";
       const levelFilter = document.getElementById("analytics-filter-level")?.value || "الكل";
@@ -2212,13 +2372,7 @@
       updateVisitDateFromSchedule();
     }
 
-    function previewReport(id) {
-      const item = reports.find(r => r.id === id);
-      if (!item) return;
-
-      document.getElementById("btn-preview-whatsapp").setAttribute("onclick", `shareReportViaWhatsApp('${item.id}')`);
-      document.getElementById("btn-preview-copylink").setAttribute("onclick", `copySigningLink('${item.id}')`);
-
+    function populatePdfElements(item) {
       document.getElementById("pdf-doc-id").innerText = item.id.substring(4, 12);
       document.getElementById("pdf-doc-date").innerText = item.visitDate;
       document.getElementById("pdf-term-display").innerText = item.term;
@@ -2279,7 +2433,6 @@
       document.getElementById("pdf-footer-provider").innerText = item.providerName || 'مقدم الدعم';
       document.getElementById("pdf-footer-member").innerText = item.author;
 
-      // توقيع مقدم الدعم
       const provSigImg = document.getElementById("pdf-provider-signature-img");
       const provPlaceholder = document.getElementById("pdf-provider-placeholder");
       if (item.providerSignature) {
@@ -2291,22 +2444,31 @@
         provPlaceholder.classList.remove("hidden");
       }
 
-      // توقيع عضو الفريق المشرف
       const sigImg = document.getElementById("pdf-signature-img");
-      const userSig = EXEC_MEMBERS[item.author]?.signature;
+      const userSig = item.authorSignature || EXEC_MEMBERS[item.author]?.signature;
       if (userSig) {
         sigImg.src = userSig;
         sigImg.classList.remove("hidden");
       } else {
         sigImg.classList.add("hidden");
       }
+    }
 
+    function previewReport(id) {
+      const item = reports.find(r => r.id === id);
+      if (!item) return;
+
+      currentPreviewReportId = id;
+      document.getElementById("btn-preview-whatsapp").setAttribute("onclick", `shareReportViaWhatsApp('${item.id}')`);
+      document.getElementById("btn-preview-copylink").setAttribute("onclick", `copySigningLink('${item.id}')`);
+
+      populatePdfElements(item);
       showSection("preview-section");
     }
 
     function exportToPdf() {
       const element = document.getElementById('printable-area');
-      const school = document.getElementById('pdf-school-name').innerText;
+      const school = document.getElementById('pdf-school-name').innerText || 'المدرسة';
       const opt = {
         margin:       [3, 3, 3, 3],
         filename:     `تقرير_التغذية_الراجعة_${school}.pdf`,
