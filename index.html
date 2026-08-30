@@ -56,7 +56,7 @@
 </head>
 <body class="min-h-screen">
 
-  <!-- شاشة الدخول الخارجي لتوقيع مقدم الدعم (تظهر تلقائياً عند فتح رابط التوقيع) -->
+  <!-- شاشة التوقيع الخارجي لمقدم الدعم عبر الرابط -->
   <div id="external-sign-container" class="hidden fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 space-y-4">
       <div class="text-center border-b pb-3">
@@ -79,7 +79,7 @@
   </div>
 
   <!-- شاشة الدخول العادية -->
-  <div id="login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div id="login-modal" class="fixed inset-0 bg-slate-900/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 border border-slate-200">
       <div class="text-center mb-6">
         <h2 class="text-2xl font-bold text-slate-800">بوابة الفريق التنفيذي</h2>
@@ -122,15 +122,46 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-4">
-      <div class="flex gap-2 no-print">
-        <button onclick="showSection('list-section')" class="px-4 py-2 bg-white border text-slate-700 rounded-lg font-bold text-xs shadow-sm">متابعة التقارير والأرشيف</button>
+      <div class="flex gap-2 no-print flex-wrap">
+        <button id="btn-nav-analytics" onclick="showSection('analytics-section'); renderAnalyticsDashboard();" class="hidden px-4 py-2 bg-indigo-700 text-white rounded-lg font-bold text-xs shadow">لوحة الإحصاءات العامة</button>
+        <button onclick="showSection('list-section')" class="px-4 py-2 bg-white border text-slate-700 rounded-lg font-bold text-xs shadow-sm">متابعة الإسناد والتقارير</button>
         <button onclick="showSection('form-section'); resetForm();" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-xs shadow">إنشاء تقرير جديد</button>
       </div>
 
-      <!-- قائمة التقارير والأرشيف -->
+      <!-- لوحة الإحصاءات لرئيس الفريق -->
+      <section id="analytics-section" class="hidden no-print space-y-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-xs font-bold text-slate-500">إجمالي مدارس الإسناد</p>
+            <h3 class="text-2xl font-black text-slate-800 mt-1" id="stat-total-schools">173</h3>
+          </div>
+          <div class="bg-white p-4 rounded-xl border shadow-sm">
+            <p class="text-xs font-bold text-slate-500">التقارير المنجزة بالمشروع</p>
+            <h3 class="text-2xl font-black text-indigo-700 mt-1" id="stat-total-reports">0</h3>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl border shadow-sm overflow-hidden p-4">
+          <h4 class="text-sm font-bold text-slate-800 mb-3">ملخص أداء أعضاء الفريق التنفيذي</h4>
+          <table class="w-full text-right text-xs">
+            <thead class="bg-slate-100 font-bold border-b">
+              <tr>
+                <th class="p-3">عضو الفريق التنفيذي</th>
+                <th class="p-3 text-center">المدارس المسندة</th>
+                <th class="p-3 text-center">التقارير المرفوعة</th>
+              </tr>
+            </thead>
+            <tbody id="table-exec-summary-body" class="divide-y"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- متابعة التقارير والأرشيف -->
       <section id="list-section" class="no-print space-y-4">
         <div class="bg-white rounded-xl shadow-md border overflow-hidden p-4">
-          <h3 class="font-bold text-slate-800 text-sm mb-3">أرشيف التقارير المحفوظة في مساحة المشروع</h3>
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="font-bold text-slate-800 text-sm">أرشيف التقارير المحفوظة في مساحة المشروع</h3>
+            <span id="report-count" class="text-xs bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full">0 تقرير</span>
+          </div>
           <div class="overflow-x-auto">
             <table class="w-full text-right text-xs">
               <thead class="bg-slate-100 font-bold border-b">
@@ -138,8 +169,8 @@
                   <th class="p-2.5">#</th>
                   <th class="p-2.5">المدرسة</th>
                   <th class="p-2.5">مقدم الدعم</th>
-                  <th class="p-2.5">حالة التوقيع</th>
-                  <th class="p-2.5 text-center">الإجراءات</th>
+                  <th class="p-2.5">حالة التوقيع الإلكتروني</th>
+                  <th class="p-2.5 text-center">الإجراءات والمعاينة</th>
                 </tr>
               </thead>
               <tbody id="reports-table-body" class="divide-y"></tbody>
@@ -148,20 +179,26 @@
         </div>
       </section>
 
-      <!-- نموذج التقرير -->
+      <!-- نموذج التقرير والتعبئة التلقائية -->
       <section id="form-section" class="hidden no-print">
-        <div class="bg-white rounded-2xl shadow-xl border p-6">
-          <h2 class="text-base font-bold text-slate-800 mb-4">استمارة التغذية الراجعة لمقدمي خدمات دعم التميز</h2>
+        <div class="bg-white rounded-2xl shadow-xl border p-6 space-y-4">
+          <h2 class="text-base font-bold text-slate-800">استمارة التغذية الراجعة لمقدمي خدمات دعم التميز</h2>
+          <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl">
+            <label class="block text-xs font-bold text-emerald-900 mb-1">اختر المدرسة للتعبئة التلقائية من جدول إسناد قطاع العوالي:</label>
+            <select id="auto-school-select" onchange="onSchoolSelected(this.value)" class="w-full border rounded p-2 text-xs font-bold bg-white">
+              <option value="">-- اختر المدرسة --</option>
+            </select>
+          </div>
           <form id="report-form" class="space-y-4">
             <input type="hidden" id="edit-id">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">اسم المدرسة</label>
-                <input type="text" id="school-name" class="w-full border rounded p-2 text-xs" required>
+                <input type="text" id="school-name" class="w-full border rounded p-2 text-xs font-bold" required>
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">اسم مقدم الدعم</label>
-                <input type="text" id="provider-name" class="w-full border rounded p-2 text-xs" required>
+                <input type="text" id="provider-name" class="w-full border rounded p-2 text-xs font-bold">
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ الزيارة</label>
@@ -169,6 +206,7 @@
               </div>
             </div>
             <div class="flex justify-end gap-2 pt-3 border-t">
+              <button type="button" onclick="showSection('list-section')" class="px-4 py-2 bg-slate-200 rounded text-xs">إلغاء</button>
               <button type="submit" class="px-5 py-2 bg-emerald-700 text-white font-bold rounded-lg text-xs shadow">حفظ التقرير في المشروع</button>
             </div>
           </form>
@@ -179,16 +217,16 @@
       <section id="preview-section" class="hidden">
         <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow mb-4 flex-wrap gap-2">
           <button onclick="showSection('list-section')" class="px-4 py-2 bg-slate-200 rounded-lg font-bold text-xs">رجوع</button>
-          <div class="flex gap-2">
-            <button onclick="openSignModal()" class="px-4 py-2 bg-amber-600 text-white rounded-lg font-bold text-xs">إرسال رابط التوقيع لمقدم الدعم</button>
-            <button onclick="sendViaWhatsApp()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold text-xs"><i class="fa-brands fa-whatsapp"></i> واتساب</button>
-            <button onclick="exportToPdf()" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-xs">تصدير PDF</button>
+          <div class="flex gap-2 flex-wrap">
+            <button onclick="openSignModal()" class="px-4 py-2 bg-amber-600 text-white rounded-lg font-bold text-xs shadow">إرسال رابط التوقيع لمقدم الدعم</button>
+            <button onclick="sendViaWhatsApp()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg font-bold text-xs shadow"><i class="fa-brands fa-whatsapp text-sm"></i> إرسال عبر واتساب</button>
+            <button onclick="exportToPdf()" class="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold text-xs shadow">تصدير PDF</button>
           </div>
         </div>
 
         <div id="printable-area" class="bg-white p-4 mx-auto shadow-2xl border max-w-[850px] official-doc text-black space-y-3">
           <div class="text-center border-b pb-2">
-            <h2 class="text-xs font-bold bg-slate-100 py-1 px-3 border inline-block">تقرير التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي</h2>
+            <h2 class="text-xs font-bold bg-slate-100 py-1 px-3 border inline-block">تقرير التغذية الراجعة لمقدمي خدمات دعم التميز المدرسي بقطاع العوالي</h2>
           </div>
           <table class="doc-table">
             <tr>
@@ -205,7 +243,7 @@
           <table class="doc-table mt-4" style="border:none;">
             <tr style="border:none;">
               <td style="border:none; width:50%; text-align:center;">
-                <p class="font-bold text-xs">مقدم/ة خدمات دعم التميز</p>
+                <p class="font-bold text-xs">مقدم/ة خدمات دعم التميز المدرسي</p>
                 <div class="h-14 flex items-center justify-center">
                   <img id="pdf-provider-sig-img" src="" class="max-h-12 object-contain hidden" alt="توقيع مقدم الدعم">
                   <span id="pdf-provider-sig-status" class="text-amber-600 italic text-[10px]">[بانتظار توقيع مقدم الدعم عبر الرابط]</span>
@@ -215,7 +253,7 @@
                 <p class="font-bold text-xs">عضو الفريق المشرف</p>
                 <p id="pdf-footer-member" class="font-bold text-xs mt-1"></p>
                 <div class="h-14 flex items-center justify-center">
-                  <span class="text-xs italic">[معتمد]</span>
+                  <span class="text-xs font-bold text-emerald-700">[تم الاعتماد]</span>
                 </div>
               </td>
             </tr>
@@ -238,6 +276,18 @@
   </div>
 
   <script>
+    // قاعدة بيانات المدارس والإسناد الكاملة لقطاع العوالي
+    const SCHOOLS_DATA = [
+      { member: "أنس بن ناجي رشيد الرحيلي", name: "ابتدائية الإمام أبي حنيفة النعمان", gender: "بنين", stage: "ابتدائي", provider_name: "أكرم ياسين أحمد الشريف" },
+      { member: "أنس بن ناجي رشيد الرحيلي", name: "ابتدائية شوران", gender: "بنين", stage: "ابتدائي", provider_name: "جايز دغيمان سميحان السليمي" },
+      { member: "صالح بن عوض فاضي الحربي", name: "متوسطة الخوارزمي", gender: "بنين", stage: "متوسط", provider_name: "سعد سعود سعد الحربي" },
+      { member: "صالح بن عوض فاضي الحربي", name: "متوسطة عبدالله بن عثمان بن عفان", gender: "بنين", stage: "متوسط", provider_name: "بندر بن عبدالكريم بن حجي الرويثي" },
+      { member: "صالح بن عوض فاضي الحربي", name: "ابتدائية أبي حيان التوحيدي (حزرة)", gender: "بنين", stage: "ابتدائي", provider_name: "اسحاق بن عمر بن محمود عبدالعال" },
+      { member: "ريم بنت عبدالله حمد السحيمي", name: "الإبتدائية السادسة والاربعون (طفولة المبكرة)", gender: "بنات", stage: "ابتدائي", provider_name: "بينة حسن ناصر القحطاني" },
+      { member: "بدرية بنت علي حسين الفريدي", name: "الابتدائية الرابعة عشرة بالمدينة", gender: "بنات", stage: "ابتدائي", provider_name: "وداد دخيل الله سليمان اللقماني" },
+      { member: "هدى بنت نويع عائض الحربي", name: "الثانوية الخامسة بالمدينة - مسارات", gender: "بنات", stage: "ثانوي", provider_name: "جواهر شكري مفرّج بطيش" }
+    ];
+
     let currentUser = null;
     let currentReportId = null;
     let globalReports = [];
@@ -248,16 +298,41 @@
       document.getElementById("login-modal").classList.add("hidden");
       document.getElementById("main-app").classList.remove("hidden");
       document.getElementById("current-user-display").innerText = currentUser;
+
+      if (currentUser.includes("د. عائشة")) {
+        document.getElementById("btn-nav-analytics").classList.remove("hidden");
+      }
+      populateSchoolSelect();
       await loadReportsFromServer();
     });
 
     function logout() { location.reload(); }
+
+    function populateSchoolSelect() {
+      const select = document.getElementById("auto-school-select");
+      select.innerHTML = '<option value="">-- اختر المدرسة من قائمة إسناد قطاع العوالي --</option>';
+      SCHOOLS_DATA.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s.name;
+        opt.innerText = `${s.name} (${s.stage} - ${s.gender}) [مشرف: ${s.member}]`;
+        select.appendChild(opt);
+      });
+    }
+
+    function onSchoolSelected(name) {
+      const sch = SCHOOLS_DATA.find(s => s.name === name);
+      if (sch) {
+        document.getElementById("school-name").value = sch.name;
+        document.getElementById("provider-name").value = sch.provider_name || "";
+      }
+    }
 
     async function loadReportsFromServer() {
       try {
         const res = await fetch('/api/reports');
         globalReports = await res.json();
         renderReportsTable();
+        renderAnalyticsDashboard();
         checkUrlForExternalSign();
       } catch (err) {
         console.error("خطأ في الاتصال بالخادم:", err);
@@ -298,6 +373,8 @@
     function renderReportsTable() {
       const tbody = document.getElementById("reports-table-body");
       tbody.innerHTML = "";
+      document.getElementById("report-count").innerText = `${globalReports.length} تقرير`;
+      
       if (globalReports.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-slate-400">لا توجد تقارير محفوظة في المشروع حالياً</td></tr>`;
         return;
@@ -305,7 +382,7 @@
       globalReports.forEach((item, idx) => {
         const tr = document.createElement("tr");
         let sigStatus = item.providerSignature ? 
-          `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check-circle"></i> م وقع رسمياً</span>` : 
+          `<span class="text-emerald-700 font-bold"><i class="fa-solid fa-check-circle"></i> موقع رسمياً</span>` : 
           `<span class="text-amber-600 font-medium">بانتظار التوقيع</span>`;
 
         tr.innerHTML = `
@@ -314,14 +391,31 @@
           <td class="p-2.5">${item.providerName || '-'}</td>
           <td class="p-2.5">${sigStatus}</td>
           <td class="p-2.5 text-center">
-            <button onclick="previewReport('${item.id}')" class="px-3 py-1 bg-emerald-700 text-white rounded font-bold text-xs">معاينة وإرسال</button>
+            <button onclick="previewReport('${item.id}')" class="px-3 py-1 bg-emerald-700 text-white rounded font-bold text-xs shadow">معاينة وإرسال للتوقيع</button>
           </td>
         `;
         tbody.appendChild(tr);
       });
     }
 
+    function renderAnalyticsDashboard() {
+      document.getElementById("stat-total-reports").innerText = globalReports.length;
+      const tbody = document.getElementById("table-exec-summary-body");
+      if(!tbody) return;
+      tbody.innerHTML = "";
+      
+      const members = ["صالح بن عوض فاضي الحربي", "أنس بن ناجي رشيد الرحيلي", "شكري بن أحمد خجا بخاري", "بدرية بنت علي حسين الفريدي", "ريم بنت عبدالله حمد السحيمي", "هدى بنت نويع عائض الحربي"];
+      members.forEach(m => {
+        const assigned = SCHOOLS_DATA.filter(s => s.member === m).length;
+        const repCount = globalReports.filter(r => r.author === m).length;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td class="p-3 font-bold">${m}</td><td class="p-3 text-center">${assigned}</td><td class="p-3 text-center text-indigo-700 font-black">${repCount}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
     function showSection(sec) {
+      document.getElementById("analytics-section").classList.add("hidden");
       document.getElementById("list-section").classList.add("hidden");
       document.getElementById("form-section").classList.add("hidden");
       document.getElementById("preview-section").classList.add("hidden");
@@ -371,11 +465,10 @@
       const item = globalReports.find(r => r.id === currentReportId);
       const baseUrl = window.location.href.split('?')[0];
       const signUrl = `${baseUrl}?sign_id=${currentReportId}`;
-      const message = `السلام عليكم الأستاذ/ة ${item.providerName}\nنأمل التكرم باعتماد وتوقيع استمارة التغذية الراجعة لزيارة مدرسة (${item.schoolName}) عبر الرابط:\n${signUrl}`;
+      const message = `السلام عليكم الأستاذ/ة ${item.providerName || 'مقدم الدعم'}\nنأمل التكرم باعتماد وتوقيع استمارة التغذية الراجعة لزيارة مدرسة (${item.schoolName}) عبر رابط التوقيع الإلكتروني:\n${signUrl}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank');
     }
 
-    // دوال استقبال وتوقيع مقدم الدعم عبر الرابط الخارجي
     async function checkUrlForExternalSign() {
       const urlParams = new URLSearchParams(window.location.search);
       const signId = urlParams.get('sign_id');
@@ -423,7 +516,7 @@
         item.signedAt = new Date().toISOString();
         await saveReportToServer(item);
         alert("تم اعتماد وتوقيع الاستمارة وحفظها داخل المشروع بنجاح!");
-        window.location.href = window.location.pathname; // العودة للصفحة الرئيسية نظيفة
+        window.location.href = window.location.pathname;
       }
     }
 
