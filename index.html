@@ -66,14 +66,14 @@
         <h2 class="text-sm font-bold text-slate-800 flex items-center gap-1.5">
           <i class="fa-solid fa-file-signature text-emerald-600"></i> مراجعة واعتماد استمارة التغذية الراجعة
         </h2>
-        <p class="text-[11px] text-slate-500">راجع تفاصيل التقرير أدناه، ثم وثق توقيعك في الصندوق أسفل الصفحة</p>
+        <p class="text-[11px] text-slate-500">راجع تفاصيل التقرير أدناه، ثم اعتمد توقيعك ليتم تحميل النسخة وإرسالها للمشرف تلقائياً</p>
       </div>
       <div id="signed-actions-toolbar" class="hidden flex gap-2">
         <button id="btn-send-back-whatsapp" onclick="sendSignedReportBackToMember()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow">
-          <i class="fa-brands fa-whatsapp text-sm"></i> إرسال التقرير المكتمل للمشرف
+          <i class="fa-brands fa-whatsapp text-sm"></i> إعادة إرسال الرابط للمشرف
         </button>
         <button onclick="downloadSignedPdfFromPayload()" class="px-3 py-1.5 bg-slate-800 hover:bg-black text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow">
-          <i class="fa-solid fa-file-pdf"></i> تحميل PDF
+          <i class="fa-solid fa-file-pdf"></i> إعادة تحميل PDF
         </button>
       </div>
     </div>
@@ -114,7 +114,7 @@
 
       <div class="pt-2 border-t flex justify-end">
         <button onclick="submitProviderSignature()" class="px-6 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow text-xs flex items-center gap-2">
-          <i class="fa-solid fa-signature"></i> اعتماد التوقيع وتحديث الاستمارة
+          <i class="fa-solid fa-signature"></i> اعتماد التوقيع وتحميل الاستمارة وإرسالها للمشرف
         </button>
       </div>
     </div>
@@ -935,7 +935,7 @@
       `;
     }
 
-    // فحص الرابط عند الفتح لمقدم الدعم
+    // فحص الرابط عند الفتح لمقدم الدعم أو المشرف
     function checkSigningUrlParam() {
       const params = new URLSearchParams(window.location.search);
       const payloadStr = params.get("payload");
@@ -951,6 +951,17 @@
       if (item && item.schoolName) {
         activePayloadReport = item;
         
+        // إذا كان التقرير مرسلاً وموقعاً مسبقاً، احفظه في قاعدة البيانات المحلية للجهاز
+        if (item.providerSignature) {
+          const localIndex = reports.findIndex(r => r.id === item.id);
+          if (localIndex !== -1) {
+            reports[localIndex] = item;
+          } else {
+            reports.unshift(item);
+          }
+          localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
+        }
+
         // إخفاء نوافذ المنظومة وإظهار صفحة التوقيع
         document.getElementById("login-modal").classList.add("hidden");
         document.getElementById("login-modal").style.display = "none";
@@ -961,7 +972,6 @@
         signingEl.classList.remove("hidden");
         signingEl.style.display = "flex";
         
-        // رسم الاستمارة كاملة أمام مقدم الدعم
         renderProviderDocument();
 
         if (item.providerSignature) {
@@ -1049,6 +1059,7 @@
       }
     }
 
+    // اعتماد التوقيع وتحميل الاستمارة تلقائياً مع فتح الواتساب
     function submitProviderSignature() {
       if (!tempProviderSignature) {
         alert("يرجى رسم التوقيع أو رفع صورة التوقيع أولاً.");
@@ -1058,7 +1069,7 @@
       activePayloadReport.providerSignature = tempProviderSignature;
       activePayloadReport.providerSignedAt = new Date().toLocaleString("ar-SA");
 
-      // الحفظ والتحديث في قاعدة البيانات المحلية
+      // الحفظ في التخزين المحلي للجهاز
       const localIndex = reports.findIndex(r => r.id === activePayloadReport.id);
       if (localIndex !== -1) {
         reports[localIndex] = activePayloadReport;
@@ -1067,23 +1078,29 @@
       }
       localStorage.setItem("excellence_reports_v2", JSON.stringify(reports));
 
-      // إعادة رسم الاستمارة بالتوقيع الجديد
+      // تحديث مظهر الاستمارة
       renderProviderDocument();
       document.getElementById("signed-actions-toolbar").classList.remove("hidden");
-      alert("تم اعتماد التوقيع بنجاح! يمكنك الآن إرسال الاستمارة المعتمدة للمشرف عبر الواتساب.");
+
+      // 1. تحميل ملف الاستمارة المعتمدة PDF تلقائياً
+      downloadSignedPdfFromPayload();
+
+      // 2. إشعار مقدم الدعم والانتقال المباشر لإرسال الاستمارة للمشرف
+      setTimeout(() => {
+        sendSignedReportBackToMember();
+      }, 1000);
     }
 
-    // إرسال التقرير المكتمل بعد توقيعه من مقدم الدعم إلى المشرف عبر الواتساب
+    // إرسال التقرير المعتمد إلى المشرف
     function sendSignedReportBackToMember() {
       if (!activePayloadReport) return;
-      const lightItem = { ...activePayloadReport };
-      delete lightItem.providerSignature; // تخفيف الرابط
       
-      const payload = encodePayload(lightItem);
+      const payload = encodePayload(activePayloadReport);
       const url = new URL(window.location.href.split('?')[0]);
       url.searchParams.set("payload", payload);
 
-      const msg = `السلام عليكم ورحمة الله،\nسعادة المشرف التربوي: ${activePayloadReport.author}\nتم الاطلاع على استمارة التغذية الراجعة لزيارة مدرسة (${activePayloadReport.schoolName}) واعتماد التوقيع إلكترونياً بنجاح.\nشاكرين ومقدرين دعمكم المستمر.\nمقدم الدعم: ${activePayloadReport.providerName || ''}`;
+      const msg = `السلام عليكم ورحمة الله،\nسعادة المشرف التربوي: ${activePayloadReport.author}\n\nتم الاطلاع على استمارة التغذية الراجعة لزيارة مدرسة (${activePayloadReport.schoolName}) وتوقيعها واعتمادها إلكترونياً بنجاح، كما تم تحميل نسخة PDF منها.\n\nيمكنكم معاينة وحفظ الاستمارة المعتمدة عبر الرابط التالي:\n${url.toString()}\n\nشاكرين ومقدرين جهودكم ودعمكم المستمر.\nمقدم الدعم: ${activePayloadReport.providerName || ''}`;
+      
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
@@ -1100,7 +1117,6 @@
       html2pdf().set(opt).from(element).save();
     }
 
-    // توليد رابط التوقيع للمشرف لإرساله لمقدم الدعم
     function generateSmartSigningLink(reportId) {
       const item = reports.find(r => r.id === reportId);
       if (!item) return "";
